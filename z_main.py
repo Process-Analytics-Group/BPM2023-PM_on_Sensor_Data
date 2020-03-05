@@ -8,7 +8,7 @@ import timeit
 
 import os
 # import settings file
-import 0-setting_parameters as settings
+import z_settingParameters as settings
 import CreateDistanceMatrix as CreateDM
 import helper
 
