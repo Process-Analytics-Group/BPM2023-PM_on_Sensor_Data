@@ -9,20 +9,20 @@ import timeit
 import os
 # import settings file
 import z_setting_parameters as settings
-import CreateDistanceMatrix as CreateDM
-import helper
+import z_create_distance_matrix as create_dm
+import z_helper
 
 # start timer
 t0_main = timeit.default_timer()
 
 # get distance Matrix from imported adjacency-matrix
-dict_distance_adjacency_sensor = CreateDM.get_distance_matrix()
+dict_distance_adjacency_sensor = create_dm.get_distance_matrix()
 
 # draw a node-representation of the Smart Home
-CreateDM.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sensor,
-                              data_sources_path=settings.path_data_sources,
-                              dir_runtime_files=settings.dir_runtime_files,
-                              filename_adjacency_plot=settings.filename_adjacency_plot)
+create_dm.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sensor,
+                               data_sources_path=settings.path_data_sources,
+                               dir_runtime_files=settings.dir_runtime_files,
+                               filename_adjacency_plot=settings.filename_adjacency_plot)
 
 param_grid = {'zero_distance_value': settings.zero_distance_value_list,
               'distance_threshold': settings.distance_threshold_list,
@@ -35,7 +35,7 @@ grid = ParameterGrid(param_grid)
 # count number of iteration so code can be continued after interruption
 iteration_counter = 0
 
-df_all_data = helper.read_csv_files()
+df_all_data = z_helper.read_csv_files()
 
 # https://stackoverflow.com/questions/13370570/elegant-grid-search-in-python-numpy
 for params in grid:
@@ -47,8 +47,8 @@ for params in grid:
     if not os.path.exists(settings.path_data_sources + dir_runtime_files):
         os.makedirs(settings.path_data_sources + dir_runtime_files)
 
-    helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files,
-                                      grid_search_parameters=params)
+    z_helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files,
+                                        grid_search_parameters=params)
     # Logger configuration
     logging.basicConfig(
         level=settings.logging_level,
@@ -59,8 +59,8 @@ for params in grid:
     logger.setLevel(settings.logging_level)
 
     dict_distance_adjacency_sensor['distance_matrix'] = \
-        CreateDM.set_zero_distance_value(distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
-                                         zero_distance_value=params['zero_distance_value'])
+        create_dm.set_zero_distance_value(distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
+                                          zero_distance_value=params['zero_distance_value'])
 
     print(2)
     # your_function(params['param1'], params['param2'])
