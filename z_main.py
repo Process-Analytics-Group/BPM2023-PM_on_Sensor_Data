@@ -1,4 +1,3 @@
-print("hallo welt")
 from sklearn.model_selection import ParameterGrid
 # supports logging
 import logging
