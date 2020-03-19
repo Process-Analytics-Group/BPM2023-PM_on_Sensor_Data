@@ -52,4 +52,3 @@ max_trace_length_list = [4, 6, 8, 10]
 
 # number of k-means cluster
 k_means_number_of_clusters = [6, 8, 10, 12, 14, 16]
-
