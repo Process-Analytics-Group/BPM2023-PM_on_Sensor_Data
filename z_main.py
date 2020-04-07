@@ -24,7 +24,6 @@ dict_distance_adjacency_sensor = create_dm.get_distance_matrix()
 # draw a node-representation of the Smart Home
 create_dm.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sensor,
                                data_sources_path=settings.path_data_sources,
-                               dir_runtime_files=settings.dir_runtime_files,
                                filename_adjacency_plot=settings.filename_adjacency_plot)
 
 param_grid = {'zero_distance_value': settings.zero_distance_value_list,
@@ -77,11 +76,11 @@ for params in grid:
                                    filename_parameters_file=settings.filename_parameters_file,
                                    prefix_motion_sensor_id=settings.prefix_motion_sensor_id,
                                    dir_runtime_files=dir_runtime_files,
-                                   distance_threshold=settings.distance_threshold,
+                                   distance_threshold=params['distance_threshold'],
                                    max_number_of_people_in_house=settings.max_number_of_people_in_house,
-                                   traces_time_out_threshold=settings.traces_time_out_threshold,
+                                   traces_time_out_threshold=params['traces_time_out_threshold'],
                                    data_types=settings.data_types,
-                                   max_trace_length=settings.max_trace_length,
+                                   max_trace_length=params['max_trace_length'],
                                    max_number_of_raw_input=settings.max_number_of_raw_input)
 
     # cut away the case number for SOM training
@@ -90,13 +89,13 @@ for params in grid:
     #################### ActivityDiscovery ####################
     # ### k-Means ###
     k_means_cluster_id = ad.custom_kmeans(data=trace_data_without_case_number,
-                                       number_of_clusters=settings.K_opt)
+                                          number_of_clusters=params['k_means_number_of_clusters'])
 
     sm, km, quantization_error, topographic_error = ad.merge_related_tracking_entries(
         trace_data_without_case_number=trace_data_without_case_number,
-        K_opt=settings.K_opt, path_data_sources=settings.path_data_sources,
+        K_opt=params['k_means_number_of_clusters'], path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
-        filename_parameters_file=settings.filename_parameters_file, loggers=logger)
+        filename_parameters_file=settings.filename_parameters_file, logger=logger)
 
     # write BMU to output file
     trace_data_time['BMU'] = np.transpose(sm._bmu[0, :]).astype(int)
@@ -141,19 +140,17 @@ for params in grid:
         list_of_properties={'quantization_error': quantization_error,
                             'topographic_error': topographic_error,
                             'runtime_main': runtime_main,
-                            'zero_distance_value': settings.zero_distance_value,
-                            'distance_threshold': settings.distance_threshold,
+                            'zero_distance_value': params['zero_distance_value'],
+                            'distance_threshold': params['distance_threshold'],
                             'max_number_of_people_in_house': settings.max_number_of_people_in_house,
-                            'traces_time_out_threshold': settings.traces_time_out_threshold,
-                            'max_trace_length': settings.max_trace_length,
+                            'traces_time_out_threshold': params['traces_time_out_threshold'],
+                            'max_trace_length': params['max_trace_length'],
                             'data_types': settings.data_types,
-                            'k_means_number_of_clusters': settings.K_opt,
-                            'vector_size_word2vec': settings.vector_size})
+                            'k_means_number_of_clusters': params['k_means_number_of_clusters']})
 
     z_helper.append_to_log_file(
         new_entry_to_log_variable='runtime_main',
         new_entry_to_log_value=runtime_main,
-        path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=settings.filename_parameters_file,
         new_entry_to_log_description='Total runtime in seconds.')
@@ -161,7 +158,6 @@ for params in grid:
     z_helper.append_to_log_file(
         new_entry_to_log_variable='execution_completed',
         new_entry_to_log_value=True,
-        path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=settings.filename_parameters_file,
         new_entry_to_log_description='Successfully executed code.')

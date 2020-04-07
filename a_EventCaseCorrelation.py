@@ -6,8 +6,9 @@ import logging
 import timeit
 from pathlib import Path
 import math
-import helper
+import z_helper
 import inspect
+
 
 def create_trace_from_file(data_sources_path,
                            dict_distance_adjacency_sensor,
@@ -112,7 +113,7 @@ def calculate_pairwise_dissimilarity(list_of_final_vectors_activations,
     # calculate runtime
     runtime_dissimilarity_matrix = np.round(t1_read_csv_files - t0_read_csv_files, 1)
 
-    helper.append_to_log_file(
+    z_helper.append_to_log_file(
         new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
         new_entry_to_log_value=runtime_dissimilarity_matrix,
         path_data_sources=data_sources_path,
@@ -221,18 +222,16 @@ def divide_raw_traces(traces_raw_pd,
     # calculate runtime
     runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
 
-    helper.append_to_log_file(
+    z_helper.append_to_log_file(
         new_entry_to_log_variable='case_id_for_short_traces',
         new_entry_to_log_value=unique_identifier - 1,
-        path_data_sources=data_sources_path,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Number of shorter traces of length ' + str(max_trace_length) + '.')
 
-    helper.append_to_log_file(
+    z_helper.append_to_log_file(
         new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
         new_entry_to_log_value=runtime_read_csv_files,
-        path_data_sources=data_sources_path,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Seconds it took to divide long traces into shorter traces.')
@@ -302,7 +301,7 @@ def convert_raw_data_to_traces_fast(raw_data,
             temporary_df['Case'] = trace_to_close
             # get activated-sensors from data frame to a list
             added_sensors_list = temporary_df['Sensor_Added'].values.tolist()
-            pd_df_all_traces_short.loc[trace_to_close] = [trace_to_close, added_sensors_list]
+            # pd_df_all_traces_short.loc[trace_to_close] = [trace_to_close, added_sensors_list]
             # remove Sensor_Added Column
             # temporary_df.drop('Sensor_Added', axis=1, inplace=True)
             # todo: Move to end and do them all at once to save time
@@ -511,7 +510,7 @@ def convert_raw_data_to_traces(raw_data,
             # remove Sensor_Added Column
             # temporary_df.drop('Sensor_Added', axis=1, inplace=True)
             # todo: Move to end and do them all at once to save time
-            pd_df_all_traces = pd.concat([pd_df_all_traces, temporary_df], axis=0, join='outer', join_axes=None,
+            pd_df_all_traces = pd.concat([pd_df_all_traces, temporary_df], axis=0, join='outer',
                                          ignore_index=False, keys=None, levels=None, names=None, verify_integrity=False,
                                          copy=True, sort=False)
             # remove extracted list from open traces
@@ -654,19 +653,17 @@ def convert_raw_data_to_traces(raw_data,
     # calculate runtime
     runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
 
-    helper.append_to_log_file(new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
-                              new_entry_to_log_value=runtime_read_csv_files,
-                              path_data_sources=data_sources_path,
-                              dir_runtime_files=dir_runtime_files,
-                              filename_parameters_file=filename_parameters_file,
-                              new_entry_to_log_description='Seconds it took to extract the traces.')
+    z_helper.append_to_log_file(new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
+                                new_entry_to_log_value=runtime_read_csv_files,
+                                dir_runtime_files=dir_runtime_files,
+                                filename_parameters_file=filename_parameters_file,
+                                new_entry_to_log_description='Seconds it took to extract the traces.')
 
-    helper.append_to_log_file(new_entry_to_log_variable='unique_new_trace_id',
-                              new_entry_to_log_value=unique_new_trace_id - 1,
-                              path_data_sources=data_sources_path,
-                              dir_runtime_files=dir_runtime_files,
-                              filename_parameters_file=filename_parameters_file,
-                              new_entry_to_log_description='Number of Traces in the long format')
+    z_helper.append_to_log_file(new_entry_to_log_variable='unique_new_trace_id',
+                                new_entry_to_log_value=unique_new_trace_id - 1,
+                                dir_runtime_files=dir_runtime_files,
+                                filename_parameters_file=filename_parameters_file,
+                                new_entry_to_log_description='Number of Traces in the long format')
 
     logging.info("Extracting %s traces took %s seconds.",
                  unique_new_trace_id - 1, runtime_read_csv_files)
@@ -736,7 +733,7 @@ def read_csv_files(data_sources_path,
         data.append(df)
 
     # copy all data-frames from data-list into one big pandas data frame
-    all_data = pd.concat(data, axis=0, join='outer', join_axes=None, ignore_index=False,
+    all_data = pd.concat(data, axis=0, join='outer', ignore_index=False,
                          keys=None, levels=None, names=None, verify_integrity=False,
                          copy=True)
 
@@ -779,12 +776,11 @@ def read_csv_files(data_sources_path,
                     sep=';',
                     index=None)
 
-    helper.append_to_log_file(new_entry_to_log_variable='number_of_data_points',
-                              new_entry_to_log_value=number_of_data_points,
-                              path_data_sources=data_sources_path,
-                              dir_runtime_files=dir_runtime_files,
-                              filename_parameters_file=filename_parameters_file,
-                              new_entry_to_log_description='Number of extracted data points from input file.')
+    z_helper.append_to_log_file(new_entry_to_log_variable='number_of_data_points',
+                                new_entry_to_log_value=number_of_data_points,
+                                filename_parameters_file=filename_parameters_file,
+                                dir_runtime_files=dir_runtime_files,
+                                new_entry_to_log_description='Number of extracted data points from input file.')
 
     # stop timer
     t1_read_csv_files = timeit.default_timer()

@@ -5,8 +5,7 @@ import logging
 # ADJUSTABLE VARIABLES
 
 # path of sources
-path_data_sources = '/Users/dominik-cau/Documents/Lernen/Uni/Promotion/Python/0-DataSources.nosync/' \
-                    '20-Kyoto-2-Daily life, 2010-2012/'
+path_data_sources = 'Data-Sources/'
 # filename of room separation
 filename_room_separation = 'Room-separation.csv'
 # filename of Adjacency-Matrix
@@ -20,7 +19,7 @@ filename_adjacency_plot = 'adjacency_plot.pdf'
 # folder name containing senor data
 dir_name_sensor_data = 'Sensor-Data'
 # folder name containing files read and written during runtime
-dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+#dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 # choose between: quantity, time, quantity_time
 data_types = 'time'
 data_types_list = ['quantity', 'time', 'quantity_time']

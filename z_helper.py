@@ -22,7 +22,6 @@ def create_parameters_log_file(dir_runtime_files,
          ['exogenous_filename_LogFile', settings.filename_parameters_file],
          ['exogenous_filename_adjacency_plot', settings.filename_adjacency_plot],
          ['exogenous_dir_name_sensor_data', settings.dir_name_sensor_data],
-         ['exogenous_dir_runtime_files', settings.dir_runtime_files],
          ['exogenous_data_types', settings.data_types, 'choose between: quantity, time, quantity_time'],
          ['exogenous_csv_delimiter', settings.csv_delimiter],
          ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id],
@@ -53,8 +52,10 @@ def create_parameters_log_file(dir_runtime_files,
 def append_to_log_file(new_entry_to_log_variable,
                        new_entry_to_log_value,
                        filename_parameters_file,
+                       dir_runtime_files,
                        new_entry_to_log_description=None):
-    target_file = settings.path_data_sources + settings.dir_runtime_files + '/' + filename_parameters_file
+
+    target_file = settings.path_data_sources + dir_runtime_files + '/' + filename_parameters_file
     log_data = pd.read_csv(filepath_or_buffer=target_file,
                            sep=';')
     new_entry = pd.DataFrame([[new_entry_to_log_variable, new_entry_to_log_value, new_entry_to_log_description]],
@@ -117,28 +118,28 @@ def read_csv_files():
 
     logger = logging.getLogger(inspect.stack()[0][3])
 
-    # try to find if sensor raw data has been created already.
-    # If yes, use this instead of starting over again
-    raw_data_file = Path(settings.path_data_sources + 'sensor_raw.csv')
-    if raw_data_file.is_file():
-        logging.info("Reading csv Files from preexisting file '../%s", settings.dir_runtime_files + '/sensor_raw.csv')
-
-        # read previously created csv file and import it a
-        all_data = pd.read_csv(settings.path_data_sources + 'sensor_raw.csv',
-                               sep=';',
-                               header=0,
-                               parse_dates=['DateTime'],
-                               dtype={'Active': np.int8})
-        # calculate how many data points there are
-        number_of_data_points = all_data.shape[0]
-        # stop timer
-        t1_read_csv_files = timeit.default_timer()
-        # calculate runtime
-        runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
-
-        logging.info("Extracted %s data points from csv-File on disc in %s seconds",
-                     number_of_data_points, runtime_read_csv_files)
-        return all_data
+    # # try to find if sensor raw data has been created already.
+    # # If yes, use this instead of starting over again
+    # raw_data_file = Path(settings.path_data_sources + 'sensor_raw.csv')
+    # if raw_data_file.is_file():
+    #     logging.info("Reading csv Files from preexisting file '../%s", settings.dir_runtime_files + '/sensor_raw.csv')
+    #
+    #     # read previously created csv file and import it a
+    #     all_data = pd.read_csv(settings.path_data_sources + 'sensor_raw.csv',
+    #                            sep=';',
+    #                            header=0,
+    #                            parse_dates=['DateTime'],
+    #                            dtype={'Active': np.int8})
+    #     # calculate how many data points there are
+    #     number_of_data_points = all_data.shape[0]
+    #     # stop timer
+    #     t1_read_csv_files = timeit.default_timer()
+    #     # calculate runtime
+    #     runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
+    #
+    #     logging.info("Extracted %s data points from csv-File on disc in %s seconds",
+    #                  number_of_data_points, runtime_read_csv_files)
+    #     return all_data
     logging.info("Reading csv Files from %s", settings.path_data_sources)
 
     data = []

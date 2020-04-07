@@ -1,5 +1,5 @@
 # SOM
-from sompy import SOMFactory
+from y_sompy import SOMFactory
 from sklearn.cluster import KMeans
 import numpy as np
 # function for the log file
@@ -25,7 +25,6 @@ def merge_related_tracking_entries(trace_data_without_case_number, K_opt, path_d
     z_helper.append_to_log_file(
         new_entry_to_log_variable='topographic_error',
         new_entry_to_log_value=topographic_error,
-        path_data_sources=path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='The topographic error: the proportion of all data '
@@ -33,7 +32,6 @@ def merge_related_tracking_entries(trace_data_without_case_number, K_opt, path_d
     z_helper.append_to_log_file(
         new_entry_to_log_variable='quantization_error',
         new_entry_to_log_value=quantization_error,
-        path_data_sources=path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='The quantization error: '
@@ -42,7 +40,6 @@ def merge_related_tracking_entries(trace_data_without_case_number, K_opt, path_d
     z_helper.append_to_log_file(
         new_entry_to_log_variable='k_means_number_of_clusters',
         new_entry_to_log_value=K_opt,
-        path_data_sources=path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Number of clusters used to do the vanilla k-means '

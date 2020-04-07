@@ -122,7 +122,6 @@ def floyd_warshall(adj_matrix):
 
 def draw_adjacency_graph(dict_room_information,
                          data_sources_path,
-                         dir_runtime_files,
                          filename_adjacency_plot):
     adjacency_matrix = dict_room_information['adjacency_matrix']
     sensor_labels = dict_room_information['sensor_labels']
