@@ -7,33 +7,43 @@ import timeit
 from pathlib import Path
 import math
 import z_helper
+import z_utils as utils
 import inspect
 
 
 def create_trace_from_file(data_sources_path,
                            dict_distance_adjacency_sensor,
-                           dir_name_sensor_data,
+                           filename_sensor_data,
+                           rel_dir_name_sensor_data,
+                           csv_delimiter_sensor_data,
+                           csv_header_sensor_data,
+                           csv_parse_dates_sensor_data,
+                           csv_dtype_sensor_data,
+                           filename_traces_raw_short,
+                           filename_traces_raw,
+                           csv_delimiter_traces,
+                           csv_header_traces,
                            dir_runtime_files,
                            filename_parameters_file,
                            data_types,
                            max_trace_length,
                            max_number_of_raw_input,
-                           csv_delimiter=';',
                            prefix_motion_sensor_id='M',
                            distance_threshold=1.5,
                            max_number_of_people_in_house=2,
                            traces_time_out_threshold=300):
-    # find all files and consolidate all data in one array
-    raw_data = read_csv_files(data_sources_path=data_sources_path,
-                              csv_delimiter=csv_delimiter,
-                              dir_name_sensor_data=dir_name_sensor_data,
-                              filename_parameters_file=filename_parameters_file,
-                              dir_runtime_files=dir_runtime_files,
-                              max_number_of_raw_input=max_number_of_raw_input)
+    # read in the sensor data as a pandas data frame
+    raw_sensor_data = read_in_sensor_data(data_sources_path=data_sources_path,
+                                          filename_sensor_data=filename_sensor_data,
+                                          rel_dir_name_sensor_data=rel_dir_name_sensor_data,
+                                          csv_delimiter_sensor_data=csv_delimiter_sensor_data,
+                                          csv_header_sensor_data=csv_header_sensor_data,
+                                          csv_parse_dates_sensor_data=csv_parse_dates_sensor_data,
+                                          csv_dtype_sensor_data=csv_dtype_sensor_data)
 
     # convert_raw_data_to_traces_fast(data_sources_path=data_sources_path,
     #                                 dir_runtime_files=dir_runtime_files,
-    #                                 raw_data=raw_data,
+    #                                 raw_sensor_data=raw_sensor_data,
     #                                 filename_parameters_file=filename_parameters_file,
     #                                 dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
     #                                 prefix_motion_sensor_id=prefix_motion_sensor_id,
@@ -44,9 +54,13 @@ def create_trace_from_file(data_sources_path,
     traces_raw_pd, all_traces_short = \
         convert_raw_data_to_traces(data_sources_path=data_sources_path,
                                    dir_runtime_files=dir_runtime_files,
-                                   raw_data=raw_data,
+                                   raw_sensor_data=raw_sensor_data,
                                    filename_parameters_file=filename_parameters_file,
                                    dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                   filename_traces_raw_short=filename_traces_raw_short,
+                                   filename_traces_raw=filename_traces_raw,
+                                   csv_delimiter_traces=csv_delimiter_traces,
+                                   csv_header_traces=csv_header_traces,
                                    prefix_motion_sensor_id=prefix_motion_sensor_id,
                                    distance_threshold=distance_threshold,
                                    max_number_of_people_in_house=max_number_of_people_in_house,
@@ -241,7 +255,7 @@ def divide_raw_traces(traces_raw_pd,
     return final_vector, output_case_traces_cluster, list_of_final_vectors_activations
 
 
-def convert_raw_data_to_traces_fast(raw_data,
+def convert_raw_data_to_traces_fast(raw_sensor_data,
                                     dict_distance_adjacency_sensor,
                                     data_sources_path,
                                     dir_runtime_files,
@@ -255,7 +269,7 @@ def convert_raw_data_to_traces_fast(raw_data,
 
     # get distance matrix from dictionary
     distance_matrix = dict_distance_adjacency_sensor['distance_matrix']
-    np_raw_data = raw_data.values
+    np_raw_data = raw_sensor_data.values
 
     trace_open = {}
     unique_new_trace_id = 1
@@ -422,10 +436,14 @@ def convert_raw_data_to_traces_fast(raw_data,
     print()
 
 
-def convert_raw_data_to_traces(raw_data,
+def convert_raw_data_to_traces(raw_sensor_data,
                                dict_distance_adjacency_sensor,
                                data_sources_path,
                                dir_runtime_files,
+                               filename_traces_raw_short,
+                               filename_traces_raw,
+                               csv_delimiter_traces,
+                               csv_header_traces,
                                filename_parameters_file,
                                prefix_motion_sensor_id='M',
                                distance_threshold=1.5,
@@ -436,18 +454,16 @@ def convert_raw_data_to_traces(raw_data,
     logger = logging.getLogger(inspect.stack()[0][3])
     # try to find if sensor raw data has been created already.
     # If yes, use this instead of starting over again
-    pd_df_all_traces_short_file = Path(data_sources_path + dir_runtime_files + '/traces_raw_short.csv')
-    pd_df_all_traces_file = Path(data_sources_path + dir_runtime_files + '/traces_raw.csv')
+    pd_df_all_traces_short_file = Path(data_sources_path + dir_runtime_files + '/' + filename_traces_raw_short)
+    pd_df_all_traces_file = Path(data_sources_path + dir_runtime_files + '/' + filename_traces_raw)
     if pd_df_all_traces_short_file.is_file() and pd_df_all_traces_file.is_file():
-        logging.info("Reading csv Files from preexisting file '../%s", dir_runtime_files + '/traces_raw_short.csv')
-        logging.info("Reading csv Files from preexisting file '../%s", dir_runtime_files + '/traces_raw.csv')
         # read previously created csv file and import it a
-        pd_df_all_traces = pd.read_csv(pd_df_all_traces_file,
-                                       sep=';',
-                                       header=0)
-        pd_df_all_traces_short = pd.read_csv(pd_df_all_traces_short_file,
-                                             sep=';',
-                                             header=0)
+        pd_df_all_traces = utils.read_csv_file(filedir=data_sources_path + dir_runtime_files + '/',
+                                               filename=filename_traces_raw, separator=csv_delimiter_traces,
+                                               header=csv_header_traces)
+        pd_df_all_traces_short = utils.read_csv_file(filedir=data_sources_path + dir_runtime_files + '/',
+                                                     filename=filename_traces_raw_short, separator=csv_delimiter_traces,
+                                                     header=csv_header_traces)
         # calculate how many data points there are
         number_of_data_points = pd_df_all_traces.shape[0]
         # stop timer
@@ -470,7 +486,7 @@ def convert_raw_data_to_traces(raw_data,
     # currently filled traces (not yet closed)
     trace_open = {}
     unique_new_trace_id = 1
-    for data_row in raw_data.itertuples():
+    for data_row in raw_sensor_data.itertuples():
         # if not a motion sensor, continue with next row
         if data_row.SensorID[0:len(prefix_motion_sensor_id)] != prefix_motion_sensor_id:
             continue
@@ -642,11 +658,11 @@ def convert_raw_data_to_traces(raw_data,
     pd_df_all_traces_short = pd_df_all_traces_short.reset_index(drop=True)
 
     # write traces to disk
-    pd_df_all_traces.to_csv(data_sources_path + dir_runtime_files + '/traces_raw.csv',
-                            sep=';',
+    pd_df_all_traces.to_csv(data_sources_path + dir_runtime_files + '/' + filename_traces_raw,
+                            sep=csv_delimiter_traces,
                             index=None)
-    pd_df_all_traces_short.to_csv(data_sources_path + dir_runtime_files + '/traces_raw_short.csv',
-                                  sep=';',
+    pd_df_all_traces_short.to_csv(data_sources_path + dir_runtime_files + '/' + filename_traces_raw_short,
+                                  sep=csv_delimiter_traces,
                                   index=None)
     # stop timer
     t1_read_csv_files = timeit.default_timer()
@@ -671,17 +687,19 @@ def convert_raw_data_to_traces(raw_data,
     return pd_df_all_traces, pd_df_all_traces_short
 
 
-def read_csv_files(data_sources_path,
-                   dir_name_sensor_data,
-                   dir_runtime_files,
-                   filename_parameters_file,
-                   max_number_of_raw_input,
-                   csv_delimiter=';'):
+def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_sensor_data, csv_delimiter_sensor_data,
+                        csv_header_sensor_data, csv_parse_dates_sensor_data, csv_dtype_sensor_data):
     """
+    Reads the sensor data file and returns the content of the file as pandas data frame.
+
     :param data_sources_path: Path where the source files can be found
-    :param dir_name_sensor_data: Name of the folder where the sensor data is located
-    :param csv_delimiter: Char that separates columns in csv files
-    :return: Pandas data frame containing the sorted merged sensor information of all files in given folder
+    :param filename_sensor_data: Name of the file
+    :param rel_dir_name_sensor_data:  Name of the folder where the sensor data is located
+    :param csv_delimiter_sensor_data: Char that separates columns in csv files
+    :param csv_header_sensor_data: Row number/s to use as the column names, and the start of the data.
+    :param csv_parse_dates_sensor_data: columns that get passed as dates.
+    :param csv_dtype_sensor_data: Data types of the columns
+    :return: Pandas data frame containing the sensor information of file in given folder
     """
 
     # start timer
@@ -689,105 +707,20 @@ def read_csv_files(data_sources_path,
 
     logger = logging.getLogger(inspect.stack()[0][3])
 
-    # try to find if sensor raw data has been created already.
-    # If yes, use this instead of starting over again
-    raw_data_file = Path(data_sources_path + dir_runtime_files + '/sensor_raw.csv')
-    if raw_data_file.is_file():
-        logging.info("Reading csv Files from preexisting file '../%s", dir_runtime_files + '/sensor_raw.csv')
+    # creates pandas data frame out of input of a csv file
+    data_frame = utils.read_csv_file(filedir=data_sources_path + rel_dir_name_sensor_data,
+                                     filename=filename_sensor_data,
+                                     separator=csv_delimiter_sensor_data, header=csv_header_sensor_data,
+                                     parse_dates=csv_parse_dates_sensor_data, dtype=csv_dtype_sensor_data)
 
-        # read previously created csv file and import it a
-        all_data = pd.read_csv(data_sources_path + dir_runtime_files + '/sensor_raw.csv',
-                               sep=';',
-                               header=0,
-                               parse_dates=['DateTime'],
-                               dtype={'Active': np.int8})
-        # calculate how many data points there are
-        number_of_data_points = all_data.shape[0]
-        # stop timer
-        t1_read_csv_files = timeit.default_timer()
-        # calculate runtime
-        runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
-
-        logging.info("Extracted %s data points from csv-File on disc in %s seconds",
-                     number_of_data_points, runtime_read_csv_files)
-        return all_data
-    logging.info("Reading csv Files from %s", data_sources_path)
-
-    data = []
-    df = pd.DataFrame
-    file_count = 0
-    for filename in os.listdir(data_sources_path + dir_name_sensor_data + '/'):
-        # only look through csv files
-        if filename.endswith(".csv"):
-            # count number of files
-            file_count += 1
-            # path of file that should be read
-            file_path = data_sources_path + '/' + dir_name_sensor_data + '/' + filename
-            # read csv as pandas data-frame
-            df = pd.read_csv(filepath_or_buffer=file_path,
-                             sep=csv_delimiter,
-                             names=['Date', 'Time', 'SensorID', 'Active'],
-                             error_bad_lines=False,
-                             skip_blank_lines=True,
-                             na_filter=False)
-        data.append(df)
-
-    # copy all data-frames from data-list into one big pandas data frame
-    all_data = pd.concat(data, axis=0, join='outer', ignore_index=False,
-                         keys=None, levels=None, names=None, verify_integrity=False,
-                         copy=True)
-
-    # only take Motion and Door Sensor Data
-    all_data = all_data[all_data['SensorID'].str.contains('M|D')]
-    all_data['Active'] = all_data['Active'].replace('ON', 1)
-    all_data['Active'] = all_data['Active'].replace('OFF', 0)
-    all_data['Active'] = all_data['Active'].replace('OPEN', 1)
-    all_data['Active'] = all_data['Active'].replace('CLOSE', 0)
-
-    # concatenate Date and time column
-    all_data['DateTime'] = all_data['Date'].map(str) + ' ' + all_data['Time']
-
-    # delete Time and Date column
-    all_data.drop(['Date', 'Time'], axis=1)
-
-    # rearrange columns
-    all_data = all_data.reindex(columns=['DateTime', 'SensorID', 'Active'])
-
-    # Convert String to DateTime format
-    all_data['DateTime'] = pd.to_datetime(all_data['DateTime'])
-
-    # Sort rows by DateTime
-    all_data.sort_values(by='DateTime', inplace=True)
-
-    # reset index so it matches up after the sorting
-    all_data = all_data.reset_index(drop=True)
-
-    number_of_data_points = all_data.shape[0]
-    # if number of data points is lower than max number of raw input
-    if number_of_data_points < max_number_of_raw_input:
-        max_number_of_raw_input = number_of_data_points
-    all_data = all_data.head(max_number_of_raw_input)
-
-    number_of_data_points = all_data.shape[0]
     # calculate how many data points there are
-    number_of_data_points = all_data.shape[0]
-
-    all_data.to_csv(data_sources_path + dir_runtime_files + '/sensor_raw.csv',
-                    sep=';',
-                    index=None)
-
-    z_helper.append_to_log_file(new_entry_to_log_variable='number_of_data_points',
-                                new_entry_to_log_value=number_of_data_points,
-                                filename_parameters_file=filename_parameters_file,
-                                dir_runtime_files=dir_runtime_files,
-                                new_entry_to_log_description='Number of extracted data points from input file.')
+    number_of_data_points = data_frame.shape[0]
 
     # stop timer
     t1_read_csv_files = timeit.default_timer()
     # calculate runtime
     runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
 
-    logger.info("Extracted %s data points from %s csv-Files in %s seconds",
-                number_of_data_points, file_count, runtime_read_csv_files)
-
-    return all_data
+    logging.info("Extracted %s data points from csv-File on disc in %s seconds",
+                 number_of_data_points, runtime_read_csv_files)
+    return data_frame

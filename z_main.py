@@ -37,9 +37,6 @@ grid = ParameterGrid(param_grid)
 # count number of iteration so code can be continued after interruption
 iteration_counter = 0
 
-# pandas data frame which contains
-df_all_data = z_helper.read_csv_files()
-
 # runs throw all combinations of the parameters (zero_distance_value, distance_threshold, ...)
 # https://stackoverflow.com/questions/13370570/elegant-grid-search-in-python-numpy
 for params in grid:
@@ -71,8 +68,16 @@ for params in grid:
     trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
         ecc.create_trace_from_file(data_sources_path=settings.path_data_sources,
                                    dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                   dir_name_sensor_data=settings.dir_name_sensor_data,
-                                   csv_delimiter=settings.csv_delimiter,
+                                   filename_sensor_data=settings.filename_sensor_data,
+                                   rel_dir_name_sensor_data=settings.rel_dir_name_sensor_data,
+                                   csv_delimiter_sensor_data=settings.csv_delimiter_sensor_data,
+                                   csv_header_sensor_data=settings.csv_header_sensor_data,
+                                   csv_parse_dates_sensor_data=settings.csv_parse_dates_sensor_data,
+                                   csv_dtype_sensor_data=settings.csv_dtype_sensor_data,
+                                   filename_traces_raw_short=settings.filename_traces_raw_short,
+                                   filename_traces_raw=settings.filename_traces_raw,
+                                   csv_delimiter_traces=settings.csv_delimiter_traces,
+                                   csv_header_traces=settings.csv_header_traces,
                                    filename_parameters_file=settings.filename_parameters_file,
                                    prefix_motion_sensor_id=settings.prefix_motion_sensor_id,
                                    dir_runtime_files=dir_runtime_files,

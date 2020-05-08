@@ -1,3 +1,8 @@
+2020-05-08
+KD: unified the read function of csv files
+KD: made parameters configurable
+KD: added comments
+
 2020-03-19
 KD: transferred code from "2019-08-16_SOM" (z_main, a_EventCaseCorrelation, b_ActivityDiscovery)
 KD: added comments
