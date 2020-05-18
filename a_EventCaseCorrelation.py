@@ -32,6 +32,34 @@ def create_trace_from_file(data_sources_path,
                            distance_threshold=1.5,
                            max_number_of_people_in_house=2,
                            traces_time_out_threshold=300):
+    # TODO Kommentare vervollständigen
+    """
+    Creates
+
+    :param data_sources_path: path of sources
+    :param dict_distance_adjacency_sensor:
+    :param filename_sensor_data: filename of the file that contains the sensor data
+    :param rel_dir_name_sensor_data: folder name containing sensor data (relative from directory of sources)
+    :param csv_delimiter_sensor_data: delimiter of the columns in csv file of sensor data (input)
+    :param csv_header_sensor_data: indicator at which line the data starts
+    :param csv_parse_dates_sensor_data: columns that should get parsed as a date
+    :param csv_dtype_sensor_data: assignment of data types of columns in the file
+    :param filename_traces_raw_short: filename of short trace file
+    :param filename_traces_raw: filename of trace file
+    :param csv_delimiter_traces: csv delimiter of trace files
+    :param csv_header_traces: indicator at which line the data starts
+    :param dir_runtime_files: the folder of the current run
+    :param filename_parameters_file: filename of parameters file
+    :param data_types:
+    :param max_trace_length: maximum length of traces (in case length mode is used to separate raw-traces)
+    :param max_number_of_raw_input:
+    :param prefix_motion_sensor_id:
+    :param distance_threshold:
+    :param max_number_of_people_in_house:
+    :param traces_time_out_threshold:
+    :return:
+    """
+
     # read in the sensor data as a pandas data frame
     raw_sensor_data = read_in_sensor_data(data_sources_path=data_sources_path,
                                           filename_sensor_data=filename_sensor_data,
@@ -41,15 +69,15 @@ def create_trace_from_file(data_sources_path,
                                           csv_parse_dates_sensor_data=csv_parse_dates_sensor_data,
                                           csv_dtype_sensor_data=csv_dtype_sensor_data)
 
-    # convert_raw_data_to_traces_fast(data_sources_path=data_sources_path,
-    #                                 dir_runtime_files=dir_runtime_files,
-    #                                 raw_sensor_data=raw_sensor_data,
-    #                                 filename_parameters_file=filename_parameters_file,
-    #                                 dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-    #                                 prefix_motion_sensor_id=prefix_motion_sensor_id,
-    #                                 distance_threshold=distance_threshold,
-    #                                 max_number_of_people_in_house=max_number_of_people_in_house,
-    #                                 traces_time_out_threshold=traces_time_out_threshold)
+    convert_raw_data_to_traces_fast(data_sources_path=data_sources_path,
+                                    dir_runtime_files=dir_runtime_files,
+                                    raw_sensor_data=raw_sensor_data,
+                                    filename_parameters_file=filename_parameters_file,
+                                    dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                    prefix_motion_sensor_id=prefix_motion_sensor_id,
+                                    distance_threshold=distance_threshold,
+                                    max_number_of_people_in_house=max_number_of_people_in_house,
+                                    traces_time_out_threshold=traces_time_out_threshold)
 
     traces_raw_pd, all_traces_short = \
         convert_raw_data_to_traces(data_sources_path=data_sources_path,
@@ -271,18 +299,21 @@ def convert_raw_data_to_traces_fast(raw_sensor_data,
     distance_matrix = dict_distance_adjacency_sensor['distance_matrix']
     np_raw_data = raw_sensor_data.values
 
+    pd_df_all_traces = pd.DataFrame(columns=['Activity', 'Sensor_Added', 'Duration',
+                                             'Timestamp', 'LC_Activity', 'LC'])
+
     trace_open = {}
     unique_new_trace_id = 1
 
-    for data_row in np_raw_data:
+    for data_row in raw_sensor_data.itertuples():
         # if not a motion sensor, continue with next row
         # ToDo: Maybe also accept door sensors for main entries
-        if data_row[1][0:len(prefix_motion_sensor_id)] != prefix_motion_sensor_id:
+        if data_row.SensorID[0:len(prefix_motion_sensor_id)] != prefix_motion_sensor_id:
             continue
 
         # extract sensor ID and skip prefix:
         # ToDo: Do this for all elements of that column under the condition of it being an M Sensor
-        sensor_id_no_prefix = int(data_row[1][len(prefix_motion_sensor_id):])
+        sensor_id_no_prefix = int(data_row.SensorID[len(prefix_motion_sensor_id):])
 
         # if sensor is greater than 51, the highest sensor id, skip and report
         # ToDo: Do this not with a fixed value, but with the upper limit being variable (use dim of distance matrix)
@@ -449,6 +480,25 @@ def convert_raw_data_to_traces(raw_sensor_data,
                                distance_threshold=1.5,
                                max_number_of_people_in_house=2,
                                traces_time_out_threshold=300):
+    # TODO Kommentierung vervollständigen
+    """
+    Sums up sensor activations to traces.
+    :param raw_sensor_data: the sensor activations
+    :param dict_distance_adjacency_sensor:
+    :param data_sources_path:
+    :param dir_runtime_files:
+    :param filename_traces_raw_short:
+    :param filename_traces_raw:
+    :param csv_delimiter_traces:
+    :param csv_header_traces:
+    :param filename_parameters_file:
+    :param prefix_motion_sensor_id:
+    :param distance_threshold:
+    :param max_number_of_people_in_house: Maximum number of persons which were in the house while the recording of sensor data.
+    :param traces_time_out_threshold: The time in seconds in which a sensor activation is assigned to a existing trace.
+    :return:
+    """
+
     # start timer
     t0_read_csv_files = timeit.default_timer()
     logger = logging.getLogger(inspect.stack()[0][3])

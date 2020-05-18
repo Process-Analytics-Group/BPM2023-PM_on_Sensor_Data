@@ -4,15 +4,14 @@ import pathlib
 
 
 def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=None):
-    # TODO Kommentierung vervollständigen
     """Reads a csv file and returns the content of the file as pandas data frame.
 
-    :param filedir:
-    :param filename:
-    :param separator:
-    :param header:
-    :param parse_dates:
-    :param dtype:
+    :param filedir: The folder the file lies in.
+    :param filename: Name of the File.
+    :param separator: The character the which saparates each column in a csv file.
+    :param header: Indicator at which line the data starts (length of the header)
+    :param parse_dates: Collection of the columns that should get parsed as a date.
+    :param dtype: A mapping of data types to the columns in the file.
     :return: the content of the file as pandas data frame
     """
 

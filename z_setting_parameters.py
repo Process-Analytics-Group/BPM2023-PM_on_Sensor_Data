@@ -23,11 +23,11 @@ filename_adjacency_plot = 'adjacency_plot.pdf'
 filename_sensor_data = 'sensor_raw.csv'
 # folder name containing sensor data (relative from directory of sources)
 rel_dir_name_sensor_data = 'Sensor-Data/'
-# csv delimiter of sensor data (input)
+# delimiter of the columns in csv file of sensor data (input)
 csv_delimiter_sensor_data = ';'
 # indicator at which line the data starts
 csv_header_sensor_data = 0
-# Columns that should get parsed as a date
+# columns that should get parsed as a date
 csv_parse_dates_sensor_data = ['DateTime']
 # data type of columns in the file
 csv_dtype_sensor_data = {'Active': np.int8}
@@ -37,11 +37,11 @@ filename_traces_raw_short = 'traces_raw_short.csv'
 filename_traces_raw = 'traces_raw.csv'
 # csv delimiter of trace files
 csv_delimiter_traces = ';'
-# indicator at which line the header starts
+# indicator at which line the data starts
 csv_header_traces = 0
 
 # folder name containing files read and written during runtime
-#dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+# dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 # choose between: quantity, time, quantity_time
 data_types = 'time'
 data_types_list = ['quantity', 'time', 'quantity_time']
@@ -62,8 +62,10 @@ max_number_of_raw_input = 6500
 # threshold when sensors are considered too far away
 distance_threshold_list = [1.2]
 
+# maximum number of persons which were in the house while the recording of sensor data
 max_number_of_people_in_house = 2
 
+# the time in seconds in which a sensor activation is assigned to a existing trace
 traces_time_out_threshold_list = [300]
 # maximum length of traces (in case length mode is used to separate raw-traces)
 max_trace_length_list = [4, 6, 8, 10]

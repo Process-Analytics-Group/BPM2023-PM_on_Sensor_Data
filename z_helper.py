@@ -14,7 +14,14 @@ import z_setting_parameters as settings
 
 def create_parameters_log_file(dir_runtime_files,
                                grid_search_parameters):
-    # ToDo: add description for each variable
+    """
+    Creates a log file with all given parameters.
+
+    :param dir_runtime_files: The folder of the current run.
+    :param grid_search_parameters: A grid of collections of parameters that is used to run all different combinations of the containing parameters.
+    :return: None
+    """
+
     log_file_content = \
         [['exogenous_path_data_sources', settings.path_data_sources, 'Path of folder with source files'],
          ['exogenous_filename_room_separation', settings.filename_room_separation, 'Filename of room separation file.'],
@@ -24,12 +31,14 @@ def create_parameters_log_file(dir_runtime_files,
          ['exogenous_filename_sensor_data', settings.filename_sensor_data, 'Filename of sensor data file.'],
          ['exogenous_rel_dir_name_sensor_data', settings.rel_dir_name_sensor_data,
           'The folder with sensor data (relative from data sources directory).'],
-         ['exogenous_csv_delimiter_sensor_data', settings.csv_delimiter_sensor_data],
-         ['exogenous_csv_header_sensor_data', settings.csv_header_sensor_data],
+         ['exogenous_csv_delimiter_sensor_data', settings.csv_delimiter_sensor_data,
+          'Delimiter of the columns in csv file of sensor data (input)'],
+         ['exogenous_csv_header_sensor_data', settings.csv_header_sensor_data,
+          'Indicator at which line the data starts.'],
          ['exogenous_csv_parse_dates_sensor_data', settings.csv_parse_dates_sensor_data,
           'Columns that should get parsed as a date.'],
          ['exogenous_csv_dtype_sensor_data', settings.csv_dtype_sensor_data,
-          'An assignment of datatypes to columns in sensor data file.'],
+          'An assignment of data types to columns in sensor data file.'],
          ['exogenous_filename_traces_raw_short', settings.filename_traces_raw_short, 'Filename of short traces file.'],
          ['exogenous_filename_traces_raw', settings.filename_traces_raw, 'Filename of traces file.'],
          ['exogenous_csv_delimiter_traces', settings.csv_delimiter_traces, 'The char each column is divided by.'],
@@ -38,13 +47,18 @@ def create_parameters_log_file(dir_runtime_files,
          ['exogenous_data_types', settings.data_types, 'choose between: quantity, time, quantity_time'],
          ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id,
           'A word, letter, or number placed before motion sensor number.'],
-         ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house],
+         ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house,
+          'Maximum number of persons which were in the house while the recording of sensor data.'],
          ['filename_log_file', settings.filename_log_file + '.log', 'Filename of logfile.'],
          ['exogenous_logging_level', settings.logging_level, 'Lvl of logging for log file and console. (10=Debugging)'],
-         ['exogenous_zero_distance_value', grid_search_parameters['zero_distance_value']],
-         ['exogenous_distance_threshold', grid_search_parameters['distance_threshold']],
-         ['exogenous_traces_time_out_threshold', grid_search_parameters['traces_time_out_threshold']],
-         ['exogenous_max_trace_length', grid_search_parameters['max_trace_length']]]
+         ['exogenous_zero_distance_value', grid_search_parameters['zero_distance_value'],
+          'Number representing zero distance to other sensors. (used in creation of distance_matrix_real_world matrix)'],
+         ['exogenous_distance_threshold', grid_search_parameters['distance_threshold'],
+          'Threshold when sensors are considered too far away.'],
+         ['exogenous_traces_time_out_threshold', grid_search_parameters['traces_time_out_threshold'],
+          'The time in seconds in which a sensor activation is assigned to a existing trace.'],
+         ['exogenous_max_trace_length', grid_search_parameters['max_trace_length'],
+          'Maximum length of traces. (in case length mode is used to separate raw-traces)']]
 
     get_trace = getattr(sys, 'gettrace', None)
     if get_trace() is None:
