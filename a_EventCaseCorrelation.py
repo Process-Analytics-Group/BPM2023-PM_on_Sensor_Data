@@ -69,7 +69,11 @@ def create_trace_from_file(data_sources_path,
                                           csv_parse_dates_sensor_data=csv_parse_dates_sensor_data,
                                           csv_dtype_sensor_data=csv_dtype_sensor_data)
 
-    convert_raw_data_to_traces_fast(data_sources_path=data_sources_path,
+    # limits the number of data points by max_number_of_raw_input
+    raw_sensor_data = limit_raw_sensor_data_points(raw_sensor_data=raw_sensor_data,
+                                                   max_number_of_raw_input=max_number_of_raw_input)
+
+    traces_raw_pd = convert_raw_data_to_traces_fast(data_sources_path=data_sources_path,
                                     dir_runtime_files=dir_runtime_files,
                                     raw_sensor_data=raw_sensor_data,
                                     filename_parameters_file=filename_parameters_file,
@@ -111,6 +115,27 @@ def create_trace_from_file(data_sources_path,
     #     max_trace_length=max_trace_length)
 
     return traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations
+
+
+def limit_raw_sensor_data_points(raw_sensor_data, max_number_of_raw_input):
+    """
+    Limits the number of sensor points to be processed.
+
+    :param raw_sensor_data: the sensor data points
+    :param max_number_of_raw_input: limit for number of sensor activations
+    :return: the sensor data points limited by max_number_of_raw_input
+    """
+    number_of_data_points = raw_sensor_data.shape[0]
+    # number sensor data points is only limited if a limit is set and the limit is lower than the actual number of
+    # sensor data points
+    if max_number_of_raw_input != -1 and max_number_of_raw_input < number_of_data_points:
+        # only keep sensor data points from 1 to max_number_of_raw_input
+        raw_sensor_data = raw_sensor_data.head(max_number_of_raw_input)
+        # log the limitation
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.info("Limited %s data points from csv-File to %s data points", number_of_data_points,
+                    max_number_of_raw_input)
+    return raw_sensor_data
 
 
 def calculate_pairwise_dissimilarity(list_of_final_vectors_activations,
@@ -463,8 +488,14 @@ def convert_raw_data_to_traces_fast(raw_sensor_data,
                                                             data_row.DateTime,
                                                             int(data_row.SensorID[len(prefix_motion_sensor_id):]),
                                                             'c'])
-
-    print()
+    # stop timer
+    t1_convert_raw2trace = timeit.default_timer()
+    # calculate method runtime
+    runtime_convert_raw2trace = np.round(t1_convert_raw2trace - t0_convert_raw2trace, 1)
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.info("Extracting %s traces took %s seconds.",
+                 unique_new_trace_id - 1, runtime_convert_raw2trace)
+    return pd_df_all_traces
 
 
 def convert_raw_data_to_traces(raw_sensor_data,
