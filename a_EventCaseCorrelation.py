@@ -19,13 +19,13 @@ def create_trace_from_file(data_sources_path,
                            csv_header_sensor_data,
                            csv_parse_dates_sensor_data,
                            csv_dtype_sensor_data,
-                           filename_traces_raw_short,
                            filename_traces_raw,
                            csv_delimiter_traces,
                            csv_header_traces,
                            dir_runtime_files,
                            filename_parameters_file,
                            data_types,
+                           data_types_list,
                            max_trace_length,
                            max_number_of_raw_input,
                            prefix_motion_sensor_id='M',
@@ -34,7 +34,7 @@ def create_trace_from_file(data_sources_path,
                            traces_time_out_threshold=300):
     # TODO Kommentare vervollständigen
     """
-    Creates
+    Creates traces out of a file with sensor activations.
 
     :param data_sources_path: path of sources
     :param dict_distance_adjacency_sensor:
@@ -73,30 +73,33 @@ def create_trace_from_file(data_sources_path,
     raw_sensor_data = limit_raw_sensor_data_points(raw_sensor_data=raw_sensor_data,
                                                    max_number_of_raw_input=max_number_of_raw_input)
 
+    # creates traces out of the raw data
     traces_raw_pd = convert_raw_data_to_traces_fast(data_sources_path=data_sources_path,
-                                    dir_runtime_files=dir_runtime_files,
-                                    raw_sensor_data=raw_sensor_data,
-                                    filename_parameters_file=filename_parameters_file,
-                                    dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                    prefix_motion_sensor_id=prefix_motion_sensor_id,
-                                    distance_threshold=distance_threshold,
-                                    max_number_of_people_in_house=max_number_of_people_in_house,
-                                    traces_time_out_threshold=traces_time_out_threshold)
+                                                    dir_runtime_files=dir_runtime_files,
+                                                    raw_sensor_data=raw_sensor_data,
+                                                    filename_parameters_file=filename_parameters_file,
+                                                    filename_traces_raw=filename_traces_raw,
+                                                    csv_delimiter_traces=csv_delimiter_traces,
+                                                    dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                                    prefix_motion_sensor_id=prefix_motion_sensor_id,
+                                                    distance_threshold=distance_threshold,
+                                                    max_number_of_people_in_house=max_number_of_people_in_house,
+                                                    traces_time_out_threshold=traces_time_out_threshold)
 
-    traces_raw_pd, all_traces_short = \
-        convert_raw_data_to_traces(data_sources_path=data_sources_path,
-                                   dir_runtime_files=dir_runtime_files,
-                                   raw_sensor_data=raw_sensor_data,
-                                   filename_parameters_file=filename_parameters_file,
-                                   dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                   filename_traces_raw_short=filename_traces_raw_short,
-                                   filename_traces_raw=filename_traces_raw,
-                                   csv_delimiter_traces=csv_delimiter_traces,
-                                   csv_header_traces=csv_header_traces,
-                                   prefix_motion_sensor_id=prefix_motion_sensor_id,
-                                   distance_threshold=distance_threshold,
-                                   max_number_of_people_in_house=max_number_of_people_in_house,
-                                   traces_time_out_threshold=traces_time_out_threshold)
+    # traces_raw_pd, all_traces_short = \
+    #     convert_raw_data_to_traces(data_sources_path=data_sources_path,
+    #                                dir_runtime_files=dir_runtime_files,
+    #                                raw_sensor_data=raw_sensor_data,
+    #                                filename_parameters_file=filename_parameters_file,
+    #                                dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+    #                                filename_traces_raw_short=filename_traces_raw_short,
+    #                                filename_traces_raw=filename_traces_raw,
+    #                                csv_delimiter_traces=csv_delimiter_traces,
+    #                                csv_header_traces=csv_header_traces,
+    #                                prefix_motion_sensor_id=prefix_motion_sensor_id,
+    #                                distance_threshold=distance_threshold,
+    #                                max_number_of_people_in_house=max_number_of_people_in_house,
+    #                                traces_time_out_threshold=traces_time_out_threshold)
 
     traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations \
         = divide_raw_traces(traces_raw_pd=traces_raw_pd,
@@ -104,7 +107,8 @@ def create_trace_from_file(data_sources_path,
                             dir_runtime_files=dir_runtime_files,
                             filename_parameters_file=filename_parameters_file,
                             max_trace_length=max_trace_length,
-                            data_types=data_types)
+                            data_types=data_types,
+                            data_types_list=data_types_list)
 
     # pairwise_dissimilarity_matrix = calculate_pairwise_dissimilarity(
     #     list_of_final_vectors_activations=list_of_final_vectors_activations,
@@ -197,7 +201,10 @@ def divide_raw_traces(traces_raw_pd,
                       dir_runtime_files,
                       filename_parameters_file,
                       max_trace_length,
-                      data_types):
+                      data_types,
+                      data_types_list):
+    # TODO Kommentierung hinzufügen
+
     # start timer
     t0_read_csv_files = timeit.default_timer()
     # logger
@@ -258,26 +265,33 @@ def divide_raw_traces(traces_raw_pd,
     final_vector_quantity = pd.DataFrame(list_of_final_vectors_quantity, columns=list_header[0])
     final_vector_time.Case = final_vector_time.Case.astype(int)
 
-    # read traces_raw
-    output_case_traces_cluster = pd.read_csv(data_sources_path + dir_runtime_files + '/traces_raw.csv',
-                                             sep=';',
-                                             header=0)
+    # TODO hübschere Lösung möglich (traces_raw_pd kann direkt verwendet werden)
+    output_case_traces_cluster = traces_raw_pd
 
     output_case_traces_cluster['Person'] = output_case_traces_cluster['Case']
     output_case_traces_cluster['Case'] = case_id_for_short_traces
 
+    # which data types should the final vector contain?
     if data_types == 'quantity':
+        # final vector contains how often a sensor was activated (in each trace)
         final_vector = final_vector_quantity
     elif data_types == 'time':
+        # final vector contains how long a sensor was activated (in each trace)
         final_vector = final_vector_time
     elif data_types == 'quantity_time':
-        # drop caseID of second dataframe
+        # final vector contains both
+        # drop caseID of second data frame
         final_vector_quantity = final_vector_quantity[final_vector_quantity.columns[1:]]
         final_vector = pd.concat([final_vector_time, final_vector_quantity],
                                  axis=1,
                                  ignore_index=True)
     else:
-        logger.exception(data_types + ' is not a valid choice.[quantity, time, quantity_time]')
+        # if invalid data types are selected the final vector can't get created.
+        exception_msg = str(
+            '\'' + data_types + '\' is not a valid choice for data types. Please choose one of the following: ' + str(
+                data_types_list))
+        logger.exception(exception_msg)
+        raise ValueError(exception_msg)
 
     # write traces to disk
     final_vector.to_csv(data_sources_path + dir_runtime_files + '/traces_basic.csv',
@@ -313,19 +327,37 @@ def convert_raw_data_to_traces_fast(raw_sensor_data,
                                     data_sources_path,
                                     dir_runtime_files,
                                     filename_parameters_file,
+                                    filename_traces_raw,
+                                    csv_delimiter_traces,
                                     prefix_motion_sensor_id='M',
                                     distance_threshold=1.5,
                                     max_number_of_people_in_house=2,
                                     traces_time_out_threshold=300):
+    """
+    Creates traces out of the raw sensor data.
+
+    :param raw_sensor_data: pandas data frame of sensor points
+    :param dict_distance_adjacency_sensor: dictionary which contains the distance matrix
+    :param data_sources_path: path of sources
+    :param dir_runtime_files: directory of current run
+    :param filename_parameters_file:
+    :param filename_traces_raw: filename of trace file which will get created
+    :param csv_delimiter_traces: csv delimiter of trace file which will get created
+    :param prefix_motion_sensor_id: prefix of Motion-Sensor IDs
+    :param distance_threshold: threshold when sensors are considered too far away
+    :param max_number_of_people_in_house: maximum number of persons in house
+    :param traces_time_out_threshold: the time in seconds in which a sensor activation is assigned to a existing trace
+    :return: A pandas data frame containing the created traces.
+    """
+
     # start timer
     t0_convert_raw2trace = timeit.default_timer()
 
     # get distance matrix from dictionary
     distance_matrix = dict_distance_adjacency_sensor['distance_matrix']
-    np_raw_data = raw_sensor_data.values
 
-    pd_df_all_traces = pd.DataFrame(columns=['Activity', 'Sensor_Added', 'Duration',
-                                             'Timestamp', 'LC_Activity', 'LC'])
+    # define columns of traces data frame
+    pd_df_all_traces = pd.DataFrame(columns=['Activity', 'Sensor_Added', 'Duration', 'Timestamp', 'LC_Activity', 'LC'])
 
     trace_open = {}
     unique_new_trace_id = 1
@@ -375,9 +407,9 @@ def convert_raw_data_to_traces_fast(raw_sensor_data,
             # remove Sensor_Added Column
             # temporary_df.drop('Sensor_Added', axis=1, inplace=True)
             # todo: Move to end and do them all at once to save time
-            pd_df_all_traces = pd.concat([pd_df_all_traces, temporary_df], axis=0, join='outer', join_axes=None,
-                                         ignore_index=False, keys=None, levels=None, names=None, verify_integrity=False,
-                                         copy=True, sort=False)
+            pd_df_all_traces = pd.concat([pd_df_all_traces, temporary_df], axis=0, join='outer', ignore_index=False,
+                                         keys=None, levels=None, names=None, verify_integrity=False, copy=True,
+                                         sort=False)
             # remove extracted list from open traces
             trace_open.pop(trace_to_close, None)
 
@@ -488,13 +520,33 @@ def convert_raw_data_to_traces_fast(raw_sensor_data,
                                                             data_row.DateTime,
                                                             int(data_row.SensorID[len(prefix_motion_sensor_id):]),
                                                             'c'])
+    # adjust traces data frame
+    # replace 'nan' with 0
+    pd_df_all_traces['Sensor_Added'].fillna(0, inplace=True)
+    # Convert Float to integer format
+    pd_df_all_traces['Sensor_Added'] = pd.to_numeric(pd_df_all_traces['Sensor_Added'], downcast='signed')
+    pd_df_all_traces['LC_Activity'] = pd.to_numeric(pd_df_all_traces['LC_Activity'], downcast='signed')
+    # sorting
+    pd_df_all_traces = pd_df_all_traces.sort_values(by=['Case', 'Timestamp'])
+
+    # reset index so it matches up after the sorting
+    pd_df_all_traces = pd_df_all_traces.reset_index(drop=True)
+
     # stop timer
     t1_convert_raw2trace = timeit.default_timer()
     # calculate method runtime
     runtime_convert_raw2trace = np.round(t1_convert_raw2trace - t0_convert_raw2trace, 1)
+    # logging
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.info("Extracting %s traces took %s seconds.",
-                 unique_new_trace_id - 1, runtime_convert_raw2trace)
+    logger.info("Extracting %s traces took %s seconds.", unique_new_trace_id - 1, runtime_convert_raw2trace)
+
+    # write traces to disk
+    pd_df_all_traces.to_csv(data_sources_path + dir_runtime_files + '/' + filename_traces_raw, sep=csv_delimiter_traces,
+                            index=None)
+    # logging
+    logger.info("Traces were saved as csv file '../%s",
+                data_sources_path + dir_runtime_files + '/' + filename_traces_raw)
+
     return pd_df_all_traces
 
 
@@ -511,7 +563,6 @@ def convert_raw_data_to_traces(raw_sensor_data,
                                distance_threshold=1.5,
                                max_number_of_people_in_house=2,
                                traces_time_out_threshold=300):
-    # TODO Kommentierung vervollständigen
     """
     Sums up sensor activations to traces.
     :param raw_sensor_data: the sensor activations
@@ -607,9 +658,9 @@ def convert_raw_data_to_traces(raw_sensor_data,
             # remove Sensor_Added Column
             # temporary_df.drop('Sensor_Added', axis=1, inplace=True)
             # todo: Move to end and do them all at once to save time
-            pd_df_all_traces = pd.concat([pd_df_all_traces, temporary_df], axis=0, join='outer',
-                                         ignore_index=False, keys=None, levels=None, names=None, verify_integrity=False,
-                                         copy=True, sort=False)
+            pd_df_all_traces = pd.concat([pd_df_all_traces, temporary_df], axis=0, join='outer', ignore_index=False,
+                                         keys=None, levels=None, names=None, verify_integrity=False, copy=True,
+                                         sort=False)
             # remove extracted list from open traces
             trace_open.pop(trace_to_close, None)
 
@@ -786,8 +837,6 @@ def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_se
     # start timer
     t0_read_csv_files = timeit.default_timer()
 
-    logger = logging.getLogger(inspect.stack()[0][3])
-
     # creates pandas data frame out of input of a csv file
     data_frame = utils.read_csv_file(filedir=data_sources_path + rel_dir_name_sensor_data,
                                      filename=filename_sensor_data,
@@ -802,6 +851,7 @@ def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_se
     # calculate runtime
     runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
 
-    logging.info("Extracted %s data points from csv-File on disc in %s seconds",
-                 number_of_data_points, runtime_read_csv_files)
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.info("Extracted %s data points from csv-File on disc in %s seconds",
+                number_of_data_points, runtime_read_csv_files)
     return data_frame

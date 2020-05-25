@@ -74,7 +74,6 @@ for params in grid:
                                    csv_header_sensor_data=settings.csv_header_sensor_data,
                                    csv_parse_dates_sensor_data=settings.csv_parse_dates_sensor_data,
                                    csv_dtype_sensor_data=settings.csv_dtype_sensor_data,
-                                   filename_traces_raw_short=settings.filename_traces_raw_short,
                                    filename_traces_raw=settings.filename_traces_raw,
                                    csv_delimiter_traces=settings.csv_delimiter_traces,
                                    csv_header_traces=settings.csv_header_traces,
@@ -85,6 +84,7 @@ for params in grid:
                                    max_number_of_people_in_house=settings.max_number_of_people_in_house,
                                    traces_time_out_threshold=params['traces_time_out_threshold'],
                                    data_types=settings.data_types,
+                                   data_types_list=settings.data_types_list,
                                    max_trace_length=params['max_trace_length'],
                                    max_number_of_raw_input=settings.max_number_of_raw_input)
 

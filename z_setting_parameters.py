@@ -32,8 +32,7 @@ csv_parse_dates_sensor_data = ['DateTime']
 # data type of columns in the file
 csv_dtype_sensor_data = {'Active': np.int8}
 
-# filename of trace files
-filename_traces_raw_short = 'traces_raw_short.csv'
+# filename of trace file
 filename_traces_raw = 'traces_raw.csv'
 # csv delimiter of trace files
 csv_delimiter_traces = ';'
@@ -42,6 +41,8 @@ csv_header_traces = 0
 
 # folder name containing files read and written during runtime
 # dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+# TODO
+
 # choose between: quantity, time, quantity_time
 data_types = 'time'
 data_types_list = ['quantity', 'time', 'quantity_time']
