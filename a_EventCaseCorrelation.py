@@ -37,14 +37,13 @@ def create_trace_from_file(data_sources_path,
     Creates traces out of a file with sensor activations.
 
     :param data_sources_path: path of sources
-    :param dict_distance_adjacency_sensor:
+    :param dict_distance_adjacency_sensor: dictionary which contains a matrix which determine which sensors are near to each other
     :param filename_sensor_data: filename of the file that contains the sensor data
     :param rel_dir_name_sensor_data: folder name containing sensor data (relative from directory of sources)
     :param csv_delimiter_sensor_data: delimiter of the columns in csv file of sensor data (input)
     :param csv_header_sensor_data: indicator at which line the data starts
     :param csv_parse_dates_sensor_data: columns that should get parsed as a date
     :param csv_dtype_sensor_data: assignment of data types of columns in the file
-    :param filename_traces_raw_short: filename of short trace file
     :param filename_traces_raw: filename of trace file
     :param csv_delimiter_traces: csv delimiter of trace files
     :param csv_header_traces: indicator at which line the data starts
@@ -53,10 +52,10 @@ def create_trace_from_file(data_sources_path,
     :param data_types:
     :param max_trace_length: maximum length of traces (in case length mode is used to separate raw-traces)
     :param max_number_of_raw_input:
-    :param prefix_motion_sensor_id:
-    :param distance_threshold:
-    :param max_number_of_people_in_house:
-    :param traces_time_out_threshold:
+    :param prefix_motion_sensor_id: prefix of Motion-Sensor IDs
+    :param distance_threshold: threshold when sensors are considered too far away
+    :param max_number_of_people_in_house: maximum number of persons which were in the house while the recording of sensor data
+    :param traces_time_out_threshold: the time in seconds in which a sensor activation is assigned to a existing trace
     :return:
     """
 
@@ -74,32 +73,17 @@ def create_trace_from_file(data_sources_path,
                                                    max_number_of_raw_input=max_number_of_raw_input)
 
     # creates traces out of the raw data
-    traces_raw_pd = convert_raw_data_to_traces_fast(data_sources_path=data_sources_path,
-                                                    dir_runtime_files=dir_runtime_files,
-                                                    raw_sensor_data=raw_sensor_data,
-                                                    filename_parameters_file=filename_parameters_file,
-                                                    filename_traces_raw=filename_traces_raw,
-                                                    csv_delimiter_traces=csv_delimiter_traces,
-                                                    dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                                    prefix_motion_sensor_id=prefix_motion_sensor_id,
-                                                    distance_threshold=distance_threshold,
-                                                    max_number_of_people_in_house=max_number_of_people_in_house,
-                                                    traces_time_out_threshold=traces_time_out_threshold)
-
-    # traces_raw_pd, all_traces_short = \
-    #     convert_raw_data_to_traces(data_sources_path=data_sources_path,
-    #                                dir_runtime_files=dir_runtime_files,
-    #                                raw_sensor_data=raw_sensor_data,
-    #                                filename_parameters_file=filename_parameters_file,
-    #                                dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-    #                                filename_traces_raw_short=filename_traces_raw_short,
-    #                                filename_traces_raw=filename_traces_raw,
-    #                                csv_delimiter_traces=csv_delimiter_traces,
-    #                                csv_header_traces=csv_header_traces,
-    #                                prefix_motion_sensor_id=prefix_motion_sensor_id,
-    #                                distance_threshold=distance_threshold,
-    #                                max_number_of_people_in_house=max_number_of_people_in_house,
-    #                                traces_time_out_threshold=traces_time_out_threshold)
+    traces_raw_pd = convert_raw_data_to_traces(data_sources_path=data_sources_path,
+                                               dir_runtime_files=dir_runtime_files,
+                                               raw_sensor_data=raw_sensor_data,
+                                               filename_parameters_file=filename_parameters_file,
+                                               filename_traces_raw=filename_traces_raw,
+                                               csv_delimiter_traces=csv_delimiter_traces,
+                                               dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                               prefix_motion_sensor_id=prefix_motion_sensor_id,
+                                               distance_threshold=distance_threshold,
+                                               max_number_of_people_in_house=max_number_of_people_in_house,
+                                               traces_time_out_threshold=traces_time_out_threshold)
 
     traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations \
         = divide_raw_traces(traces_raw_pd=traces_raw_pd,
@@ -132,7 +116,7 @@ def limit_raw_sensor_data_points(raw_sensor_data, max_number_of_raw_input):
     number_of_data_points = raw_sensor_data.shape[0]
     # number sensor data points is only limited if a limit is set and the limit is lower than the actual number of
     # sensor data points
-    if max_number_of_raw_input != -1 and max_number_of_raw_input < number_of_data_points:
+    if max_number_of_raw_input is not None and max_number_of_raw_input < number_of_data_points:
         # only keep sensor data points from 1 to max_number_of_raw_input
         raw_sensor_data = raw_sensor_data.head(max_number_of_raw_input)
         # log the limitation
@@ -293,6 +277,7 @@ def divide_raw_traces(traces_raw_pd,
         logger.exception(exception_msg)
         raise ValueError(exception_msg)
 
+    # TODO Dateiname, Sep, ... konfigurierbar machen
     # write traces to disk
     final_vector.to_csv(data_sources_path + dir_runtime_files + '/traces_basic.csv',
                         sep=';',
@@ -322,25 +307,25 @@ def divide_raw_traces(traces_raw_pd,
     return final_vector, output_case_traces_cluster, list_of_final_vectors_activations
 
 
-def convert_raw_data_to_traces_fast(raw_sensor_data,
-                                    dict_distance_adjacency_sensor,
-                                    data_sources_path,
-                                    dir_runtime_files,
-                                    filename_parameters_file,
-                                    filename_traces_raw,
-                                    csv_delimiter_traces,
-                                    prefix_motion_sensor_id='M',
-                                    distance_threshold=1.5,
-                                    max_number_of_people_in_house=2,
-                                    traces_time_out_threshold=300):
+def convert_raw_data_to_traces(raw_sensor_data,
+                               dict_distance_adjacency_sensor,
+                               data_sources_path,
+                               dir_runtime_files,
+                               filename_parameters_file,
+                               filename_traces_raw,
+                               csv_delimiter_traces,
+                               prefix_motion_sensor_id='M',
+                               distance_threshold=1.5,
+                               max_number_of_people_in_house=2,
+                               traces_time_out_threshold=300):
     """
     Creates traces out of the raw sensor data.
 
     :param raw_sensor_data: pandas data frame of sensor points
-    :param dict_distance_adjacency_sensor: dictionary which contains the distance matrix
+    :param dict_distance_adjacency_sensor: dictionary which contains a matrix which determine which sensors are near to each other
     :param data_sources_path: path of sources
     :param dir_runtime_files: directory of current run
-    :param filename_parameters_file:
+    :param filename_parameters_file: filename of parameters file
     :param filename_traces_raw: filename of trace file which will get created
     :param csv_delimiter_traces: csv delimiter of trace file which will get created
     :param prefix_motion_sensor_id: prefix of Motion-Sensor IDs
@@ -359,6 +344,7 @@ def convert_raw_data_to_traces_fast(raw_sensor_data,
     # define columns of traces data frame
     pd_df_all_traces = pd.DataFrame(columns=['Activity', 'Sensor_Added', 'Duration', 'Timestamp', 'LC_Activity', 'LC'])
 
+    # currently filled traces (not yet closed)
     trace_open = {}
     unique_new_trace_id = 1
 
@@ -550,275 +536,6 @@ def convert_raw_data_to_traces_fast(raw_sensor_data,
     return pd_df_all_traces
 
 
-def convert_raw_data_to_traces(raw_sensor_data,
-                               dict_distance_adjacency_sensor,
-                               data_sources_path,
-                               dir_runtime_files,
-                               filename_traces_raw_short,
-                               filename_traces_raw,
-                               csv_delimiter_traces,
-                               csv_header_traces,
-                               filename_parameters_file,
-                               prefix_motion_sensor_id='M',
-                               distance_threshold=1.5,
-                               max_number_of_people_in_house=2,
-                               traces_time_out_threshold=300):
-    """
-    Sums up sensor activations to traces.
-    :param raw_sensor_data: the sensor activations
-    :param dict_distance_adjacency_sensor:
-    :param data_sources_path:
-    :param dir_runtime_files:
-    :param filename_traces_raw_short:
-    :param filename_traces_raw:
-    :param csv_delimiter_traces:
-    :param csv_header_traces:
-    :param filename_parameters_file:
-    :param prefix_motion_sensor_id:
-    :param distance_threshold:
-    :param max_number_of_people_in_house: Maximum number of persons which were in the house while the recording of sensor data.
-    :param traces_time_out_threshold: The time in seconds in which a sensor activation is assigned to a existing trace.
-    :return:
-    """
-
-    # start timer
-    t0_read_csv_files = timeit.default_timer()
-    logger = logging.getLogger(inspect.stack()[0][3])
-    # try to find if sensor raw data has been created already.
-    # If yes, use this instead of starting over again
-    pd_df_all_traces_short_file = Path(data_sources_path + dir_runtime_files + '/' + filename_traces_raw_short)
-    pd_df_all_traces_file = Path(data_sources_path + dir_runtime_files + '/' + filename_traces_raw)
-    if pd_df_all_traces_short_file.is_file() and pd_df_all_traces_file.is_file():
-        # read previously created csv file and import it a
-        pd_df_all_traces = utils.read_csv_file(filedir=data_sources_path + dir_runtime_files + '/',
-                                               filename=filename_traces_raw, separator=csv_delimiter_traces,
-                                               header=csv_header_traces)
-        pd_df_all_traces_short = utils.read_csv_file(filedir=data_sources_path + dir_runtime_files + '/',
-                                                     filename=filename_traces_raw_short, separator=csv_delimiter_traces,
-                                                     header=csv_header_traces)
-        # calculate how many data points there are
-        number_of_data_points = pd_df_all_traces.shape[0]
-        # stop timer
-        t1_read_csv_files = timeit.default_timer()
-        # calculate runtime
-        runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
-
-        logger.info("Extracted %s data points from csv-File on disc in %s seconds",
-                    number_of_data_points, runtime_read_csv_files)
-        return pd_df_all_traces, pd_df_all_traces_short
-
-    # get distance matrix from dictionary
-    distance_matrix = dict_distance_adjacency_sensor['distance_matrix']
-
-    # create empty pandas Data Frame where all traces are saved with their Trace-ID
-    pd_df_all_traces = pd.DataFrame(columns=['Case', 'Activity', 'Duration', 'Timestamp'])
-
-    pd_df_all_traces_short = pd.DataFrame(columns=['Case', 'Activity'])
-
-    # currently filled traces (not yet closed)
-    trace_open = {}
-    unique_new_trace_id = 1
-    for data_row in raw_sensor_data.itertuples():
-        # if not a motion sensor, continue with next row
-        if data_row.SensorID[0:len(prefix_motion_sensor_id)] != prefix_motion_sensor_id:
-            continue
-
-        # extract sensor ID and skip prefix:
-        sensor_id_no_prefix = int(data_row.SensorID[len(prefix_motion_sensor_id):])
-        # if sensor is greater than 51, the highest sensor id, skip and report
-        if sensor_id_no_prefix > 51:
-            # logging.warning("Found sensor M%s in row %s is not part of the real world layout. It has been skipped.",
-            #                sensor_id_no_prefix, data_row)
-            continue
-        active_trace_id_list = []
-        # close open traces
-        # CASE: Time-Out (Trace has been inactive longer than a preset threshold)
-        traces_to_be_closed = []
-        for trace_id, value in trace_open.items():
-            # if no Sensor active and all open traces are empty, skip row
-            if not trace_open[trace_id]:
-                continue
-            activation_time = np.round((data_row.DateTime - trace_open[trace_id][-1][2]) / np.timedelta64(1, 's'), 2)
-            # only close if no sensor currently activated
-            if activation_time > traces_time_out_threshold and trace_open[trace_id][-1][0] == []:
-                traces_to_be_closed.append(trace_id)
-
-        for trace_to_close in traces_to_be_closed:
-            # remove one of the timestamps of last entry
-            trace_open[trace_to_close][-1][2] = None
-            temporary_df = pd.DataFrame(columns=['Activity', 'Sensor_Added', 'Duration',
-                                                 'Timestamp', 'LC_Activity', 'LC'])
-            temporary_df = temporary_df.from_records(data=trace_open[trace_to_close],
-                                                     columns=['Activity', 'Sensor_Added', 'Duration',
-                                                              'Timestamp', 'LC_Activity', 'LC'])
-            temporary_df['Case'] = trace_to_close
-            # get activated-sensors from data frame to a list
-            added_sensors_list = temporary_df['Sensor_Added'].values.tolist()
-            pd_df_all_traces_short.loc[trace_to_close] = [trace_to_close, added_sensors_list]
-            # remove Sensor_Added Column
-            # temporary_df.drop('Sensor_Added', axis=1, inplace=True)
-            # todo: Move to end and do them all at once to save time
-            pd_df_all_traces = pd.concat([pd_df_all_traces, temporary_df], axis=0, join='outer', ignore_index=False,
-                                         keys=None, levels=None, names=None, verify_integrity=False, copy=True,
-                                         sort=False)
-            # remove extracted list from open traces
-            trace_open.pop(trace_to_close, None)
-
-        # check if new sensor is in proximity of previously activated sensors
-        # loop through trace_open to check in all open traces
-        # dictionary with the average distances from the sensor to the last entry of all active traces
-        if trace_open:
-            if data_row.Active == 1:
-                average_distance_dict = {}
-                for trace_id, value in trace_open.items():
-                    skip_last_timestamp = 0
-                    sum_of_distances = 0
-                    # only look into last entry of every dict
-                    # loop through all activated sensors in last entry
-                    # if last time stamp no sensors have been activated, look into second last time stamp
-                    if not trace_open[trace_id][-1][0]:
-                        skip_last_timestamp = 1
-                    weighted_decay_factor = 1
-                    for sensor_element in trace_open[trace_id][-1 - skip_last_timestamp][0]:
-                        sum_of_distances += weighted_decay_factor * distance_matrix[sensor_element][sensor_id_no_prefix]
-                        weighted_decay_factor += 1
-                    # calculate weighted average distance with decay function to active sensors
-                    # sensors activated a while ago have less influence than recent sensors
-                    average_distance = sum_of_distances / sum(range(weighted_decay_factor))
-                    # add average distance to dictionary with average distance as key
-                    if average_distance in average_distance_dict:
-                        average_distance_dict[average_distance].append(trace_id)
-                    else:
-                        average_distance_dict[average_distance] = [trace_id]
-                # if average distance is over a threshold, it is considered too far away from currently active trace
-                # only consider a maximum amount of people in the house at the same time
-                # ToDo: find a better solution for the max amount of people
-                if min(average_distance_dict) <= distance_threshold or len(trace_open) >= max_number_of_people_in_house:
-                    # get trace-ID(s) with the lowest average distance
-                    active_trace_id_list = average_distance_dict[min(average_distance_dict)]
-                else:
-                    trace_open[unique_new_trace_id] = []
-                    active_trace_id_list.append(unique_new_trace_id)
-                    unique_new_trace_id += 1
-
-            elif data_row.Active == 0:
-                # mark all traces that contain deactivated sensor
-                for trace_id, value in trace_open.items():
-                    if trace_open[trace_id] and sensor_id_no_prefix in trace_open[trace_id][-1][0]:
-                        active_trace_id_list.append(trace_id)
-        # if traces open is still empty, create new personalised trace
-        elif data_row.Active == 1:
-            trace_open[unique_new_trace_id] = []
-            # identifier which trace to write to
-            active_trace_id_list = [unique_new_trace_id]
-            unique_new_trace_id += 1
-        # if more than one trace is suitable add to all of them
-        for active_trace_id in active_trace_id_list:
-            # CASE: if active_trace_id is empty AND Sensor is Activated
-            if not trace_open[active_trace_id] and data_row.Active == 1:
-                trace_open[active_trace_id] = [[[sensor_id_no_prefix],
-                                                sensor_id_no_prefix,
-                                                data_row.DateTime,
-                                                data_row.DateTime,
-                                                int(data_row.SensorID[len(prefix_motion_sensor_id):]),
-                                                's']]
-            elif not trace_open[active_trace_id] and data_row.Active == 0:
-                continue
-            # CASE: if active_trace_id exists
-            else:
-
-                # calculate activation time:
-                activation_time = np.round((data_row.DateTime - trace_open[active_trace_id][-1][2])
-                                           / np.timedelta64(1, 's'), 2)
-                # CASE: Active
-                if data_row.Active == 1:
-                    # add sensor to active trace
-                    # modify the time of last entry so it matches the duration it was active
-                    trace_open[active_trace_id][-1][2] = activation_time
-
-                    # append currently active sensor to sensor list
-                    new_sensor_activation_list = trace_open[active_trace_id][-1][0] + [sensor_id_no_prefix]
-
-                    trace_open[active_trace_id].append([new_sensor_activation_list,
-                                                        sensor_id_no_prefix,
-                                                        data_row.DateTime,
-                                                        data_row.DateTime,
-                                                        int(data_row.SensorID[len(prefix_motion_sensor_id):]),
-                                                        's'])
-                # CASE: Deactivated,
-                # delete from active list
-                elif data_row.Active == 0:
-                    # copy active sensors from last entry
-                    new_sensor_activation_list = trace_open[active_trace_id][-1][0][:]
-                    # remove now deactivated sensor
-                    new_sensor_activation_list.remove(int(data_row.SensorID[len(prefix_motion_sensor_id):]))
-
-                    # modify the time of last entry so it matches the duration it was active
-                    trace_open[active_trace_id][-1][2] = activation_time
-                    # differentiate for the 'last activated' column
-                    if new_sensor_activation_list:
-                        trace_open[active_trace_id].append([new_sensor_activation_list,
-                                                            None,
-                                                            data_row.DateTime,
-                                                            data_row.DateTime,
-                                                            int(data_row.SensorID[len(prefix_motion_sensor_id):]),
-                                                            'c'])
-                    # if no sensor is activated anymore, document that in 'last activated' column
-                    else:
-                        trace_open[active_trace_id].append([new_sensor_activation_list,
-                                                            None,
-                                                            data_row.DateTime,
-                                                            data_row.DateTime,
-                                                            int(data_row.SensorID[len(prefix_motion_sensor_id):]),
-                                                            'c'])
-
-    # rearrange columns
-    pd_df_all_traces = pd_df_all_traces.reindex(columns=['Case', 'Activity', 'Sensor_Added', 'Duration',
-                                                         'Timestamp', 'LC_Activity', 'LC'])
-
-    # replace 'nan' with 0
-    pd_df_all_traces['Sensor_Added'].fillna(0, inplace=True)
-    # Convert Float to integer format
-    pd_df_all_traces['Sensor_Added'] = pd.to_numeric(pd_df_all_traces['Sensor_Added'], downcast='signed')
-    pd_df_all_traces['LC_Activity'] = pd.to_numeric(pd_df_all_traces['LC_Activity'], downcast='signed')
-    # sorting
-    pd_df_all_traces = pd_df_all_traces.sort_values(by=['Case', 'Timestamp'])
-    pd_df_all_traces_short = pd_df_all_traces_short.sort_values(by=['Case'])
-
-    # reset index so it matches up after the sorting
-    pd_df_all_traces = pd_df_all_traces.reset_index(drop=True)
-    pd_df_all_traces_short = pd_df_all_traces_short.reset_index(drop=True)
-
-    # write traces to disk
-    pd_df_all_traces.to_csv(data_sources_path + dir_runtime_files + '/' + filename_traces_raw,
-                            sep=csv_delimiter_traces,
-                            index=None)
-    pd_df_all_traces_short.to_csv(data_sources_path + dir_runtime_files + '/' + filename_traces_raw_short,
-                                  sep=csv_delimiter_traces,
-                                  index=None)
-    # stop timer
-    t1_read_csv_files = timeit.default_timer()
-    # calculate runtime
-    runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
-
-    z_helper.append_to_log_file(new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
-                                new_entry_to_log_value=runtime_read_csv_files,
-                                dir_runtime_files=dir_runtime_files,
-                                filename_parameters_file=filename_parameters_file,
-                                new_entry_to_log_description='Seconds it took to extract the traces.')
-
-    z_helper.append_to_log_file(new_entry_to_log_variable='unique_new_trace_id',
-                                new_entry_to_log_value=unique_new_trace_id - 1,
-                                dir_runtime_files=dir_runtime_files,
-                                filename_parameters_file=filename_parameters_file,
-                                new_entry_to_log_description='Number of Traces in the long format')
-
-    logging.info("Extracting %s traces took %s seconds.",
-                 unique_new_trace_id - 1, runtime_read_csv_files)
-
-    return pd_df_all_traces, pd_df_all_traces_short
-
-
 def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_sensor_data, csv_delimiter_sensor_data,
                         csv_header_sensor_data, csv_parse_dates_sensor_data, csv_dtype_sensor_data):
     """
@@ -851,7 +568,9 @@ def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_se
     # calculate runtime
     runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
 
+    # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.info("Extracted %s data points from csv-File on disc in %s seconds",
                 number_of_data_points, runtime_read_csv_files)
+
     return data_frame

@@ -1,6 +1,7 @@
 import pandas as pd
 import logging
 import pathlib
+import inspect
 
 
 def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=None):
@@ -16,8 +17,12 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
     """
 
     try:
+        # creates path out of file dir and file name
         file_path = pathlib.Path(filedir + filename)
-        logging.info("Reading csv file '../%s", file_path)
+
+        # logger
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.info("Reading csv file '../%s", file_path)
 
         # reads csv file
         data_frame = pd.read_csv(file_path,

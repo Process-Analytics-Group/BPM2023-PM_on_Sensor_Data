@@ -57,7 +57,7 @@ logging_level = logging.DEBUG
 # used in creation of the distance_matrix_real_world matrix
 zero_distance_value_list = [1]
 
-# upper limit for input_data (set to -1 if there is no limit)
+# upper limit for input_data (set to None if there is no limit)
 max_number_of_raw_input = 6500
 
 # threshold when sensors are considered too far away
