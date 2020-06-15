@@ -32,7 +32,6 @@ def create_trace_from_file(data_sources_path,
                            distance_threshold=1.5,
                            max_number_of_people_in_house=2,
                            traces_time_out_threshold=300):
-    # TODO Kommentare vervollständigen
     """
     Creates traces out of a file with sensor activations.
 
@@ -49,14 +48,16 @@ def create_trace_from_file(data_sources_path,
     :param csv_header_traces: indicator at which line the data starts
     :param dir_runtime_files: the folder of the current run
     :param filename_parameters_file: filename of parameters file
-    :param data_types:
+    :param data_types: column/s which is/are applied to divided traces
+    :param data_types_list: collection of all available data types
     :param max_trace_length: maximum length of traces (in case length mode is used to separate raw-traces)
-    :param max_number_of_raw_input:
+    :param max_number_of_raw_input: limitation of the number of processed activations
     :param prefix_motion_sensor_id: prefix of Motion-Sensor IDs
     :param distance_threshold: threshold when sensors are considered too far away
     :param max_number_of_people_in_house: maximum number of persons which were in the house while the recording of sensor data
     :param traces_time_out_threshold: the time in seconds in which a sensor activation is assigned to a existing trace
-    :return:
+    :return: The divided traces (traces_shortened), raw traces clustered into cases (output_case_traces_cluster),
+    activated sensors grouped by divided traces (list_of_final_vectors_activations)
     """
 
     # read in the sensor data as a pandas data frame
@@ -85,6 +86,7 @@ def create_trace_from_file(data_sources_path,
                                                max_number_of_people_in_house=max_number_of_people_in_house,
                                                traces_time_out_threshold=traces_time_out_threshold)
 
+    # split up the raw traces to shorter traces
     traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations \
         = divide_raw_traces(traces_raw_pd=traces_raw_pd,
                             data_sources_path=data_sources_path,
@@ -187,10 +189,22 @@ def divide_raw_traces(traces_raw_pd,
                       max_trace_length,
                       data_types,
                       data_types_list):
-    # TODO Kommentierung hinzufügen
+    """
+    Split up the raw traces to shorter traces. The traces are limited by max_trace_length.
+
+    :param traces_raw_pd: traces that will get divided
+    :param data_sources_path: path of sources
+    :param dir_runtime_files: the folder of the current run
+    :param filename_parameters_file: filename of parameters file
+    :param max_trace_length: the max length of one trace
+    :param data_types: column/s which is/are applied to divided traces
+    :param data_types_list: collection of all available data types
+    :return: The divided traces (final_vector), raw traces clustered into cases (output_case_traces_cluster), activated
+    sensors grouped by divided traces (list_of_final_vectors_activations)
+    """
 
     # start timer
-    t0_read_csv_files = timeit.default_timer()
+    t0_divide_raw_traces = timeit.default_timer()
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     # ToDo ordentlicher machen
@@ -201,46 +215,56 @@ def divide_raw_traces(traces_raw_pd,
     list_header = [list(range(52))]
     list_header[0].insert(0, 'Case')
     length_count = 1
+    # creates new arrays with zeros in it
     final_vector_time = np.zeros(53)
     final_vector_quantity = np.zeros(53, dtype=int)
-    case = 1
-    unique_identifier = 1
+    # current case looked at in raw traces (starts at first case which is the first row in the raw traces df)
+    current_case_id = traces_raw_pd.iloc[0].Case
+    # every divided trace will have its own id starting at 1
+    divided_trace_case_id = 1
+    # case id collection of all divided traces
     case_id_for_short_traces = []
 
+    # runs through all raw traces and divides/assigns them to divided traces
     for data_row in traces_raw_pd.itertuples():
 
-        if case != data_row.Case or length_count > max_trace_length:
-            final_vector_time[0] = unique_identifier
-            final_vector_quantity[0] = unique_identifier
+        # every divided trace only represents one raw case and has a length limitation
+        if current_case_id != data_row.Case or length_count > max_trace_length:
+            final_vector_time[0] = divided_trace_case_id
+            final_vector_quantity[0] = divided_trace_case_id
+            # Add data of last trace to final vectors
             list_of_final_vectors.append(final_vector_time)
             list_of_final_vectors_quantity.append(final_vector_quantity)
             list_of_final_vectors_activations.append(np.array(list_of_activations))
-            unique_identifier += 1
+            # preparation for next trace
+            current_case_id = data_row.Case
+            divided_trace_case_id += 1
             length_count = 1
             final_vector_time = np.zeros(53)
             final_vector_quantity = np.zeros(53, dtype=int)
             list_of_activations = []
-        case_id_for_short_traces.append(unique_identifier)
-        case = data_row.Case
-        # add +1 to vector that counts quantity
+        # Set case to next case in list
+        case_id_for_short_traces.append(divided_trace_case_id)
         list_of_activations.append(data_row.Sensor_Added)
         try:
+            # add +1 to vector that counts quantity
             final_vector_quantity[data_row.Activity[-1] + 1] += 1
         except IndexError:
             # if no sensor activated, add quantity to M0
             final_vector_quantity[1] += 1
         # if no entry, M0 is active
         if len(data_row.Activity) == 0:
-            if math.isnan(data_row.Duration):
-                final_vector_time[1] += 0
-            else:
+            # if row has a duration its added to the vector time of M0
+            if not math.isnan(data_row.Duration):
                 final_vector_time[1] += data_row.Duration
+
         for sensor_id in data_row.Activity:
             final_vector_time[int(sensor_id) + 1] += data_row.Duration
         length_count += 1
+
     # take last unfinished trace and copy it too
-    final_vector_time[0] = unique_identifier
-    final_vector_quantity[0] = unique_identifier
+    final_vector_time[0] = divided_trace_case_id
+    final_vector_quantity[0] = divided_trace_case_id
     list_of_final_vectors.append(final_vector_time)
     list_of_final_vectors_quantity.append(final_vector_quantity)
     list_of_final_vectors_activations.append(np.array(list_of_activations))
@@ -249,9 +273,8 @@ def divide_raw_traces(traces_raw_pd,
     final_vector_quantity = pd.DataFrame(list_of_final_vectors_quantity, columns=list_header[0])
     final_vector_time.Case = final_vector_time.Case.astype(int)
 
-    # TODO hübschere Lösung möglich (traces_raw_pd kann direkt verwendet werden)
+    # apply short trace case ids to raw traces data
     output_case_traces_cluster = traces_raw_pd
-
     output_case_traces_cluster['Person'] = output_case_traces_cluster['Case']
     output_case_traces_cluster['Case'] = case_id_for_short_traces
 
@@ -277,33 +300,37 @@ def divide_raw_traces(traces_raw_pd,
         logger.exception(exception_msg)
         raise ValueError(exception_msg)
 
-    # TODO Dateiname, Sep, ... konfigurierbar machen
-    # write traces to disk
-    final_vector.to_csv(data_sources_path + dir_runtime_files + '/traces_basic.csv',
-                        sep=';',
-                        index=None)
-
     # stop timer
-    t1_read_csv_files = timeit.default_timer()
+    t1_divide_raw_traces = timeit.default_timer()
     # calculate runtime
-    runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
+    runtime_divide_raw_traces = np.round(t1_divide_raw_traces - t0_divide_raw_traces, 1)
 
     z_helper.append_to_log_file(
         new_entry_to_log_variable='case_id_for_short_traces',
-        new_entry_to_log_value=unique_identifier - 1,
+        new_entry_to_log_value=divided_trace_case_id - 1,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Number of shorter traces of length ' + str(max_trace_length) + '.')
 
     z_helper.append_to_log_file(
         new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
-        new_entry_to_log_value=runtime_read_csv_files,
+        new_entry_to_log_value=runtime_divide_raw_traces,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Seconds it took to divide long traces into shorter traces.')
 
+    # logging
     logger.info("Dividing the long traces into %s short traces took %s seconds.",
-                unique_identifier - 1, runtime_read_csv_files)
+                divided_trace_case_id - 1, runtime_divide_raw_traces)
+
+    # TODO Dateiname, Sep, ... konfigurierbar machen
+    # write traces to disk
+    final_vector.to_csv(data_sources_path + dir_runtime_files + '/traces_basic.csv',
+                        sep=';',
+                        index=None)
+    # logging
+    logger.info("Divided traces were saved as csv file '../%s",
+                data_sources_path + dir_runtime_files + '/traces_basic.csv')
     return final_vector, output_case_traces_cluster, list_of_final_vectors_activations
 
 

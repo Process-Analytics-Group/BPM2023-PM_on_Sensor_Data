@@ -1,3 +1,9 @@
+2020-06-15
+KD: moved event/activity abstraction functionality into right file
+KD: adjusted divide_raw_traces method
+KD: adjusted error handling
+KD: added comments
+
 2020-05-29
 KD: removed "old" convert_raw_data_to_traces method
 KD: added comments

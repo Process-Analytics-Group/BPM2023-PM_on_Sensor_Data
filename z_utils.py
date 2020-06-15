@@ -33,8 +33,8 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
 
     # if there is no file the program ends
     except FileNotFoundError as err:
-        print(err.args)
-        logging.info("There is no file named '../%s", file_path)
-        exit(1)
+        err_msg = str('There is no file named "../'+ str(file_path) + '".')
+        logger.error(err, err_msg)
+        raise err
 
     return data_frame
