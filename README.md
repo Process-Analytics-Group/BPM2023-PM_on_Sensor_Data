@@ -3,7 +3,8 @@
 Discovers process models from raw event log data. 
 
 Based on the approach presented in:
-D. Janssen, A. Koschmider, F. Mannhardt, S. v. Zelst. Process Model Discovery from Sensor Event Data. 
+D. Janssen, A. Koschmider, F. Mannhardt, S. v. Zelst. 
+Process Model Discovery from Sensor Event Data. 
 
 
 ## Installation
