@@ -96,14 +96,19 @@ for params in grid:
     k_means_cluster_ids = ad.custom_kmeans(data=trace_data_without_case_number,
                                            number_of_clusters=params['k_means_number_of_clusters'])
 
+    sm, km, quantization_error, topographic_error = ad.self_organising_map(
+        trace_data_without_case_number=trace_data_without_case_number, K_opt=params['k_means_number_of_clusters'],
+        path_data_sources=settings.path_data_sources,
+        dir_runtime_files=dir_runtime_files, filename_parameters_file=settings.filename_parameters_file, logger=logger)
+
     #################### EventActivityAbstraction ####################
-    quantization_error, topographic_error = \
-        eaa.create_event_log_files(trace_data_time=trace_data_time,
-                                   output_case_traces_cluster=output_case_traces_cluster,
-                                   trace_data_without_case_number=trace_data_without_case_number,
-                                   k_means_cluster_ids=k_means_cluster_ids, K_opt=params['k_means_number_of_clusters'],
-                                   path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
-                                   filename_parameters_file=settings.filename_parameters_file, logger=logger)
+    eaa.create_event_log_files(trace_data_time=trace_data_time,
+                               output_case_traces_cluster=output_case_traces_cluster,
+                               k_means_cluster_ids=k_means_cluster_ids,
+                               path_data_sources=settings.path_data_sources,
+                               dir_runtime_files=dir_runtime_files,
+                               sm=sm,
+                               km=km)
 
     # stop timer
     t1_main = timeit.default_timer()
