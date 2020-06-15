@@ -8,7 +8,7 @@ D. Janssen, A. Koschmider, F. Mannhardt, S. v. Zelst. Process Model Discovery fr
 
 ## Installation
 ### Clone
-Clone this repo to your local machine using https://github.com/d-o-m-i-n-i-k/Process-Model-Discovery-public.git
+Clone this repository to your local machine using https://github.com/d-o-m-i-n-i-k/Process-Model-Discovery-public.git
 ### Requirements
 - Python 3.5+
 - Dataset with time stamps, sensor IDs and sensor status 
