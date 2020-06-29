@@ -1,3 +1,8 @@
+2020-05-29
+KD: made filenames and number of sensors configurable
+KD: adjusted loggers
+KD: added comments
+
 2020-06-15
 KD: moved event/activity abstraction functionality into right file
 KD: adjusted divide_raw_traces method

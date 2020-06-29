@@ -6,7 +6,7 @@ import z_helper
 
 
 def create_event_log_files(trace_data_time, output_case_traces_cluster, k_means_cluster_ids, path_data_sources,
-                           dir_runtime_files,sm, km):
+                           dir_runtime_files,sm, km, filename_cluster, filename_cases_cluster):
 
     # write best matching units (BMU) to output file
     trace_data_time['BMU'] = np.transpose(sm._bmu[0, :]).astype(int)
@@ -31,11 +31,12 @@ def create_event_log_files(trace_data_time, output_case_traces_cluster, k_means_
     trace_data_time = trace_data_time.reset_index(drop=True)
 
     # write traces to disk
-    trace_data_time.to_csv(path_data_sources + dir_runtime_files + '/Cluster.csv',
+    # time of sensor activations grouped by case
+    trace_data_time.to_csv(path_data_sources + dir_runtime_files + filename_cluster,
                            sep=';',
                            index=None)
 
     output_case_traces_cluster.to_csv(
-        path_data_sources + dir_runtime_files + '/Cases_Cluster.csv',
+        path_data_sources + dir_runtime_files + filename_cases_cluster,
         sep=';',
         index=None)

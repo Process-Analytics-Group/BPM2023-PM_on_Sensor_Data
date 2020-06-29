@@ -1,9 +1,12 @@
 # SOM
+import inspect
+import logging
+
 from sklearn.cluster import KMeans
 from y_sompy import SOMFactory
 import numpy as np
-import pandas as pd
 import z_helper
+
 
 # k-means Vanilla
 def custom_kmeans(data, number_of_clusters):
@@ -11,12 +14,13 @@ def custom_kmeans(data, number_of_clusters):
     kmeans = KMeans(n_clusters=number_of_clusters, random_state=0).fit(np_data_array)
     return kmeans.labels_
 
+
 # SOM with k-means to cluster the best matching units
 def self_organising_map(trace_data_without_case_number, K_opt, path_data_sources, dir_runtime_files,
-                                   filename_parameters_file, logger):
+                        filename_parameters_file, number_of_motion_sensors, logging_level):
     # create list with sensor names
     names = []
-    for sensor_number in range(0, 51):
+    for sensor_number in range(0, number_of_motion_sensors - 1):
         names.append(str("Sensor " + str(sensor_number)))
     # create the SOM network and train it.
     # You can experiment with different normalizations and initializations
@@ -52,6 +56,8 @@ def self_organising_map(trace_data_without_case_number, K_opt, path_data_sources
         new_entry_to_log_description='Number of clusters used to do the vanilla k-means '
                                      'and Cluster the SOM-Neurons. ')
 
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
     logger.info("Topographic error = %s; Quantization error = %s", topographic_error, quantization_error)
 
     # component planes view

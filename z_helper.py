@@ -71,7 +71,7 @@ def create_parameters_log_file(dir_runtime_files,
     target_folder = settings.path_data_sources + dir_runtime_files
 
     # Create a file with used parameters
-    pandas_log_file_content.to_csv(path_or_buf=target_folder + '/' + settings.filename_parameters_file,
+    pandas_log_file_content.to_csv(path_or_buf=target_folder + settings.filename_parameters_file,
                                    index=False,
                                    sep=';')
 
@@ -81,7 +81,7 @@ def append_to_log_file(new_entry_to_log_variable,
                        filename_parameters_file,
                        dir_runtime_files,
                        new_entry_to_log_description=None):
-    target_file = settings.path_data_sources + dir_runtime_files + '/' + filename_parameters_file
+    target_file = settings.path_data_sources + dir_runtime_files + filename_parameters_file
     log_data = pd.read_csv(filepath_or_buffer=target_file,
                            sep=';')
     new_entry = pd.DataFrame([[new_entry_to_log_variable, new_entry_to_log_value, new_entry_to_log_description]],
@@ -96,6 +96,7 @@ def append_to_log_file(new_entry_to_log_variable,
 
 def append_to_performance_documentation_file(path_data_sources,
                                              dir_runtime_files,
+                                             filename_benchmark,
                                              list_of_properties):
     # start timer
     t0_runtime = timeit.default_timer()
@@ -104,7 +105,7 @@ def append_to_performance_documentation_file(path_data_sources,
 
     folder_name = dir_runtime_files.split('/')[-1]
 
-    benchmark_file_path = Path(path_data_sources + dir_runtime_files.split('/')[0] + '/benchmark.csv')
+    benchmark_file_path = Path(path_data_sources + dir_runtime_files.split('/')[0] + filename_benchmark)
     pass
     if benchmark_file_path.is_file():
         logger.debug("Reading preexisting benchmark file.")

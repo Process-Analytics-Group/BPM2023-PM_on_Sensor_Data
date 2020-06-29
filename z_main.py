@@ -41,8 +41,9 @@ iteration_counter = 0
 # https://stackoverflow.com/questions/13370570/elegant-grid-search-in-python-numpy
 for params in grid:
     iteration_counter += 1
+
     # folder name containing files read and written during runtime
-    dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '/'
 
     # create new folder for current run
     if not os.path.exists(settings.path_data_sources + dir_runtime_files):
@@ -53,11 +54,14 @@ for params in grid:
     # Logger configuration
     logging.basicConfig(
         level=settings.logging_level,
-        format="%(asctime)s [%(levelname)-5.5s] [%(threadName)-12.12s] [%(levelname)s] [%(name)s] %(message)s",
+        format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
         handlers=[logging.FileHandler("{0}/{1}.log".format(settings.path_data_sources + dir_runtime_files,
                                                            settings.filename_log_file)), logging.StreamHandler()])
+
     logger = logging.getLogger('main')
     logger.setLevel(settings.logging_level)
+
+    logger.info("################# Start of iteration: %s #################", iteration_counter)
 
     dict_distance_adjacency_sensor['distance_matrix'] = \
         create_dm.set_zero_distance_value(distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
@@ -77,7 +81,9 @@ for params in grid:
                                    filename_traces_raw=settings.filename_traces_raw,
                                    csv_delimiter_traces=settings.csv_delimiter_traces,
                                    csv_header_traces=settings.csv_header_traces,
+                                   filename_traces_basic=settings.filename_traces_basic,
                                    filename_parameters_file=settings.filename_parameters_file,
+                                   number_of_motion_sensors=settings.number_of_motion_sensors,
                                    prefix_motion_sensor_id=settings.prefix_motion_sensor_id,
                                    dir_runtime_files=dir_runtime_files,
                                    distance_threshold=params['distance_threshold'],
@@ -86,7 +92,8 @@ for params in grid:
                                    data_types=settings.data_types,
                                    data_types_list=settings.data_types_list,
                                    max_trace_length=params['max_trace_length'],
-                                   max_number_of_raw_input=settings.max_number_of_raw_input)
+                                   max_number_of_raw_input=settings.max_number_of_raw_input,
+                                   logging_level=settings.logging_level)
 
     # cut away the case number for SOM training
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
@@ -98,8 +105,9 @@ for params in grid:
 
     sm, km, quantization_error, topographic_error = ad.self_organising_map(
         trace_data_without_case_number=trace_data_without_case_number, K_opt=params['k_means_number_of_clusters'],
-        path_data_sources=settings.path_data_sources,
-        dir_runtime_files=dir_runtime_files, filename_parameters_file=settings.filename_parameters_file, logger=logger)
+        path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
+        filename_parameters_file=settings.filename_parameters_file,
+        number_of_motion_sensors=settings.number_of_motion_sensors, logging_level=settings.logging_level)
 
     #################### EventActivityAbstraction ####################
     eaa.create_event_log_files(trace_data_time=trace_data_time,
@@ -107,8 +115,8 @@ for params in grid:
                                k_means_cluster_ids=k_means_cluster_ids,
                                path_data_sources=settings.path_data_sources,
                                dir_runtime_files=dir_runtime_files,
-                               sm=sm,
-                               km=km)
+                               sm=sm, km=km, filename_cluster=settings.filename_cluster,
+                               filename_cases_cluster=settings.filename_cases_cluster)
 
     # stop timer
     t1_main = timeit.default_timer()
@@ -118,6 +126,7 @@ for params in grid:
     z_helper.append_to_performance_documentation_file(
         path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
+        filename_benchmark=settings.filename_benchmark,
         list_of_properties={'quantization_error': quantization_error,
                             'topographic_error': topographic_error,
                             'runtime_main': runtime_main,

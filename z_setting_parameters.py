@@ -39,6 +39,16 @@ csv_delimiter_traces = ';'
 # indicator at which line the data starts
 csv_header_traces = 0
 
+#output files
+# filename of divided trace file
+filename_traces_basic = 'traces_basic.csv'
+# filename of cluster file
+filename_cluster = 'Cluster.csv'
+# filename of cases cluster file
+filename_cases_cluster = 'Cases_Cluster.csv'
+# filename of cases benchmark file
+filename_benchmark = 'benchmark.csv'
+
 # folder name containing files read and written during runtime
 # dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 # TODO
@@ -47,7 +57,9 @@ csv_header_traces = 0
 data_types = 'time'
 data_types_list = ['quantity', 'time', 'quantity_time']
 
-# prefix of Motion-Sensor IDs
+# number of motion sensors
+number_of_motion_sensors = 52
+# prefix of motion sensor IDs
 prefix_motion_sensor_id = 'M'
 
 # set a level of logging
