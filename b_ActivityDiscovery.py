@@ -8,6 +8,21 @@ import numpy as np
 import z_helper
 
 
+def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt, path_data_sources,
+                                    dir_runtime_files, filename_parameters_file, number_of_motion_sensors,
+                                    logging_level):
+    # k-means clustering
+    k_means_cluster_ids = custom_kmeans(data=trace_data_without_case_number, number_of_clusters=number_of_clusters)
+
+    sm, km, quantization_error, topographic_error = self_organising_map(
+        trace_data_without_case_number=trace_data_without_case_number, K_opt=K_opt,
+        path_data_sources=path_data_sources, dir_runtime_files=dir_runtime_files,
+        filename_parameters_file=filename_parameters_file,
+        number_of_motion_sensors=number_of_motion_sensors, logging_level=logging_level)
+
+    return k_means_cluster_ids, sm, km, quantization_error, topographic_error
+
+
 # k-means Vanilla
 def custom_kmeans(data, number_of_clusters):
     np_data_array = data.values

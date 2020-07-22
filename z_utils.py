@@ -40,3 +40,15 @@ def read_csv_file(filedir, filename, separator, header, logging_level, parse_dat
         raise err
 
     return data_frame
+
+
+def write_csv_file(data, filedir, filename, separator, logging_level):
+    # creates path out of file dir and file name
+    file_path = pathlib.Path(filedir + filename)
+
+    # logger
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
+    logger.info("Writing csv file to disk '../%s", file_path)
+
+    data.to_csv(file_path, sep=separator)

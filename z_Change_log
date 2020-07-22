@@ -1,4 +1,14 @@
-2020-05-29
+2020-07-20
+KD: changed logging and benchmark file location
+KD: added missing parameters to parameters log
+KD: added comments
+
+2020-07-09
+KD: made csv file separators configurable
+KD: removed unused variables
+KD: added comments
+
+2020-06-29
 KD: made filenames and number of sensors configurable
 KD: adjusted loggers
 KD: added comments

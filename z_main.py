@@ -9,7 +9,7 @@ import os
 
 # import settings file
 import z_setting_parameters as settings
-import z_create_distance_matrix as create_dm
+import z_DistanceMatrixCreation as create_dm
 import z_helper
 import a_EventCaseCorrelation as ecc
 import b_ActivityDiscovery as ad
@@ -42,8 +42,8 @@ iteration_counter = 0
 for params in grid:
     iteration_counter += 1
 
-    # folder name containing files read and written during runtime
-    dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '/'
+    # apply current time to the format of the folder name containing files read and written during runtime
+    dir_runtime_files = datetime.now().strftime(settings.dir_runtime_files + settings.dir_runtime_files_iteration)
 
     # create new folder for current run
     if not os.path.exists(settings.path_data_sources + dir_runtime_files):
@@ -51,16 +51,15 @@ for params in grid:
 
     z_helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files,
                                         grid_search_parameters=params)
+
     # Logger configuration
     logging.basicConfig(
-        level=settings.logging_level,
-        format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
-        handlers=[logging.FileHandler("{0}/{1}.log".format(settings.path_data_sources + dir_runtime_files,
-                                                           settings.filename_log_file)), logging.StreamHandler()])
+        level=settings.logging_level, format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
+        handlers=[logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
+                  logging.StreamHandler()])
 
     logger = logging.getLogger('main')
     logger.setLevel(settings.logging_level)
-
     logger.info("################# Start of iteration: %s #################", iteration_counter)
 
     dict_distance_adjacency_sensor['distance_matrix'] = \
@@ -80,8 +79,8 @@ for params in grid:
                                    csv_dtype_sensor_data=settings.csv_dtype_sensor_data,
                                    filename_traces_raw=settings.filename_traces_raw,
                                    csv_delimiter_traces=settings.csv_delimiter_traces,
-                                   csv_header_traces=settings.csv_header_traces,
                                    filename_traces_basic=settings.filename_traces_basic,
+                                   csv_delimiter_traces_basic=settings.csv_delimiter_traces_basic,
                                    filename_parameters_file=settings.filename_parameters_file,
                                    number_of_motion_sensors=settings.number_of_motion_sensors,
                                    prefix_motion_sensor_id=settings.prefix_motion_sensor_id,
@@ -99,12 +98,10 @@ for params in grid:
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
 
     #################### ActivityDiscovery ####################
-    # k-means clustering
-    k_means_cluster_ids = ad.custom_kmeans(data=trace_data_without_case_number,
-                                           number_of_clusters=params['k_means_number_of_clusters'])
-
-    sm, km, quantization_error, topographic_error = ad.self_organising_map(
-        trace_data_without_case_number=trace_data_without_case_number, K_opt=params['k_means_number_of_clusters'],
+    # k-means clustering and som classification
+    k_means_cluster_ids, sm, km, quantization_error, topographic_error = ad.cluster_and_classify_activities(
+        trace_data_without_case_number=trace_data_without_case_number,
+        number_of_clusters=params['k_means_number_of_clusters'], K_opt=params['k_means_number_of_clusters'],
         path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
         filename_parameters_file=settings.filename_parameters_file,
         number_of_motion_sensors=settings.number_of_motion_sensors, logging_level=settings.logging_level)
@@ -116,7 +113,9 @@ for params in grid:
                                path_data_sources=settings.path_data_sources,
                                dir_runtime_files=dir_runtime_files,
                                sm=sm, km=km, filename_cluster=settings.filename_cluster,
-                               filename_cases_cluster=settings.filename_cases_cluster)
+                               csv_delimiter_cluster=settings.csv_delimiter_cluster,
+                               filename_cases_cluster=settings.filename_cases_cluster,
+                               csv_delimiter_cases_cluster=settings.csv_delimiter_cases_cluster)
 
     # stop timer
     t1_main = timeit.default_timer()
@@ -127,6 +126,7 @@ for params in grid:
         path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_benchmark=settings.filename_benchmark,
+        csv_delimiter_benchmark=settings.csv_delimiter_benchmark,
         list_of_properties={'quantization_error': quantization_error,
                             'topographic_error': topographic_error,
                             'runtime_main': runtime_main,

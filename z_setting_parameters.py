@@ -1,12 +1,15 @@
-from datetime import datetime
 import logging
 import numpy as np
 
 # ############################################################
 # ADJUSTABLE VARIABLES
 
-# path of sources
+# path of sources and outputs
 path_data_sources = 'Data-Sources/'
+# folder containing files read and written during runtime
+dir_runtime_files = 'runtime-files/'
+# folder of one iteration containing files read and written during runtime
+dir_runtime_files_iteration = '%Y-%m-%d_%H-%M-%S/'
 # filename of room separation
 filename_room_separation = 'Room-separation.csv'
 # filename of Adjacency-Matrix
@@ -14,7 +17,7 @@ filename_adjacency_matrix = 'Adjacency-Matrix.csv'
 # filename of parameters file
 filename_parameters_file = '0-Parameters.csv'
 # filename of log file coming from logging module
-filename_log_file = '1-LogFile'
+filename_log_file = '1-LogFile.log'
 # filename of Adjacency-plot
 filename_adjacency_plot = 'adjacency_plot.pdf'
 
@@ -32,26 +35,34 @@ csv_parse_dates_sensor_data = ['DateTime']
 # data type of columns in the file
 csv_dtype_sensor_data = {'Active': np.int8}
 
-# filename of trace file
-filename_traces_raw = 'traces_raw.csv'
-# csv delimiter of trace files
-csv_delimiter_traces = ';'
-# indicator at which line the data starts
-csv_header_traces = 0
-
-#output files
-# filename of divided trace file
-filename_traces_basic = 'traces_basic.csv'
-# filename of cluster file
-filename_cluster = 'Cluster.csv'
-# filename of cases cluster file
-filename_cases_cluster = 'Cases_Cluster.csv'
 # filename of cases benchmark file
 filename_benchmark = 'benchmark.csv'
+# csv delimiter of benchmark file
+csv_delimiter_benchmark = ';'
+# indicator at which line the data starts
+csv_header_benchmark = 0
 
-# folder name containing files read and written during runtime
-# dir_runtime_files = 'runtime-files' + '/' + datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-# TODO
+
+# output files
+# filename of trace file
+filename_traces_raw = 'traces_raw.csv'
+# csv delimiter of trace file
+csv_delimiter_traces = ';'
+
+# filename of divided trace file
+filename_traces_basic = 'traces_basic.csv'
+# csv delimiter of divided trace file
+csv_delimiter_traces_basic = ';'
+
+# filename of cluster file
+filename_cluster = 'Cluster.csv'
+# csv delimiter of cluster file
+csv_delimiter_cluster = ';'
+
+# filename of cases cluster file
+filename_cases_cluster = 'Cases_Cluster.csv'
+# csv delimiter of cases_cluster file
+csv_delimiter_cases_cluster = ';'
 
 # choose between: quantity, time, quantity_time
 data_types = 'time'

@@ -15,7 +15,7 @@ import z_setting_parameters as settings
 def create_parameters_log_file(dir_runtime_files,
                                grid_search_parameters):
     """
-    Creates a log file with all given parameters.
+    Creates a log file with all given parameters for each iteration.
 
     :param dir_runtime_files: The folder of the current run.
     :param grid_search_parameters: A grid of collections of parameters that is used to run all different combinations of the containing parameters.
@@ -24,6 +24,10 @@ def create_parameters_log_file(dir_runtime_files,
 
     log_file_content = \
         [['exogenous_path_data_sources', settings.path_data_sources, 'Path of folder with source files'],
+         ['exogenous_dir_runtime_files', settings.dir_runtime_files,
+          'Folder containing files read and written during runtime'],
+         ['exogenous_dir_runtime_files_iteration', settings.dir_runtime_files_iteration,
+          'Folder of one iteration containing files read and written during runtime'],
          ['exogenous_filename_room_separation', settings.filename_room_separation, 'Filename of room separation file.'],
          ['exogenous_filename_adjacency_matrix', settings.filename_adjacency_matrix, 'Filename of adjacency matrix.'],
          ['exogenous_filename_parameters_file', settings.filename_parameters_file, 'Filename of parameters file.'],
@@ -41,8 +45,6 @@ def create_parameters_log_file(dir_runtime_files,
           'An assignment of data types to columns in sensor data file.'],
          ['exogenous_filename_traces_raw', settings.filename_traces_raw, 'Filename of traces file.'],
          ['exogenous_csv_delimiter_traces', settings.csv_delimiter_traces, 'The char each column is divided by.'],
-         ['exogenous_csv_header_traces', settings.csv_header_traces,
-          'Row number/s to use as the column names and also the start of the data.'],
          ['exogenous_data_types', settings.data_types, 'choose between: quantity, time, quantity_time'],
          ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id,
           'A word, letter, or number placed before motion sensor number.'],
@@ -97,27 +99,28 @@ def append_to_log_file(new_entry_to_log_variable,
 def append_to_performance_documentation_file(path_data_sources,
                                              dir_runtime_files,
                                              filename_benchmark,
+                                             csv_delimiter_benchmark,
                                              list_of_properties):
     # start timer
     t0_runtime = timeit.default_timer()
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
 
-    folder_name = dir_runtime_files.split('/')[-1]
+    folder_name = dir_runtime_files.split('/')[-2]
 
-    benchmark_file_path = Path(path_data_sources + dir_runtime_files.split('/')[0] + filename_benchmark)
+    benchmark_file_path = Path(path_data_sources + dir_runtime_files.split('/')[0] + '/' + filename_benchmark)
     pass
     if benchmark_file_path.is_file():
         logger.debug("Reading preexisting benchmark file.")
 
         pd_benchmark_old = pd.read_csv(benchmark_file_path,
-                                       sep=';',
+                                       sep=csv_delimiter_benchmark,
                                        header=0,
                                        index_col=0)
         pd_benchmark_add = pd.DataFrame(list_of_properties, index=[folder_name])
         pd_benchmark_new = pd.concat([pd_benchmark_old, pd_benchmark_add], sort=False)
 
-        pd_benchmark_new.to_csv(benchmark_file_path, sep=';')
+        pd_benchmark_new.to_csv(benchmark_file_path, sep=csv_delimiter_benchmark)
 
     # if does not exist, create file
     else:

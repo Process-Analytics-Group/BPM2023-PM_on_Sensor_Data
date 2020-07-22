@@ -1,10 +1,8 @@
 # Personentrennung und Tracelängenbestimmung
 import pandas as pd
 import numpy as np
-import os
 import logging
 import timeit
-from pathlib import Path
 import math
 import z_helper
 import z_utils as utils
@@ -21,8 +19,8 @@ def create_trace_from_file(data_sources_path,
                            csv_dtype_sensor_data,
                            filename_traces_raw,
                            csv_delimiter_traces,
-                           csv_header_traces,
                            filename_traces_basic,
+                           csv_delimiter_traces_basic,
                            dir_runtime_files,
                            filename_parameters_file,
                            data_types,
@@ -48,8 +46,8 @@ def create_trace_from_file(data_sources_path,
     :param csv_dtype_sensor_data: assignment of data types of columns in the file
     :param filename_traces_raw: filename of trace file
     :param csv_delimiter_traces: csv delimiter of trace files
-    :param csv_header_traces: indicator at which line the data starts
     :param filename_traces_basic: filename of divided trace file
+    :param csv_delimiter_traces_basic: csv delimiter of divided trace file
     :param dir_runtime_files: the folder of the current run
     :param filename_parameters_file: filename of parameters file
     :param data_types: column/s which is/are applied to divided traces
@@ -101,6 +99,7 @@ def create_trace_from_file(data_sources_path,
         = divide_raw_traces(traces_raw_pd=traces_raw_pd,
                             data_sources_path=data_sources_path,
                             filename_traces_basic=filename_traces_basic,
+                            csv_delimiter_traces_basic=csv_delimiter_traces_basic,
                             dir_runtime_files=dir_runtime_files,
                             filename_parameters_file=filename_parameters_file,
                             max_trace_length=max_trace_length,
@@ -126,6 +125,7 @@ def limit_raw_sensor_data_points(raw_sensor_data, max_number_of_raw_input, loggi
 
     :param raw_sensor_data: the sensor data points
     :param max_number_of_raw_input: limit for number of sensor activations
+    :param logging_level: level of logging
     :return: the sensor data points limited by max_number_of_raw_input
     """
     number_of_data_points = raw_sensor_data.shape[0]
@@ -200,6 +200,7 @@ def divide_raw_traces(traces_raw_pd,
                       data_sources_path,
                       dir_runtime_files,
                       filename_traces_basic,
+                      csv_delimiter_traces_basic,
                       filename_parameters_file,
                       max_trace_length,
                       data_types,
@@ -213,6 +214,7 @@ def divide_raw_traces(traces_raw_pd,
     :param data_sources_path: path of sources
     :param dir_runtime_files: the folder of the current run
     :param filename_traces_basic: filename of divided traces
+    :param csv_delimiter_traces_basic: csv delimiter of divided trace file
     :param filename_parameters_file: filename of parameters file
     :param max_trace_length: the max length of one trace
     :param data_types: column/s which is/are applied to divided traces
@@ -345,14 +347,12 @@ def divide_raw_traces(traces_raw_pd,
     logger.info("Dividing the long traces into %s short traces took %s seconds.",
                 divided_trace_case_id - 1, runtime_divide_raw_traces)
 
-    # TODO Dateiname, Sep, ... konfigurierbar machen
     # write traces to disk
-    final_vector.to_csv(data_sources_path + dir_runtime_files + filename_traces_basic,
-                        sep=';',
-                        index=None)
+    final_vector.to_csv(data_sources_path + dir_runtime_files + filename_traces_basic, sep=csv_delimiter_traces_basic)
     # logging
     logger.info("Divided traces were saved as csv file '../%s",
                 data_sources_path + dir_runtime_files + filename_traces_basic)
+
     return final_vector, output_case_traces_cluster, list_of_final_vectors_activations
 
 
@@ -580,11 +580,10 @@ def convert_raw_data_to_traces(raw_sensor_data,
     logger.info("Extracting %s traces took %s seconds.", unique_new_trace_id - 1, runtime_convert_raw2trace)
 
     # write traces to disk
-    pd_df_all_traces.to_csv(data_sources_path + dir_runtime_files + filename_traces_raw, sep=csv_delimiter_traces,
-                            index=None)
+    utils.write_csv_file(data=pd_df_all_traces, filedir=data_sources_path + dir_runtime_files,
+                         filename=filename_traces_raw, separator=csv_delimiter_traces, logging_level=logging_level)
     # logging
-    logger.info("Traces were saved as csv file '../%s",
-                data_sources_path + dir_runtime_files + filename_traces_raw)
+    logger.info("Traces were saved as csv file '../%s", data_sources_path + dir_runtime_files + filename_traces_raw)
 
     return pd_df_all_traces
 
