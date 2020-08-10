@@ -14,6 +14,7 @@ import z_helper
 import a_EventCaseCorrelation as ecc
 import b_ActivityDiscovery as ad
 import c_EventActivityAbstraction as eaa
+import d_ProcessDiscovery as prd
 
 # start timer
 t0_main = timeit.default_timer()
@@ -55,8 +56,9 @@ for params in grid:
     # Logger configuration
     logging.basicConfig(
         level=settings.logging_level, format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
-        handlers=[logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
-                  logging.StreamHandler()])
+        handlers=[
+            logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
+            logging.StreamHandler()])
 
     logger = logging.getLogger('main')
     logger.setLevel(settings.logging_level)
@@ -107,15 +109,24 @@ for params in grid:
         number_of_motion_sensors=settings.number_of_motion_sensors, logging_level=settings.logging_level)
 
     #################### EventActivityAbstraction ####################
-    eaa.create_event_log_files(trace_data_time=trace_data_time,
-                               output_case_traces_cluster=output_case_traces_cluster,
-                               k_means_cluster_ids=k_means_cluster_ids,
-                               path_data_sources=settings.path_data_sources,
-                               dir_runtime_files=dir_runtime_files,
-                               sm=sm, km=km, filename_cluster=settings.filename_cluster,
-                               csv_delimiter_cluster=settings.csv_delimiter_cluster,
-                               filename_cases_cluster=settings.filename_cases_cluster,
-                               csv_delimiter_cases_cluster=settings.csv_delimiter_cases_cluster)
+    output_case_traces_cluster = \
+        eaa.create_event_log_files(trace_data_time=trace_data_time,
+                                   output_case_traces_cluster=output_case_traces_cluster,
+                                   k_means_cluster_ids=k_means_cluster_ids,
+                                   path_data_sources=settings.path_data_sources,
+                                   dir_runtime_files=dir_runtime_files,
+                                   sm=sm, km=km, filename_cluster=settings.filename_cluster,
+                                   csv_delimiter_cluster=settings.csv_delimiter_cluster,
+                                   filename_cases_cluster=settings.filename_cases_cluster,
+                                   csv_delimiter_cases_cluster=settings.csv_delimiter_cases_cluster)
+
+    #################### ProcessDiscovery ####################
+    prd.create_process_models(output_case_traces_cluster=output_case_traces_cluster,
+                              path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
+                              dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
+                              filename_dfg_cluster=settings.filename_dfg_cluster,
+                              min_number_of_occurrences=settings.min_number_of_occurrences,
+                              logging_level=settings.logging_level)
 
     # stop timer
     t1_main = timeit.default_timer()

@@ -96,3 +96,10 @@ max_trace_length_list = [4, 6, 8, 10]
 
 # number of k-means cluster
 k_means_number_of_clusters = [6, 8, 10, 12, 14, 16]
+
+# folder containing dfg png files
+dir_dfg_cluster_files = 'directly_follows_graphs/'
+# filename of dfg file (per cluster)
+filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
+# threshold for filtering out sensors in dfg
+min_number_of_occurrences = 50

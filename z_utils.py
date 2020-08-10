@@ -24,7 +24,7 @@ def read_csv_file(filedir, filename, separator, header, logging_level, parse_dat
         # logger
         logger = logging.getLogger(inspect.stack()[0][3])
         logger.setLevel(logging_level)
-        logger.info("Reading csv file '../%s", file_path)
+        logger.info("Reading csv file '../%s'.", file_path)
 
         # reads csv file
         data_frame = pd.read_csv(file_path,
@@ -49,6 +49,6 @@ def write_csv_file(data, filedir, filename, separator, logging_level):
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)
-    logger.info("Writing csv file to disk '../%s", file_path)
+    logger.info("Writing csv file to disk '../%s'.", file_path)
 
     data.to_csv(file_path, sep=separator)

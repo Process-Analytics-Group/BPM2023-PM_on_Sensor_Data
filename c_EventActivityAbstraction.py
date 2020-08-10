@@ -35,3 +35,5 @@ def create_event_log_files(trace_data_time, output_case_traces_cluster, k_means_
 
     output_case_traces_cluster.to_csv(path_data_sources + dir_runtime_files + filename_cases_cluster,
                                       sep=csv_delimiter_cases_cluster)
+
+    return output_case_traces_cluster
