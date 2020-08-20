@@ -11,7 +11,7 @@ from pm4py.visualization.dfg import visualizer as dfg_visualization
 
 
 def create_process_models(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
-                          filename_dfg_cluster, min_number_of_occurrences, logging_level):
+                          filename_dfg_cluster, rel_proportion_dfg_threshold, logging_level):
     """
     Creates directly follows graphs out of a event log.
     :param output_case_traces_cluster: traces that are visualised
@@ -19,7 +19,7 @@ def create_process_models(output_case_traces_cluster, path_data_sources, dir_run
     :param dir_runtime_files: folder containing files read and written during runtime
     :param dir_dfg_cluster_files: folder containing dfg png files
     :param filename_dfg_cluster: filename of dfg file (per cluster)
-    :param min_number_of_occurrences: threshold for filtering out sensors in dfg
+    :param rel_proportion_dfg_threshold: threshold for filtering out sensors in dfg relative to max occurrences of a sensor
     :param logging_level: level of logging
     :return:
     """
@@ -44,6 +44,9 @@ def create_process_models(output_case_traces_cluster, path_data_sources, dir_run
 
         # keep only activities with more than certain number of occurrences
         activities = attributes_get.get_attribute_values(log, 'concept:name')
+        # determine that number relative to the max number of occurrences of a sensor in a cluster. (the result is
+        # the threshold at which an activity/activity strand is kept)
+        min_number_of_occurrences = round((max(activities.values()) * rel_proportion_dfg_threshold), 0)
         activities = {x: y for x, y in activities.items() if y >= min_number_of_occurrences}
         log = attributes_filter.apply(log, activities)
 

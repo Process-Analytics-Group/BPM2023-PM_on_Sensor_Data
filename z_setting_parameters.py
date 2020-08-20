@@ -101,5 +101,5 @@ k_means_number_of_clusters = [6, 8, 10, 12, 14, 16]
 dir_dfg_cluster_files = 'directly_follows_graphs/'
 # filename of dfg file (per cluster)
 filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
-# threshold for filtering out sensors in dfg
-min_number_of_occurrences = 50
+# threshold for filtering out sensors in dfg relative to max occurrences of a sensor (value in range 0-1)
+rel_proportion_dfg_threshold = 0.5

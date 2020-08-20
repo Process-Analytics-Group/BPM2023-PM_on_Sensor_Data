@@ -125,7 +125,7 @@ for params in grid:
                               path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
                               dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
                               filename_dfg_cluster=settings.filename_dfg_cluster,
-                              min_number_of_occurrences=settings.min_number_of_occurrences,
+                              rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
                               logging_level=settings.logging_level)
 
     # stop timer
