@@ -45,3 +45,5 @@ Event Activity Abstraction
 - Match the discovered clusters by both the vanilla k-means and the som-algorithm to the raw data input
 
 ### Step 4: d_ProcessDiscovery
+Process Discovery
+- create a directly follows graph of the process using the visualization tool "graphviz"
