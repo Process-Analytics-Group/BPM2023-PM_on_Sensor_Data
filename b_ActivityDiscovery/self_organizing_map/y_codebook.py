@@ -3,7 +3,7 @@ import scipy as sp
 
 from sklearn.decomposition import PCA
 #from sklearn.decomposition import RandomizedPCA# (randomizedpca is deprecated)
-from y_decorators import timeit
+from b_ActivityDiscovery.self_organizing_map.y_decorators import timeit
 
 
 class InvalidNodeIndexError(Exception):

@@ -25,7 +25,7 @@ def create_trace_from_file(data_sources_path,
                            filename_parameters_file,
                            data_types,
                            data_types_list,
-                           max_trace_length,
+                           trace_length_limit,
                            max_number_of_raw_input,
                            logging_level,
                            number_of_motion_sensors,
@@ -52,7 +52,7 @@ def create_trace_from_file(data_sources_path,
     :param filename_parameters_file: filename of parameters file
     :param data_types: column/s which is/are applied to divided traces
     :param data_types_list: collection of all available data types
-    :param max_trace_length: maximum length of traces (in case length mode is used to separate raw-traces)
+    :param trace_length_limit: maximum length of traces (in case length mode is used to separate raw-traces)
     :param max_number_of_raw_input: limitation of the number of processed activations
     :param logging_level: level of logging
     :param number_of_motion_sensors: number of motion sensors
@@ -102,7 +102,7 @@ def create_trace_from_file(data_sources_path,
                             csv_delimiter_traces_basic=csv_delimiter_traces_basic,
                             dir_runtime_files=dir_runtime_files,
                             filename_parameters_file=filename_parameters_file,
-                            max_trace_length=max_trace_length,
+                            max_trace_length=trace_length_limit,
                             data_types=data_types,
                             data_types_list=data_types_list,
                             number_of_motion_sensors=number_of_motion_sensors,

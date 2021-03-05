@@ -12,13 +12,12 @@ import logging
 import z_setting_parameters as settings
 
 
-def create_parameters_log_file(dir_runtime_files,
-                               grid_search_parameters):
+def create_parameters_log_file(dir_runtime_files, params):
     """
     Creates a log file with all given parameters for each iteration.
 
     :param dir_runtime_files: The folder of the current run.
-    :param grid_search_parameters: A grid of collections of parameters that is used to run all different combinations of the containing parameters.
+    :param params: A grid of collections of parameters that is used to run all different combinations of the containing parameters.
     :return: None
     """
 
@@ -57,13 +56,13 @@ def create_parameters_log_file(dir_runtime_files,
           'Threshold for number of sensor activations at which a sensor is shown in dfg (relative to max occurrences of a sensor).'],
          ['filename_log_file', settings.filename_log_file + '.log', 'Filename of logfile.'],
          ['exogenous_logging_level', settings.logging_level, 'Lvl of logging for log file and console. (10=Debugging)'],
-         ['exogenous_zero_distance_value', grid_search_parameters['zero_distance_value'],
+         ['exogenous_zero_distance_value', params['zero_distance_value'],
           'Number representing zero distance to other sensors. (used in creation of distance_matrix_real_world matrix)'],
-         ['exogenous_distance_threshold', grid_search_parameters['distance_threshold'],
+         ['exogenous_distance_threshold', params['distance_threshold'],
           'Threshold when sensors are considered too far away.'],
-         ['exogenous_traces_time_out_threshold', grid_search_parameters['traces_time_out_threshold'],
+         ['exogenous_traces_time_out_threshold', params['traces_time_out_threshold'],
           'The time in seconds in which a sensor activation is assigned to a existing trace.'],
-         ['exogenous_max_trace_length', grid_search_parameters['max_trace_length'],
+         ['exogenous_trace_length_limit', params['trace_length_limit'],
           'Maximum length of traces. (in case length mode is used to separate raw-traces)']]
 
     get_trace = getattr(sys, 'gettrace', None)

@@ -23,10 +23,10 @@ from sklearn import neighbors
 from sklearn.externals.joblib import Parallel, delayed, load, dump
 import sys
 
-from y_decorators import timeit
-from y_codebook import Codebook
-from y_neighborhood import NeighborhoodFactory
-from y_normalization import NormalizatorFactory
+from b_ActivityDiscovery.self_organizing_map.y_decorators import timeit
+from b_ActivityDiscovery.self_organizing_map.y_codebook import Codebook
+from b_ActivityDiscovery.self_organizing_map.y_neighborhood import NeighborhoodFactory
+from b_ActivityDiscovery.self_organizing_map.y_normalization import NormalizatorFactory
 
 
 # lbugnon

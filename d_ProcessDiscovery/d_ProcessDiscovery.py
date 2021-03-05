@@ -63,7 +63,18 @@ def create_process_models(output_case_traces_cluster, path_data_sources, dir_run
                                                    'end_activities': end_activities})
         dfg_visualization.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (
             filename_dfg_cluster.format(cluster=str(cluster))))
-
+##########################################################
+        # from pm4py.algo.discovery.heuristics import algorithm as heuristics_miner
+        # net, im, fm = heuristics_miner.apply(log, parameters={
+        #     heuristics_miner.Variants.CLASSIC.value.Parameters.DEPENDENCY_THRESH: 0.99})
+        #
+        # from pm4py.visualization.petrinet import visualizer as pn_visualizer
+        # gviz_pn = pn_visualizer.apply(net, im, fm)
+        # pn_visualizer.view(gviz_pn)
+        #
+        # from pm4py.evaluation.generalization import evaluator as generalization_evaluator
+        # gen = generalization_evaluator.apply(log, net, im, fm)
+#################################################################################
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)

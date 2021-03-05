@@ -1,5 +1,6 @@
 import logging
 import numpy as np
+from hyperopt import tpe
 
 # ############################################################
 # ADJUSTABLE VARIABLES
@@ -44,6 +45,12 @@ csv_header_benchmark = 0
 
 
 # output files
+# hyperopt parameter tuning
+# optimization algorithm (representative Tree of Parzen Estimators (TPE))
+opt_algorithm = tpe.suggest
+# number of optimization attempts
+opt_attempts = 2
+
 # filename of trace file
 filename_traces_raw = 'traces_raw.csv'
 # csv delimiter of trace file
@@ -76,26 +83,31 @@ prefix_motion_sensor_id = 'M'
 # set a level of logging
 logging_level = logging.DEBUG
 
-# set distance for zero to other sensors
+# set distance for zero to other sensors (range for parameter optimization)
 # used in creation of the distance_matrix_real_world matrix
-zero_distance_value_list = [1]
+zero_distance_value_min = 1
+zero_distance_value_max = 1
 
 # upper limit for input_data (set to None if there is no limit)
 max_number_of_raw_input = 6500
 
-# threshold when sensors are considered too far away
-distance_threshold_list = [1.2]
+# threshold when sensors are considered too far away (range for parameter optimization)
+distance_threshold_min = 1.2
+distance_threshold_max = 1.2
 
 # maximum number of persons which were in the house while the recording of sensor data
 max_number_of_people_in_house = 2
 
-# the time in seconds in which a sensor activation is assigned to a existing trace
-traces_time_out_threshold_list = [300]
+# the time in seconds in which a sensor activation is assigned to a existing trace (range for parameter optimization)
+traces_time_out_threshold_min = 300
+traces_time_out_threshold_max = 300
 # maximum length of traces (in case length mode is used to separate raw-traces)
-max_trace_length_list = [4, 6, 8, 10]
+trace_length_limit_min = 4
+trace_length_limit_max = 10
 
-# number of k-means cluster
-k_means_number_of_clusters = [6, 8, 10, 12, 14, 16]
+# range of k-means cluster (parameter optimization)
+k_means_number_of_clusters_min = 6
+k_means_number_of_clusters_max = 16
 
 # folder containing dfg png files
 dir_dfg_cluster_files = 'directly_follows_graphs/'

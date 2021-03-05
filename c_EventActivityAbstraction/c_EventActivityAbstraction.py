@@ -1,5 +1,4 @@
 # Zuordnung Cluster und Aktivitäten
-from y_sompy import SOMFactory
 import numpy as np
 import pandas as pd
 

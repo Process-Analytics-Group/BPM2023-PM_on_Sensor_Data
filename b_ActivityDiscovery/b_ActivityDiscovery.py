@@ -3,7 +3,7 @@ import inspect
 import logging
 
 from sklearn.cluster import KMeans
-from y_sompy import SOMFactory
+from b_ActivityDiscovery.self_organizing_map.y_sompy import SOMFactory
 import numpy as np
 import z_helper
 
@@ -96,7 +96,6 @@ def self_organising_map(trace_data_without_case_number, K_opt, path_data_sources
     [labels, km, norm_data] = sm.cluster(n_clusters=K, opt=K_opt)
 
     hits = HitMapView(20, 20, "Clustering", text_size=12)
-    a = hits.show(sm, path_data_sources=path_data_sources,
-                  dir_runtime_files=dir_runtime_files)
+    a = hits.show(sm, path_data_sources=path_data_sources, dir_runtime_files=dir_runtime_files)
 
     return sm, km, quantization_error, topographic_error
