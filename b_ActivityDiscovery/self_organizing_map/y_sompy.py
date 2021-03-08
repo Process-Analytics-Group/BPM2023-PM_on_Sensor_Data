@@ -20,7 +20,7 @@ from multiprocessing.dummy import Pool
 from multiprocessing import cpu_count
 from scipy.sparse import csr_matrix
 from sklearn import neighbors
-from sklearn.externals.joblib import Parallel, delayed, load, dump
+from joblib import Parallel, delayed, load, dump
 import sys
 
 from b_ActivityDiscovery.self_organizing_map.y_decorators import timeit

@@ -115,7 +115,7 @@ def create_trace_from_file(data_sources_path,
     #     dir_runtime_files=dir_runtime_files,
     #     filename_parameters_file=filename_parameters_file,
     #     max_trace_length=max_trace_length)
-
+    output_case_traces_cluster['Timestamp'] = pd.to_datetime(output_case_traces_cluster['Timestamp'])
     return traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations
 
 
@@ -608,7 +608,7 @@ def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_se
     t0_read_csv_files = timeit.default_timer()
 
     # creates pandas data frame out of input of a csv file
-    data_frame = utils.read_csv_file(filedir=data_sources_path + rel_dir_name_sensor_data,
+    data_frame = utils.read_csv_file(filedir=data_sources_path,
                                      filename=filename_sensor_data, separator=csv_delimiter_sensor_data,
                                      header=csv_header_sensor_data,
                                      parse_dates=csv_parse_dates_sensor_data, dtype=csv_dtype_sensor_data,

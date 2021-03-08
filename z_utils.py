@@ -31,7 +31,8 @@ def read_csv_file(filedir, filename, separator, header, logging_level, parse_dat
                                  sep=separator,
                                  header=header,
                                  parse_dates=parse_dates,
-                                 dtype=dtype)
+                                 dtype=dtype,
+                                 error_bad_lines=False)
 
     # if there is no file the program ends
     except FileNotFoundError as err:

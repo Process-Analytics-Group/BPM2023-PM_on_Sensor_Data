@@ -58,7 +58,7 @@ def perform_process_model_discovery(params):
         create_dm.set_zero_distance_value(distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
                                           zero_distance_value=params['zero_distance_value'])
 
-    #################### EventCaseCorrelation ####################
+    # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
         ecc.create_trace_from_file(data_sources_path=settings.path_data_sources,
@@ -89,7 +89,7 @@ def perform_process_model_discovery(params):
     # cut away the case number for SOM training
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
 
-    #################### ActivityDiscovery ####################
+    # ################### ActivityDiscovery ####################
     # k-means clustering and som classification
     k_means_cluster_ids, sm, km, quantization_error, topographic_error = ad.cluster_and_classify_activities(
         trace_data_without_case_number=trace_data_without_case_number,
@@ -98,7 +98,7 @@ def perform_process_model_discovery(params):
         filename_parameters_file=settings.filename_parameters_file,
         number_of_motion_sensors=settings.number_of_motion_sensors, logging_level=settings.logging_level)
 
-    #################### EventActivityAbstraction ####################
+    # ################### EventActivityAbstraction ####################
     output_case_traces_cluster = \
         eaa.create_event_log_files(trace_data_time=trace_data_time,
                                    output_case_traces_cluster=output_case_traces_cluster,
@@ -110,14 +110,23 @@ def perform_process_model_discovery(params):
                                    filename_cases_cluster=settings.filename_cases_cluster,
                                    csv_delimiter_cases_cluster=settings.csv_delimiter_cases_cluster)
 
-    #################### ProcessDiscovery ####################
-    prd.create_process_models(output_case_traces_cluster=output_case_traces_cluster,
-                              path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
-                              dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
-                              filename_dfg_cluster=settings.filename_dfg_cluster,
-                              rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
-                              logging_level=settings.logging_level)
+    # ################### ProcessDiscovery ####################
+    prd.create_activtiy_models(output_case_traces_cluster=output_case_traces_cluster,
+                               path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
+                               dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
+                               filename_dfg_cluster=settings.filename_dfg_cluster,
+                               rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
+                               logging_level=settings.logging_level)
 
+    metrics = prd.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
+                                       path_data_sources=settings.path_data_sources,
+                                       dir_runtime_files=dir_runtime_files,
+                                       dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
+                                       filename_dfg_cluster=settings.filename_dfg_cluster,
+                                       rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
+                                       logging_level=settings.logging_level)
+
+    print(metrics)
     # stop timer
     t1_main = timeit.default_timer()
 
@@ -157,6 +166,7 @@ def perform_process_model_discovery(params):
     logger.info("################# End iteration %s of %s #################",
                 perform_process_model_discovery.iteration_counter, settings.opt_attempts)
     return {
+        # ToDo: replace loss-function "-1" with actual method for process model evaluation
         'loss': -1,
         'status': STATUS_OK,
         'iteration': perform_process_model_discovery.iteration_counter,

@@ -156,8 +156,9 @@ def draw_adjacency_graph(dict_room_information,
     pos = nx.spring_layout(graph_object_data, k=0.85 * 1 / np.sqrt(len(graph_object_data.nodes())), iterations=20)
 
     # the following line throws a deprecation warning
-    nx.draw(graph_object_data, node_color=color_map, with_labels=True, node_size=1000, pos=pos)
-
+    # nx.draw(graph_object_data, node_color=color_map, with_labels=True, node_size=1000, pos=pos)
+    # ToDo: Get the room-colours back
+    nx.draw(graph_object_data, with_labels=True, node_size=1000, pos=pos)
     # make legend
     patches = []
     for element in legend:

@@ -5,8 +5,11 @@ from hyperopt import tpe
 # ############################################################
 # ADJUSTABLE VARIABLES
 
+# folder name containing sensor data (relative from directory of sources)
+rel_dir_name_sensor_data = '19-Aruba/'
+
 # path of sources and outputs
-path_data_sources = 'Data-Sources/'
+path_data_sources = 'Data-Sources/' + rel_dir_name_sensor_data
 # folder containing files read and written during runtime
 dir_runtime_files = 'runtime-files/'
 # folder of one iteration containing files read and written during runtime
@@ -24,17 +27,15 @@ filename_adjacency_plot = 'adjacency_plot.pdf'
 
 # csv configuration for sensor data file
 # filename of the file that contains the sensor data
-filename_sensor_data = 'sensor_raw.csv'
-# folder name containing sensor data (relative from directory of sources)
-rel_dir_name_sensor_data = 'Sensor-Data/'
+filename_sensor_data = '19-Aruba_data'
 # delimiter of the columns in csv file of sensor data (input)
-csv_delimiter_sensor_data = ';'
+csv_delimiter_sensor_data = '\t'
 # indicator at which line the data starts
 csv_header_sensor_data = 0
 # columns that should get parsed as a date
 csv_parse_dates_sensor_data = ['DateTime']
 # data type of columns in the file
-csv_dtype_sensor_data = {'Active': np.int8}
+csv_dtype_sensor_data = {'Active': float}
 
 # filename of cases benchmark file
 filename_benchmark = 'benchmark.csv'
@@ -76,7 +77,7 @@ data_types = 'time'
 data_types_list = ['quantity', 'time', 'quantity_time']
 
 # number of motion sensors
-number_of_motion_sensors = 52
+number_of_motion_sensors = 31
 # prefix of motion sensor IDs
 prefix_motion_sensor_id = 'M'
 
@@ -96,7 +97,7 @@ distance_threshold_min = 1.2
 distance_threshold_max = 1.2
 
 # maximum number of persons which were in the house while the recording of sensor data
-max_number_of_people_in_house = 2
+max_number_of_people_in_house = 1
 
 # the time in seconds in which a sensor activation is assigned to a existing trace (range for parameter optimization)
 traces_time_out_threshold_min = 300
