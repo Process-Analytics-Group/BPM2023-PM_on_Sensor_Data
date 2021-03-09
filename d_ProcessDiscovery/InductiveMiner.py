@@ -10,7 +10,13 @@ from pm4py.evaluation.generalization import evaluator as generalization_evaluato
 from pm4py.evaluation.simplicity import evaluator as simplicity_evaluator
 
 
-def applyInductiveMiner():
+def apply_inductive_miner(log,
+                          path_data_sources,
+                          dir_runtime_files,
+                          dir_dfg_cluster_files,
+                          filename_dfg_cluster,
+                          rel_proportion_dfg_threshold,
+                          logging_level):
     print("Prepare inductive Miner.")
 
     import_file_path = filedialog.askopenfilename()

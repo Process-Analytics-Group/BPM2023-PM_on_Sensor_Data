@@ -10,6 +10,7 @@ from pm4py.statistics.start_activities.log import get as sa_get
 from pm4py.statistics.end_activities.log import get as ea_get
 from pm4py.visualization.dfg import visualizer as dfg_visualization
 from d_ProcessDiscovery.HeuristicMiner import applyHeuristicMiner
+from d_ProcessDiscovery.InductiveMiner import apply_inductive_miner
 
 
 def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
@@ -99,6 +100,14 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
                                   filename_dfg_cluster=filename_dfg_cluster,
                                   rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
                                   logging_level=logging_level)
+
+    metrics = apply_inductive_miner(log=pm4py_log,
+                                    path_data_sources=path_data_sources,
+                                    dir_runtime_files=dir_runtime_files,
+                                    dir_dfg_cluster_files=dir_dfg_cluster_files,
+                                    filename_dfg_cluster=filename_dfg_cluster,
+                                    rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
+                                    logging_level=logging_level)
 
     return metrics
 
