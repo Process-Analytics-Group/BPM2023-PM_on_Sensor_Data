@@ -61,30 +61,11 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
-        ecc.create_trace_from_file(data_sources_path=settings.path_data_sources,
-                                   dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                   filename_sensor_data=settings.filename_sensor_data,
-                                   rel_dir_name_sensor_data=settings.rel_dir_name_sensor_data,
-                                   csv_delimiter_sensor_data=settings.csv_delimiter_sensor_data,
-                                   csv_header_sensor_data=settings.csv_header_sensor_data,
-                                   csv_parse_dates_sensor_data=settings.csv_parse_dates_sensor_data,
-                                   csv_dtype_sensor_data=settings.csv_dtype_sensor_data,
-                                   filename_traces_raw=settings.filename_traces_raw,
-                                   csv_delimiter_traces=settings.csv_delimiter_traces,
-                                   filename_traces_basic=settings.filename_traces_basic,
-                                   csv_delimiter_traces_basic=settings.csv_delimiter_traces_basic,
-                                   filename_parameters_file=settings.filename_parameters_file,
-                                   number_of_motion_sensors=settings.number_of_motion_sensors,
-                                   prefix_motion_sensor_id=settings.prefix_motion_sensor_id,
+        ecc.create_trace_from_file(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                    dir_runtime_files=dir_runtime_files,
                                    distance_threshold=params['distance_threshold'],
-                                   max_number_of_people_in_house=settings.max_number_of_people_in_house,
                                    traces_time_out_threshold=params['traces_time_out_threshold'],
-                                   data_types=settings.data_types,
-                                   data_types_list=settings.data_types_list,
-                                   trace_length_limit=params['trace_length_limit'],
-                                   max_number_of_raw_input=settings.max_number_of_raw_input,
-                                   logging_level=settings.logging_level)
+                                   trace_length_limit=params['trace_length_limit'])
 
     # cut away the case number for SOM training
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]

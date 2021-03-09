@@ -10,70 +10,34 @@ import inspect
 import z_setting_parameters as settings
 
 
-def create_trace_from_file(data_sources_path,
-                           dict_distance_adjacency_sensor,
-                           filename_sensor_data,
-                           rel_dir_name_sensor_data,
-                           csv_delimiter_sensor_data,
-                           csv_header_sensor_data,
-                           csv_parse_dates_sensor_data,
-                           csv_dtype_sensor_data,
-                           filename_traces_raw,
-                           csv_delimiter_traces,
-                           filename_traces_basic,
-                           csv_delimiter_traces_basic,
+def create_trace_from_file(dict_distance_adjacency_sensor,
                            dir_runtime_files,
-                           filename_parameters_file,
-                           data_types,
-                           data_types_list,
                            trace_length_limit,
-                           max_number_of_raw_input,
-                           logging_level,
-                           number_of_motion_sensors,
-                           prefix_motion_sensor_id='M',
                            distance_threshold=1.5,
-                           max_number_of_people_in_house=2,
                            traces_time_out_threshold=300):
     """
     Creates traces out of a file with sensor activations.
 
-    :param data_sources_path: path of sources
-    :param dict_distance_adjacency_sensor: dictionary which contains a matrix which determine which sensors are near to each other
-    :param filename_sensor_data: filename of the file that contains the sensor data
-    :param rel_dir_name_sensor_data: folder name containing sensor data (relative from directory of sources)
-    :param csv_delimiter_sensor_data: delimiter of the columns in csv file of sensor data (input)
-    :param csv_header_sensor_data: indicator at which line the data starts
-    :param csv_parse_dates_sensor_data: columns that should get parsed as a date
-    :param csv_dtype_sensor_data: assignment of data types of columns in the file
-    :param filename_traces_raw: filename of trace file
-    :param csv_delimiter_traces: csv delimiter of trace files
-    :param filename_traces_basic: filename of divided trace file
-    :param csv_delimiter_traces_basic: csv delimiter of divided trace file
+    :param dict_distance_adjacency_sensor: dictionary which contains a matrix which determine which
+            sensors are near to each other
     :param dir_runtime_files: the folder of the current run
-    :param filename_parameters_file: filename of parameters file
-    :param data_types: column/s which is/are applied to divided traces
-    :param data_types_list: collection of all available data types
     :param trace_length_limit: maximum length of traces (in case length mode is used to separate raw-traces)
-    :param max_number_of_raw_input: limitation of the number of processed activations
-    :param logging_level: level of logging
-    :param number_of_motion_sensors: number of motion sensors
-    :param prefix_motion_sensor_id: prefix of motion sensor IDs
     :param distance_threshold: threshold when sensors are considered too far away
-    :param max_number_of_people_in_house: maximum number of persons which were in the house while the recording of sensor data
     :param traces_time_out_threshold: the time in seconds in which a sensor activation is assigned to a existing trace
     :return: The divided traces (traces_shortened), raw traces clustered into cases (output_case_traces_cluster),
     activated sensors grouped by divided traces (list_of_final_vectors_activations)
     """
+    data_sources_path = settings.path_data_sources
+    csv_delimiter_traces_basic = settings.csv_delimiter_traces_basic
+    filename_parameters_file = settings.filename_parameters_file
+    number_of_motion_sensors = settings.number_of_motion_sensors
+    data_types=settings.data_types
+    data_types_list=settings.data_types_list
+    max_number_of_raw_input=settings.max_number_of_raw_input
+    logging_level=settings.logging_level
 
     # read in the sensor data as a pandas data frame
-    raw_sensor_data = read_in_sensor_data(data_sources_path=data_sources_path,
-                                          filename_sensor_data=filename_sensor_data,
-                                          rel_dir_name_sensor_data=rel_dir_name_sensor_data,
-                                          csv_delimiter_sensor_data=csv_delimiter_sensor_data,
-                                          csv_header_sensor_data=csv_header_sensor_data,
-                                          csv_parse_dates_sensor_data=csv_parse_dates_sensor_data,
-                                          csv_dtype_sensor_data=csv_dtype_sensor_data,
-                                          logging_level=logging_level)
+    raw_sensor_data = read_in_sensor_data()
 
     # limits the number of data points by max_number_of_raw_input
     raw_sensor_data = limit_raw_sensor_data_points(raw_sensor_data=raw_sensor_data,
@@ -81,25 +45,18 @@ def create_trace_from_file(data_sources_path,
                                                    logging_level=logging_level)
 
     # creates traces out of the raw data
-    traces_raw_pd = convert_raw_data_to_traces(data_sources_path=data_sources_path,
+    traces_raw_pd = convert_raw_data_to_traces(
                                                dir_runtime_files=dir_runtime_files,
                                                raw_sensor_data=raw_sensor_data,
-                                               filename_parameters_file=filename_parameters_file,
-                                               filename_traces_raw=filename_traces_raw,
-                                               csv_delimiter_traces=csv_delimiter_traces,
                                                dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                               logging_level=logging_level,
-                                               number_of_motion_sensors=number_of_motion_sensors,
-                                               prefix_motion_sensor_id=prefix_motion_sensor_id,
                                                distance_threshold=distance_threshold,
-                                               max_number_of_people_in_house=max_number_of_people_in_house,
                                                traces_time_out_threshold=traces_time_out_threshold)
 
     # split up the raw traces to shorter traces
     traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations \
         = divide_raw_traces(traces_raw_pd=traces_raw_pd,
                             data_sources_path=data_sources_path,
-                            filename_traces_basic=filename_traces_basic,
+                            filename_traces_basic=settings.filename_traces_basic,
                             csv_delimiter_traces_basic=csv_delimiter_traces_basic,
                             dir_runtime_files=dir_runtime_files,
                             filename_parameters_file=filename_parameters_file,
@@ -359,35 +316,38 @@ def divide_raw_traces(traces_raw_pd,
 
 def convert_raw_data_to_traces(raw_sensor_data,
                                dict_distance_adjacency_sensor,
-                               data_sources_path,
                                dir_runtime_files,
-                               filename_parameters_file,
-                               filename_traces_raw,
-                               csv_delimiter_traces,
-                               logging_level,
-                               number_of_motion_sensors,
-                               prefix_motion_sensor_id='M',
                                distance_threshold=1.5,
-                               max_number_of_people_in_house=2,
                                traces_time_out_threshold=300):
     """
     Creates traces out of the raw sensor data.
 
     :param raw_sensor_data: pandas data frame of sensor points
     :param dict_distance_adjacency_sensor: dictionary which contains a matrix which determine which sensors are near to each other
-    :param data_sources_path: path of sources
     :param dir_runtime_files: directory of current run
-    :param filename_parameters_file: filename of parameters file
-    :param filename_traces_raw: filename of trace file which will get created
-    :param csv_delimiter_traces: csv delimiter of trace file which will get created
-    :param logging_level: level of logging
-    :param number_of_motion_sensors: number of motion sensors
-    :param prefix_motion_sensor_id: prefix of Motion-Sensor IDs
     :param distance_threshold: threshold when sensors are considered too far away
-    :param max_number_of_people_in_house: maximum number of persons in house
     :param traces_time_out_threshold: the time in seconds in which a sensor activation is assigned to a existing trace
     :return: A pandas data frame containing the created traces.
     """
+    # # # import from settings file
+    # data_sources_path: path of sources
+    data_sources_path = settings.path_data_sources
+
+    # filename_traces_raw: filename of trace file which will get created
+    filename_traces_raw = settings.filename_traces_raw
+
+    # csv_delimiter_traces: csv delimiter of trace file which will get created
+    csv_delimiter_traces = settings.csv_delimiter_traces
+
+    # number_of_motion_sensors: number of motion sensors
+    number_of_motion_sensors = settings.number_of_motion_sensors
+
+    # prefix_motion_sensor_id: prefix of Motion-Sensor IDs
+    prefix_motion_sensor_id = settings.prefix_motion_sensor_id
+
+    # max_number_of_people_in_house: maximum number of persons in house
+    max_number_of_people_in_house=settings.max_number_of_people_in_house
+    # # #
 
     # start timer
     t0_convert_raw2trace = timeit.default_timer()
@@ -577,31 +537,32 @@ def convert_raw_data_to_traces(raw_sensor_data,
     runtime_convert_raw2trace = np.round(t1_convert_raw2trace - t0_convert_raw2trace, 1)
     # logging
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
     logger.info("Extracting %s traces took %s seconds.", unique_new_trace_id - 1, runtime_convert_raw2trace)
 
     # write traces to disk
     utils.write_csv_file(data=pd_df_all_traces, filedir=data_sources_path + dir_runtime_files,
-                         filename=filename_traces_raw, separator=csv_delimiter_traces, logging_level=logging_level)
+                         filename=filename_traces_raw,
+                         separator=csv_delimiter_traces,
+                         logging_level=settings.logging_level)
     # logging
     logger.info("Traces were saved as csv file '../%s", data_sources_path + dir_runtime_files + filename_traces_raw)
 
     return pd_df_all_traces
 
 
-def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_sensor_data, csv_delimiter_sensor_data,
-                        csv_header_sensor_data, csv_parse_dates_sensor_data, csv_dtype_sensor_data, logging_level):
+def read_in_sensor_data():
     """
     Reads the sensor data file and returns the content of the file as pandas data frame.
-
-    :param data_sources_path: Path where the source files can be found
-    :param filename_sensor_data: Name of the file
-    :param rel_dir_name_sensor_data:  Name of the folder where the sensor data is located
-    :param csv_delimiter_sensor_data: Char that separates columns in csv files
-    :param csv_header_sensor_data: Row number/s to use as the column names, and the start of the data.
-    :param csv_parse_dates_sensor_data: columns that get passed as dates.
-    :param csv_dtype_sensor_data: data types of the columns
-    :param logging_level: level of logging
+    Uses the following parameters from the settings file:
+        data_sources_path: Path where the source files can be found
+        filename_sensor_data: Name of the file
+        rel_dir_name_sensor_data:  Name of the folder where the sensor data is located
+        csv_delimiter_sensor_data: Char that separates columns in csv files
+        csv_header_sensor_data: Row number/s to use as the column names, and the start of the data.
+        csv_parse_dates_sensor_data: columns that get passed as dates.
+        csv_dtype_sensor_data: data types of the columns
+        logging_level: level of logging
     :return: Pandas data frame containing the sensor information of file in given folder
     """
 
@@ -609,11 +570,13 @@ def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_se
     t0_read_csv_files = timeit.default_timer()
 
     # creates pandas data frame out of input of a csv file
-    data_frame = utils.read_csv_file(filedir=data_sources_path,
-                                     filename=filename_sensor_data, separator=csv_delimiter_sensor_data,
-                                     header=csv_header_sensor_data,
-                                     parse_dates=csv_parse_dates_sensor_data, dtype=csv_dtype_sensor_data,
-                                     logging_level=logging_level)
+    data_frame = utils.read_csv_file(filedir=settings.path_data_sources,
+                                     filename=settings.filename_sensor_data,
+                                     separator=settings.csv_delimiter_sensor_data,
+                                     header=settings.csv_header_sensor_data,
+                                     parse_dates=settings.csv_parse_dates_sensor_data,
+                                     dtype=settings.csv_dtype_sensor_data,
+                                     logging_level=settings.logging_level)
 
     # calculate how many data points there are
     number_of_data_points = data_frame.shape[0]
@@ -625,7 +588,7 @@ def read_in_sensor_data(data_sources_path, filename_sensor_data, rel_dir_name_se
 
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
     logger.info("Extracted %s data points from csv-File on disc in %s seconds",
                 number_of_data_points, runtime_read_csv_files)
 
