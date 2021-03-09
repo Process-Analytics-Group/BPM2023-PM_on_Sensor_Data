@@ -89,7 +89,10 @@ def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_ru
 def create_process_model(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
                          filename_dfg_cluster, rel_proportion_dfg_threshold, logging_level):
 
-    metrics = applyHeuristicMiner(log=output_case_traces_cluster,
+    # create a log that can be understood by pm4py
+    pm4py_log = convert_log_to_pm4py(log=output_case_traces_cluster)
+
+    metrics = applyHeuristicMiner(log=pm4py_log,
                                   path_data_sources=path_data_sources,
                                   dir_runtime_files=dir_runtime_files,
                                   dir_dfg_cluster_files=dir_dfg_cluster_files,
@@ -99,3 +102,22 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
 
     return metrics
 
+
+def convert_log_to_pm4py(log):
+
+    log['Date'] = log['Timestamp'].dt.date
+
+    log = log.reindex(columns={'Case', 'Timestamp', 'Cluster', 'Date'})
+    log = log.rename(columns={'Date': 'case:concept:name',
+                              'Cluster': 'concept:name',
+                              'Timestamp': 'time:timestamp'})
+    log = log.astype(str)
+    log['time:timestamp'] = pd.to_datetime(log['time:timestamp'])
+
+    # reduce log entries, so that every case only appears once
+    log.drop_duplicates(subset=['Case'], inplace=True)
+
+    # reset row index
+    log = log.reset_index(drop=True)
+
+    return log

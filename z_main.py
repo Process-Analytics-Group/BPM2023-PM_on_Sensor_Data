@@ -90,7 +90,7 @@ def perform_process_model_discovery(params):
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
 
     # ################### ActivityDiscovery ####################
-    # k-means clustering and som classification
+    # k-means clustering and SOM classification
     k_means_cluster_ids, sm, km, quantization_error, topographic_error = ad.cluster_and_classify_activities(
         trace_data_without_case_number=trace_data_without_case_number,
         number_of_clusters=params['k_means_number_of_clusters'], K_opt=params['k_means_number_of_clusters'],
