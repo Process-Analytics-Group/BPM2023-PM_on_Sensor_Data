@@ -1,9 +1,5 @@
-from tkinter import filedialog
-
-
 import os
 import pandas as pd
-from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.algo.discovery.heuristics import algorithm as heuristics_miner
 from pm4py.visualization.heuristics_net import visualizer as hn_visualizer
 from pm4py.visualization.petrinet import visualizer as pn_visualizer

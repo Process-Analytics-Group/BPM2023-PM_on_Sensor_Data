@@ -1,7 +1,5 @@
 ##Interface section
-from tkinter import filedialog
 ## Pm4py Section
-from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.algo.discovery.inductive import algorithm as inductive_miner
 from pm4py.visualization.petrinet import visualizer as pn_visualizer
 from pm4py.evaluation.replay_fitness import evaluator as replay_fitness_evaluator
@@ -25,10 +23,10 @@ def apply_inductive_miner(log,
 
     fitness = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
                                              variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
-    precision = precision_evaluator.apply(log, net, initial_marking, final_marking,
-                                     variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
-    generalization = generalization_evaluator.apply(log, net, initial_marking, final_marking)
-    simplicity = simplicity_evaluator.apply(net)
+    # precision = precision_evaluator.apply(log, net, initial_marking, final_marking,
+    #                                       variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
+    # generalization = generalization_evaluator.apply(log, net, initial_marking, final_marking)
+    # simplicity = simplicity_evaluator.apply(net)
 
     # ToDo uncomment metrics & metrics calculation above
     metrics = {'Fitness': fitness,
@@ -41,7 +39,10 @@ def apply_inductive_miner(log,
     gviz = pn_visualizer.apply(net, initial_marking, final_marking, parameters=parameters,
                                variant=pn_visualizer.Variants.FREQUENCY, log=log)
 
-    pn_visualizer.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelIM.png')))
+    pn_visualizer.save(gviz,
+                       path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelIM.png')))
 
     pn_visualizer.view(gviz)
     print("Induvtive Miner - Petri Net is done.")
+
+    return metrics
