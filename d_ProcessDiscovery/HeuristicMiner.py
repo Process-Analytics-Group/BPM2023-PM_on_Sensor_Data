@@ -28,23 +28,24 @@ def applyHeuristicMiner(log,
     parameters = {log_converter.Variants.TO_EVENT_LOG.value.Parameters.CASE_ID_KEY: 'case:concept:name'}
     log_converted = log_converter.apply(log, parameters=parameters, variant=log_converter.Variants.TO_EVENT_LOG)
 
-    net, im, fm = heuristics_miner.apply(log_converted, parameters={
+    net, initial_marking, final_marking = heuristics_miner.apply(log_converted, parameters={
         heuristics_miner.Variants.CLASSIC.value.Parameters.DEPENDENCY_THRESH: 0.8})
 
-    fitness = replay_fitness_evaluator.apply(log_converted, net, im, fm,
+    fitness = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
                                              variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
     # precision = precision_evaluator.apply(log, net, im, fm, variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
     # generalization = generalization_evaluator.apply(log, net, im, fm)
     # simplicity = simplicity_evaluator.apply(net)
 
+    # ToDo uncomment metrics & metrics calculation above
     metrics = {'Fitness': fitness,
     #           'Precision': precision,
     #           'Generalization': generalization,
     #           'Simplicity': simplicity
                }
 
-    gviz = pn_visualizer.apply(net, im, fm)
-    pn_visualizer.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModel.png')))
+    gviz = pn_visualizer.apply(net, initial_marking, final_marking)
+    pn_visualizer.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelHM.png')))
 
     pn_visualizer.view(gviz)
 
