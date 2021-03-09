@@ -7,6 +7,7 @@ import math
 import z_helper
 import z_utils as utils
 import inspect
+import z_setting_parameters as settings
 
 
 def create_trace_from_file(data_sources_path,
