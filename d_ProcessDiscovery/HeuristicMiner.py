@@ -10,17 +10,14 @@ from pm4py.evaluation.simplicity import evaluator as simplicity_evaluator
 from pm4py.objects.conversion.log import converter as log_converter
 from pm4py.visualization.dfg import visualizer as dfg_visualization
 
-def applyHeuristicMiner(log,
-                        path_data_sources,
-                        dir_runtime_files,
-                        dir_dfg_cluster_files,
-                        filename_dfg_cluster,
-                        rel_proportion_dfg_threshold,
-                        logging_level):
-    print("Prepare Heuristic Miner")
 
-
-
+def apply_heuristic_miner(log,
+                          path_data_sources,
+                          dir_runtime_files,
+                          dir_dfg_cluster_files,
+                          filename_dfg_cluster,
+                          rel_proportion_dfg_threshold,
+                          logging_level):
     parameters = {log_converter.Variants.TO_EVENT_LOG.value.Parameters.CASE_ID_KEY: 'case:concept:name'}
     log_converted = log_converter.apply(log, parameters=parameters, variant=log_converter.Variants.TO_EVENT_LOG)
 
@@ -34,17 +31,16 @@ def applyHeuristicMiner(log,
     # simplicity = simplicity_evaluator.apply(net)
 
     # ToDo uncomment metrics & metrics calculation above
-    metrics = {'Fitness': fitness,
-    #           'Precision': precision,
-    #           'Generalization': generalization,
-    #           'Simplicity': simplicity
+    metrics = {'fitness': fitness,
+               #           'precision': precision,
+               #           'generalization': generalization,
+               #           'simplicity': simplicity
                }
 
     gviz = pn_visualizer.apply(net, initial_marking, final_marking)
-    pn_visualizer.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelHM.png')))
+    pn_visualizer.save(gviz,
+                       path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelHM.png')))
 
     pn_visualizer.view(gviz)
-
-    print("Heuristic Miner completed.")
 
     return metrics

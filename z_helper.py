@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import os
 import sys
 import inspect
 import timeit
@@ -139,3 +138,20 @@ def append_to_performance_documentation_file(path_data_sources,
 
         logger.info("Saving entry to benchmark file took %s seconds.",
                     runtime)
+
+
+def create_distance_threshold_list(distance_threshold_min,
+                                   distance_threshold_max,
+                                   distance_threshold_step_length):
+
+    # creates a list of possible thresholds
+    curr_distance_threshold = distance_threshold_min
+    distance_threshold_list = []
+
+    while curr_distance_threshold < distance_threshold_max:
+        distance_threshold_list.append(curr_distance_threshold)
+        curr_distance_threshold += distance_threshold_step_length
+
+    distance_threshold_list.append(distance_threshold_max)
+
+    return distance_threshold_list

@@ -29,10 +29,10 @@ def apply_inductive_miner(log,
     # simplicity = simplicity_evaluator.apply(net)
 
     # ToDo uncomment metrics & metrics calculation above
-    metrics = {'Fitness': fitness,
-               #           'Precision': precision,
-               #           'Generalization': generalization,
-               #           'Simplicity': simplicity
+    metrics = {'fitness': fitness,
+               #           'precision': precision,
+               #           'generalization': generalization,
+               #           'simplicity': simplicity
                }
 
     parameters = {pn_visualizer.Variants.FREQUENCY.value.Parameters.FORMAT: "png"}
@@ -43,6 +43,5 @@ def apply_inductive_miner(log,
                        path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelIM.png')))
 
     pn_visualizer.view(gviz)
-    print("Induvtive Miner - Petri Net is done.")
 
     return metrics

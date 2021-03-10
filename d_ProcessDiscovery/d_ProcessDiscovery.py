@@ -9,7 +9,7 @@ from pm4py.algo.discovery.dfg import algorithm as dfg_discovery
 from pm4py.statistics.start_activities.log import get as sa_get
 from pm4py.statistics.end_activities.log import get as ea_get
 from pm4py.visualization.dfg import visualizer as dfg_visualization
-from d_ProcessDiscovery.HeuristicMiner import applyHeuristicMiner
+from d_ProcessDiscovery.HeuristicMiner import apply_heuristic_miner
 from d_ProcessDiscovery.InductiveMiner import apply_inductive_miner
 
 
@@ -61,25 +61,13 @@ def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_ru
         start_activities = sa_get.get_start_activities(log)
         end_activities = ea_get.get_end_activities(log)
 
-
         # create png of dfg (if the graph does not show a graph, it is possible that the sensors did not trigger often)
-        gviz = dfg_visualization.apply(dfg0=dfg, log=log, variant=dfg_visualization.Variants.FREQUENCY,
+        gviz = dfg_visualization.apply(dfg=dfg, log=log, variant=dfg_visualization.Variants.FREQUENCY,
                                        parameters={'start_activities': start_activities,
                                                    'end_activities': end_activities})
         dfg_visualization.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (
             filename_dfg_cluster.format(cluster=str(cluster))))
-##########################################################
-        # from pm4py.algo.discovery.heuristics import algorithm as heuristics_miner
-        # net, im, fm = heuristics_miner.apply(log, parameters={
-        #     heuristics_miner.Variants.CLASSIC.value.Parameters.DEPENDENCY_THRESH: 0.99})
-        #
-        # from pm4py.visualization.petrinet import visualizer as pn_visualizer
-        # gviz_pn = pn_visualizer.apply(net, im, fm)
-        # pn_visualizer.view(gviz_pn)
-        #
-        # from pm4py.evaluation.generalization import evaluator as generalization_evaluator
-        # gen = generalization_evaluator.apply(log, net, im, fm)
-#################################################################################
+
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)
@@ -88,32 +76,41 @@ def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_ru
 
 
 def create_process_model(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
-                         filename_dfg_cluster, rel_proportion_dfg_threshold, logging_level):
-
+                         filename_dfg_cluster, rel_proportion_dfg_threshold, miner_type, miner_type_list,
+                         logging_level):
     # create a log that can be understood by pm4py
     pm4py_log = convert_log_to_pm4py(log=output_case_traces_cluster)
 
-    metrics = applyHeuristicMiner(log=pm4py_log,
-                                  path_data_sources=path_data_sources,
-                                  dir_runtime_files=dir_runtime_files,
-                                  dir_dfg_cluster_files=dir_dfg_cluster_files,
-                                  filename_dfg_cluster=filename_dfg_cluster,
-                                  rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
-                                  logging_level=logging_level)
+    # logger
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
 
-    metrics = apply_inductive_miner(log=pm4py_log,
-                                    path_data_sources=path_data_sources,
-                                    dir_runtime_files=dir_runtime_files,
-                                    dir_dfg_cluster_files=dir_dfg_cluster_files,
-                                    filename_dfg_cluster=filename_dfg_cluster,
-                                    rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
-                                    logging_level=logging_level)
+    if miner_type == 'heuristic':
+        metrics = apply_heuristic_miner(log=pm4py_log,
+                                        path_data_sources=path_data_sources,
+                                        dir_runtime_files=dir_runtime_files,
+                                        dir_dfg_cluster_files=dir_dfg_cluster_files,
+                                        filename_dfg_cluster=filename_dfg_cluster,
+                                        rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
+                                        logging_level=logging_level)
+        logger.info("Applied heuristic miner to log.")
+    elif miner_type == 'inductive':
+        metrics = apply_inductive_miner(log=pm4py_log,
+                                        path_data_sources=path_data_sources,
+                                        dir_runtime_files=dir_runtime_files,
+                                        dir_dfg_cluster_files=dir_dfg_cluster_files,
+                                        filename_dfg_cluster=filename_dfg_cluster,
+                                        rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
+                                        logging_level=logging_level)
+        logger.info("Applied inductive miner to log.")
+    else:
+        logger.info("The chosen miner type '%s' is invalid. Please choose one of the following: %s", miner_type,
+                    miner_type_list)
 
     return metrics
 
 
 def convert_log_to_pm4py(log):
-
     log['Date'] = log['Timestamp'].dt.date
 
     log = log.reindex(columns={'Case', 'Timestamp', 'Cluster', 'Date'})

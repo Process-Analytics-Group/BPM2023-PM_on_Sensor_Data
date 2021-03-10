@@ -11,7 +11,7 @@ import os
 # import settings file
 import z_setting_parameters as settings
 import z_DistanceMatrixCreation as create_dm
-import z_helper
+import z_helper as helper
 from a_EventCaseCorrelation import a_EventCaseCorrelation as ecc
 from b_ActivityDiscovery import b_ActivityDiscovery as ad
 from c_EventActivityAbstraction import c_EventActivityAbstraction as eaa
@@ -40,7 +40,7 @@ def perform_process_model_discovery(params):
     if not os.path.exists(settings.path_data_sources + dir_runtime_files):
         os.makedirs(settings.path_data_sources + dir_runtime_files)
 
-    z_helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files, params=params)
+    helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files, params=params)
 
     # Logger configuration
     logging.basicConfig(
@@ -105,15 +105,16 @@ def perform_process_model_discovery(params):
                                        dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
                                        filename_dfg_cluster=settings.filename_dfg_cluster,
                                        rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
+                                       miner_type=settings.miner_type,
+                                       miner_type_list=settings.miner_type_list,
                                        logging_level=settings.logging_level)
 
-    print(metrics)
     # stop timer
     t1_main = timeit.default_timer()
 
     # calculate runtime
     runtime_main = np.round(t1_main - t0_main, 1)
-    z_helper.append_to_performance_documentation_file(
+    helper.append_to_performance_documentation_file(
         path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_benchmark=settings.filename_benchmark,
@@ -129,14 +130,14 @@ def perform_process_model_discovery(params):
                             'data_types': settings.data_types,
                             'k_means_number_of_clusters': params['k_means_number_of_clusters']})
 
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='runtime_main',
         new_entry_to_log_value=runtime_main,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=settings.filename_parameters_file,
         new_entry_to_log_description='Total runtime in seconds.')
 
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='execution_completed',
         new_entry_to_log_value=True,
         dir_runtime_files=dir_runtime_files,
@@ -146,15 +147,22 @@ def perform_process_model_discovery(params):
     logger.info("Total runtime: %s", runtime_main)
     logger.info("################# End iteration %s of %s #################",
                 perform_process_model_discovery.iteration_counter, settings.opt_attempts)
+
     return {
-        # ToDo: replace loss-function "-1" with actual method for process model evaluation
-        'loss': -1,
+        # ToDo: Is the current loss value the right one?
+        'loss': metrics['fitness']['log_fitness'],
         'status': STATUS_OK,
         'iteration': perform_process_model_discovery.iteration_counter,
         'dir_runtime_files': dir_runtime_files,
         'opt_params': params
     }
 
+
+# creates a selection of thresholds out of min, max and threshold length
+distance_threshold_list = helper.create_distance_threshold_list(
+    distance_threshold_min=settings.distance_threshold_min,
+    distance_threshold_max=settings.distance_threshold_max,
+    distance_threshold_step_length=settings.distance_threshold_step_length)
 
 # hyperopt parameter tuning
 # parameter's search space
@@ -167,22 +175,30 @@ space = {
                                      settings.trace_length_limit_max + 1),
     'k_means_number_of_clusters': hp.randint('k_means_number_of_clusters', settings.k_means_number_of_clusters_min,
                                              settings.k_means_number_of_clusters_max + 1),
-    'distance_threshold': hp.uniform('distance_threshold', settings.distance_threshold_min,
-                                     settings.distance_threshold_max + 10 ** -10)
+    'distance_threshold': hp.choice('distance_threshold', distance_threshold_list)
 }
 
+# capture the iterations of hyperopt parameter tuning
 perform_process_model_discovery.iteration_counter = 0
 trials = Trials()
-best = fmin(fn=perform_process_model_discovery, space=space, algo=settings.opt_algorithm,
-            max_evals=settings.opt_attempts, verbose=False, trials=trials)
-for attempt in trials.trials:
-    if attempt['result']['opt_params'] == best:
-        best_attempt = attempt['result']['opt_params']
-        print('optimised function value =', attempt['result']['loss'])
-        print('optimised parameters:')
-        for key, value in best.items():
-            print('\t', key, '=', value)
-        print('files directory =', attempt['result']['dir_runtime_files'])
-        print('iteration =', attempt['result']['iteration'])
-        break
+# perform process model discovery for different parameter combinations and find the best outcome (hyperopt parameter tuning)
+fmin(fn=perform_process_model_discovery,
+     space=space,
+     algo=settings.opt_algorithm,
+     max_evals=settings.opt_attempts,
+     verbose=False,
+     trials=trials)
+
+# additional information of the best iteration
+best = trials.best_trial
+information_string = '\n\toptimised function value = ' + str(best['result']['loss']) + '\n\toptimised parameters:'
+for key, value in best['result']['opt_params'].items():
+    information_string += '\n\t\t' + str(key) + ' = ' + str(value)
+information_string += '\n\tfiles directory = ' + str(best['result']['dir_runtime_files']) + '\n\titeration = ' + str(
+    best['result']['iteration'])
+
+# looger to print the information
+logger = logging.getLogger('main')
+logger.setLevel(settings.logging_level)
+logger.info(information_string)
 pass

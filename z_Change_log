@@ -1,3 +1,12 @@
+2021-03-10
+KD: added possibility to choose between heuristic and inductive miner
+KD: added function to create a distance threshold value selection for parameter tuning
+KD: changed logging
+KD: added comments
+
+2021-03-09
+DJ: changed project structure
+
 2021-03-05
 KD: implemented parameter optimization
 KD: altered folder structure

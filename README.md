@@ -26,14 +26,17 @@ Clone this repository to your local machine using https://github.com/d-o-m-i-n-i
 ## Usage
 
 ### Step 0: z_create_distance_matrix
-
 - Distance matrix is created from the adjacency matrix using the Floyd-Warshall-Algorithm
 
-### Step 1: a_EventCaseCorelation
+<br>
+<br>
+The following steps are performed in several iterations with different parameters. The parameters are determined by hyperparameter optimization using "hyperopt".
+ 
+### Step 1: a_EventCaseCorrelation
 Transform raw-data to traces
-- read in the sensor data
-- create trace from the raw data by associating every event log entry to an entity (def convert_raw_data_to_traces)
-- split up the raw traces to shorter traces (def divide_raw_traces)
+- Read in the sensor data
+- Create trace from the raw data by associating every event log entry to an entity (def convert_raw_data_to_traces)
+- Split up the raw traces to shorter traces (def divide_raw_traces)
 
 ### Step 2: b_ActivityDiscovery
 Activity Discovery
@@ -46,4 +49,5 @@ Event Activity Abstraction
 
 ### Step 4: d_ProcessDiscovery
 Process Discovery
-- create a directly follows graph of the process using the visualization tool "graphviz"
+- Create a directly follows graph of the process using the visualization tool "graphviz"
+- Determine the accuracy of a process model using "PM4Py"

@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 from hyperopt import tpe
 
 # ############################################################
@@ -95,6 +94,7 @@ max_number_of_raw_input = 6500
 # threshold when sensors are considered too far away (range for parameter optimization)
 distance_threshold_min = 1.2
 distance_threshold_max = 1.2
+distance_threshold_step_length = 0.1
 
 # maximum number of persons which were in the house while the recording of sensor data
 max_number_of_people_in_house = 1
@@ -116,3 +116,7 @@ dir_dfg_cluster_files = 'directly_follows_graphs/'
 filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
 # threshold for filtering out sensors in dfg relative to max occurrences of a sensor (value in range 0-1)
 rel_proportion_dfg_threshold = 0.5
+
+# miner used for process model creation - choose between: heuristic, inductive
+miner_type = 'heuristic'
+miner_type_list = ['heuristic', 'inductive']
