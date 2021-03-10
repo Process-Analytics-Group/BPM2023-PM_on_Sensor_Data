@@ -2,6 +2,8 @@
 KD: added possibility to choose between heuristic and inductive miner
 KD: added function to create a distance threshold value selection for parameter tuning
 KD: changed logging
+KD: added settings correctness check
+KD: altered folder structure and file names
 KD: added comments
 
 2021-03-09

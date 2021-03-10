@@ -9,8 +9,8 @@ from pm4py.algo.discovery.dfg import algorithm as dfg_discovery
 from pm4py.statistics.start_activities.log import get as sa_get
 from pm4py.statistics.end_activities.log import get as ea_get
 from pm4py.visualization.dfg import visualizer as dfg_visualization
-from d_ProcessDiscovery.HeuristicMiner import apply_heuristic_miner
-from d_ProcessDiscovery.InductiveMiner import apply_inductive_miner
+from d_ProcessDiscovery.miner.HeuristicMiner import apply_heuristic_miner
+from d_ProcessDiscovery.miner.InductiveMiner import apply_inductive_miner
 
 
 def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,

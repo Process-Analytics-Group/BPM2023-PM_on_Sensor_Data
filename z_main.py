@@ -1,4 +1,3 @@
-from sklearn.model_selection import ParameterGrid
 # supports logging
 import logging
 
@@ -9,9 +8,8 @@ from hyperopt import hp, fmin, Trials, STATUS_OK
 import os
 
 # import settings file
+from u_utils import u_helper as helper, u_DistanceMatrixCreation as create_dm
 import z_setting_parameters as settings
-import z_DistanceMatrixCreation as create_dm
-import z_helper as helper
 from a_EventCaseCorrelation import a_EventCaseCorrelation as ecc
 from b_ActivityDiscovery import b_ActivityDiscovery as ad
 from c_EventActivityAbstraction import c_EventActivityAbstraction as eaa
@@ -19,6 +17,33 @@ from d_ProcessDiscovery import d_ProcessDiscovery as prd
 
 # start timer
 t0_main = timeit.default_timer()
+
+# Logger configuration
+logging.basicConfig(
+    level=settings.logging_level, format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
+    handlers=[
+        logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
+        logging.StreamHandler()])
+# "disable" specific logger
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
+logging.getLogger('hyperopt').setLevel(logging.WARNING)
+
+# checks settings for correctness
+helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
+                      zero_distance_value_max=settings.zero_distance_value_max,
+                      distance_threshold_min=settings.distance_threshold_min,
+                      distance_threshold_max=settings.distance_threshold_max,
+                      traces_time_out_threshold_min=settings.traces_time_out_threshold_min,
+                      traces_time_out_threshold_max=settings.traces_time_out_threshold_max,
+                      trace_length_limit_min=settings.trace_length_limit_min,
+                      trace_length_limit_max=settings.trace_length_limit_max,
+                      k_means_number_of_clusters_min=settings.k_means_number_of_clusters_min,
+                      k_means_number_of_clusters_max=settings.k_means_number_of_clusters_max,
+                      data_types=settings.data_types,
+                      data_types_list=settings.data_types_list,
+                      miner_type=settings.miner_type,
+                      miner_type_list=settings.miner_type_list,
+                      logging_level=settings.logging_level)
 
 # get distance Matrix from imported adjacency-matrix
 dict_distance_adjacency_sensor = create_dm.get_distance_matrix()
@@ -41,13 +66,6 @@ def perform_process_model_discovery(params):
         os.makedirs(settings.path_data_sources + dir_runtime_files)
 
     helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files, params=params)
-
-    # Logger configuration
-    logging.basicConfig(
-        level=settings.logging_level, format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
-        handlers=[
-            logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
-            logging.StreamHandler()])
 
     logger = logging.getLogger('main')
     logger.setLevel(settings.logging_level)
@@ -150,7 +168,7 @@ def perform_process_model_discovery(params):
 
     return {
         # ToDo: Is the current loss value the right one?
-        'loss': metrics['fitness']['log_fitness'],
+        'loss': -metrics['fitness']['log_fitness'],
         'status': STATUS_OK,
         'iteration': perform_process_model_discovery.iteration_counter,
         'dir_runtime_files': dir_runtime_files,
@@ -191,7 +209,7 @@ fmin(fn=perform_process_model_discovery,
 
 # additional information of the best iteration
 best = trials.best_trial
-information_string = '\n\toptimised function value = ' + str(best['result']['loss']) + '\n\toptimised parameters:'
+information_string = '\n\toptimised function value = ' + str(-best['result']['loss']) + '\n\toptimised parameters:'
 for key, value in best['result']['opt_params'].items():
     information_string += '\n\t\t' + str(key) + ' = ' + str(value)
 information_string += '\n\tfiles directory = ' + str(best['result']['dir_runtime_files']) + '\n\titeration = ' + str(

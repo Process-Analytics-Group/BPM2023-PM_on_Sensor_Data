@@ -23,10 +23,10 @@ from sklearn import neighbors
 from joblib import Parallel, delayed, load, dump
 import sys
 
-from b_ActivityDiscovery.self_organizing_map.y_decorators import timeit
-from b_ActivityDiscovery.self_organizing_map.y_codebook import Codebook
-from b_ActivityDiscovery.self_organizing_map.y_neighborhood import NeighborhoodFactory
-from b_ActivityDiscovery.self_organizing_map.y_normalization import NormalizatorFactory
+from b_ActivityDiscovery.self_organizing_map.decorators import timeit
+from b_ActivityDiscovery.self_organizing_map.codebook import Codebook
+from b_ActivityDiscovery.self_organizing_map.neighborhood import NeighborhoodFactory
+from b_ActivityDiscovery.self_organizing_map.normalization import NormalizatorFactory
 
 
 # lbugnon
@@ -546,8 +546,7 @@ class SOM(object):
     def cluster(self, n_clusters=8, opt=0):
         import sklearn.cluster as clust
 
-        print("Performing K-means SSE elbow sweep...")
-
+        # Performing K-means SSE elbow sweep
         # generate the bootstrap samples
         BTS = 20
         BTS_SIZE = 0.8
@@ -594,10 +593,6 @@ class SOM(object):
             index = opt
 
         km = clust.KMeans(n_clusters=index).fit(normalized_data)
-
-        # print cluster centroids
-        for i in range(index):
-            print("Centroid " + str(i) + str(km.cluster_centers_[i]))
 
         self.cluster_labels = km.labels_
         return km.labels_, km, normalized_data

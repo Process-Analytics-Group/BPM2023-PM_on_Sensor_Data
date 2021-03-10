@@ -4,10 +4,9 @@ import numpy as np
 import logging
 import timeit
 import math
-import z_helper
-import z_utils as utils
-import inspect
+from u_utils import u_utils as utils, u_helper as helper
 import z_setting_parameters as settings
+import inspect
 
 
 def create_trace_from_file(dict_distance_adjacency_sensor,
@@ -31,10 +30,10 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
     csv_delimiter_traces_basic = settings.csv_delimiter_traces_basic
     filename_parameters_file = settings.filename_parameters_file
     number_of_motion_sensors = settings.number_of_motion_sensors
-    data_types=settings.data_types
-    data_types_list=settings.data_types_list
-    max_number_of_raw_input=settings.max_number_of_raw_input
-    logging_level=settings.logging_level
+    data_types = settings.data_types
+    data_types_list = settings.data_types_list
+    max_number_of_raw_input = settings.max_number_of_raw_input
+    logging_level = settings.logging_level
 
     # read in the sensor data as a pandas data frame
     raw_sensor_data = read_in_sensor_data()
@@ -46,11 +45,11 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
 
     # creates traces out of the raw data
     traces_raw_pd = convert_raw_data_to_traces(
-                                               dir_runtime_files=dir_runtime_files,
-                                               raw_sensor_data=raw_sensor_data,
-                                               dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                               distance_threshold=distance_threshold,
-                                               traces_time_out_threshold=traces_time_out_threshold)
+        dir_runtime_files=dir_runtime_files,
+        raw_sensor_data=raw_sensor_data,
+        dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+        distance_threshold=distance_threshold,
+        traces_time_out_threshold=traces_time_out_threshold)
 
     # split up the raw traces to shorter traces
     traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations \
@@ -142,7 +141,7 @@ def calculate_pairwise_dissimilarity(list_of_final_vectors_activations,
     # calculate runtime
     runtime_dissimilarity_matrix = np.round(t1_read_csv_files - t0_read_csv_files, 1)
 
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
         new_entry_to_log_value=runtime_dissimilarity_matrix,
         path_data_sources=data_sources_path,
@@ -274,27 +273,20 @@ def divide_raw_traces(traces_raw_pd,
         final_vector = pd.concat([final_vector_time, final_vector_quantity],
                                  axis=1,
                                  ignore_index=True)
-    else:
-        # if invalid data types are selected the final vector can't get created.
-        exception_msg = str(
-            '\'' + data_types + '\' is not a valid choice for data types. Please choose one of the following: ' + str(
-                data_types_list))
-        logger.exception(exception_msg)
-        raise ValueError(exception_msg)
 
     # stop timer
     t1_divide_raw_traces = timeit.default_timer()
     # calculate runtime
     runtime_divide_raw_traces = np.round(t1_divide_raw_traces - t0_divide_raw_traces, 1)
 
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='case_id_for_short_traces',
         new_entry_to_log_value=divided_trace_case_id - 1,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Number of shorter traces of length ' + str(max_trace_length) + '.')
 
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
         new_entry_to_log_value=runtime_divide_raw_traces,
         dir_runtime_files=dir_runtime_files,
@@ -346,7 +338,7 @@ def convert_raw_data_to_traces(raw_sensor_data,
     prefix_motion_sensor_id = settings.prefix_motion_sensor_id
 
     # max_number_of_people_in_house: maximum number of persons in house
-    max_number_of_people_in_house=settings.max_number_of_people_in_house
+    max_number_of_people_in_house = settings.max_number_of_people_in_house
     # # #
 
     # start timer

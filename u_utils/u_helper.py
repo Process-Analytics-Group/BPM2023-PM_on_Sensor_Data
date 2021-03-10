@@ -143,7 +143,6 @@ def append_to_performance_documentation_file(path_data_sources,
 def create_distance_threshold_list(distance_threshold_min,
                                    distance_threshold_max,
                                    distance_threshold_step_length):
-
     # creates a list of possible thresholds
     curr_distance_threshold = distance_threshold_min
     distance_threshold_list = []
@@ -155,3 +154,59 @@ def create_distance_threshold_list(distance_threshold_min,
     distance_threshold_list.append(distance_threshold_max)
 
     return distance_threshold_list
+
+
+def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
+                   traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
+                   trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max, data_types,
+                   data_types_list, miner_type, miner_type_list, logging_level):
+    # checks settings for correctness (if they are invalid the execution get stopped)
+    settings_valid = True
+
+    # logger
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
+
+    # checking different settings
+    if zero_distance_value_min > zero_distance_value_max:
+        logger.error("'zero_distance_value_min' has to be <= 'zero_distance_value_max'")
+        settings_valid = False
+
+    if distance_threshold_min > distance_threshold_max:
+        logger.error("'distance_threshold_min' has to be <= 'distance_threshold_max'")
+        settings_valid = False
+
+    if traces_time_out_threshold_min > traces_time_out_threshold_max:
+        logger.error("'traces_time_out_threshold_min' has to be <= 'traces_time_out_threshold_max'")
+        settings_valid = False
+
+    if trace_length_limit_min > trace_length_limit_max:
+        logger.error("'trace_length_limit_min' has to be <= 'trace_length_limit_max'")
+        settings_valid = False
+
+    if k_means_number_of_clusters_min > k_means_number_of_clusters_max:
+        logger.error("'k_means_number_of_clusters_min' has to be <= 'k_means_number_of_clusters_max'")
+        settings_valid = False
+
+    if data_types not in data_types_list:
+        # if invalid data types are selected the final vector can't get created.
+        error_msg = str("'" + data_types +
+                        "' is not a valid choice for data types. Please choose one of the following: " +
+                        str(data_types_list))
+        logger.error(error_msg)
+        settings_valid = False
+
+    if miner_type not in miner_type_list:
+        error_msg = str("'" + miner_type +
+                        "' is not a valid choice for a miner. Please choose one of the following: " +
+                        str(miner_type_list))
+        logger.error(error_msg)
+        settings_valid = False
+
+    # if at least one parameter is wrong the execution stops with an value error
+    if not settings_valid:
+        raise ValueError()
+
+    # if all settings are valid the program get executed
+    logger.info("The chosen settings are valid")
+    return

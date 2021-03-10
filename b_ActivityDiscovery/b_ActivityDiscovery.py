@@ -3,9 +3,9 @@ import inspect
 import logging
 
 from sklearn.cluster import KMeans
-from b_ActivityDiscovery.self_organizing_map.y_sompy import SOMFactory
+from b_ActivityDiscovery.self_organizing_map.sompy import SOMFactory
 import numpy as np
-import z_helper
+from u_utils import u_helper as helper
 
 
 def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt, path_data_sources,
@@ -48,14 +48,14 @@ def self_organising_map(trace_data_without_case_number, K_opt, path_data_sources
     # The topographic error: the proportion of all data vectors for which first and second BMUs are not adjacent units.
     topographic_error = sm.calculate_topographic_error()
     quantization_error = np.mean(sm._bmu[1])
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='topographic_error',
         new_entry_to_log_value=topographic_error,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='The topographic error: the proportion of all data '
                                      'vectors for which first and second BMUs are not adjacent units.')
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='quantization_error',
         new_entry_to_log_value=quantization_error,
         dir_runtime_files=dir_runtime_files,
@@ -63,7 +63,7 @@ def self_organising_map(trace_data_without_case_number, K_opt, path_data_sources
         new_entry_to_log_description='The quantization error: '
                                      'average distance between each data vector and its BMU.')
 
-    z_helper.append_to_log_file(
+    helper.append_to_log_file(
         new_entry_to_log_variable='k_means_number_of_clusters',
         new_entry_to_log_value=K_opt,
         dir_runtime_files=dir_runtime_files,
