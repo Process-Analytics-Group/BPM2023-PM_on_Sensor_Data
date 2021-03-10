@@ -1,4 +1,4 @@
-# supports logging
+import inspect
 import logging
 
 from datetime import datetime
@@ -67,7 +67,7 @@ def perform_process_model_discovery(params):
 
     helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files, params=params)
 
-    logger = logging.getLogger('main')
+    logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
     logger.info("################# Start iteration %s of %s #################",
                 perform_process_model_discovery.iteration_counter, settings.opt_attempts)
@@ -215,7 +215,7 @@ for key, value in best['result']['opt_params'].items():
 information_string += '\n\tfiles directory = ' + str(best['result']['dir_runtime_files']) + '\n\titeration = ' + str(
     best['result']['iteration'])
 
-# looger to print the information
+# logger to print and save the information
 logger = logging.getLogger('main')
 logger.setLevel(settings.logging_level)
 logger.info(information_string)

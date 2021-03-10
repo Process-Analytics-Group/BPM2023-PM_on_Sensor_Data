@@ -103,9 +103,6 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
                                         rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
                                         logging_level=logging_level)
         logger.info("Applied inductive miner to log.")
-    else:
-        logger.info("The chosen miner type '%s' is invalid. Please choose one of the following: %s", miner_type,
-                    miner_type_list)
 
     return metrics
 
