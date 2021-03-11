@@ -2,9 +2,12 @@ import pandas as pd
 import logging
 import pathlib
 import inspect
+import numpy as np
+import timeit
+import z_setting_parameters as settings
 
 
-def read_csv_file(filedir, filename, separator, header, logging_level, parse_dates=None, dtype=None):
+def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=None):
     """Reads a csv file and returns the content of the file as pandas data frame.
 
     :param filedir: The folder the file lies in.
@@ -16,8 +19,11 @@ def read_csv_file(filedir, filename, separator, header, logging_level, parse_dat
     :param dtype: A mapping of data types to the columns in the file.
     :return: the content of the file as pandas data frame
     """
-
+    logging_level = settings.logging_level
     try:
+        # start timer
+        t0_read_csv_files = timeit.default_timer()
+
         # creates path out of file dir and file name
         file_path = pathlib.Path(filedir + filename)
 
@@ -34,11 +40,26 @@ def read_csv_file(filedir, filename, separator, header, logging_level, parse_dat
                                  dtype=dtype,
                                  error_bad_lines=False)
 
+        # calculate how many data points there are
+        number_of_data_points = data_frame.shape[0]
+
+        # stop timer
+        t1_read_csv_files = timeit.default_timer()
+        # calculate runtime
+        runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
+
+        # logger
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(settings.logging_level)
+        logger.info("Extracted %s data points from csv-File on disc in %s seconds",
+                    number_of_data_points, runtime_read_csv_files)
+
     # if there is no file the program ends
     except FileNotFoundError as err:
         err_msg = str('There is no file named "../' + str(file_path) + '".')
         logger.error(err, err_msg)
         raise err
+
 
     return data_frame
 

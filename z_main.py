@@ -9,6 +9,7 @@ import os
 
 # import settings file
 from u_utils import u_helper as helper, u_DistanceMatrixCreation as create_dm
+from u_utils import u_utils
 import z_setting_parameters as settings
 from a_EventCaseCorrelation import a_EventCaseCorrelation as ecc
 from b_ActivityDiscovery import b_ActivityDiscovery as ad
@@ -53,6 +54,16 @@ create_dm.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sen
                                data_sources_path=settings.path_data_sources,
                                filename_adjacency_plot=settings.filename_adjacency_plot)
 
+# load data
+# read in the sensor data as a pandas data frame
+raw_sensor_data = u_utils.read_csv_file(filedir=settings.path_data_sources,
+                                        filename=settings.filename_sensor_data,
+                                        separator=settings.csv_delimiter_sensor_data,
+                                        header=settings.csv_header_sensor_data,
+                                        parse_dates=settings.csv_parse_dates_sensor_data,
+                                        dtype=settings.csv_dtype_sensor_data,
+                                        )
+
 
 def perform_process_model_discovery(params):
     # count number of iterations
@@ -83,7 +94,8 @@ def perform_process_model_discovery(params):
                                    dir_runtime_files=dir_runtime_files,
                                    distance_threshold=params['distance_threshold'],
                                    traces_time_out_threshold=params['traces_time_out_threshold'],
-                                   trace_length_limit=params['trace_length_limit'])
+                                   trace_length_limit=params['trace_length_limit'],
+                                   raw_sensor_data=raw_sensor_data)
 
     # cut away the case number for SOM training
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]

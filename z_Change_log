@@ -1,3 +1,7 @@
+2021-03-11
+DJ: Moved load_raw_data from a_EventCaseCorrelation to utils folder.
+    No need to load the raw file every iteration.
+
 2021-03-10
 KD: added possibility to choose between heuristic and inductive miner
 KD: added function to create a distance threshold value selection for parameter tuning

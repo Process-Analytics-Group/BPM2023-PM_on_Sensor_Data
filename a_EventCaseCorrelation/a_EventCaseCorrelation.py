@@ -13,10 +13,12 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
                            dir_runtime_files,
                            trace_length_limit,
                            distance_threshold=1.5,
-                           traces_time_out_threshold=300):
+                           traces_time_out_threshold=300,
+                           raw_sensor_data=None):
     """
     Creates traces out of a file with sensor activations.
 
+    :param raw_sensor_data: raw unedited sensor data imported from a csv file
     :param dict_distance_adjacency_sensor: dictionary which contains a matrix which determine which
             sensors are near to each other
     :param dir_runtime_files: the folder of the current run
@@ -34,9 +36,6 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
     data_types_list = settings.data_types_list
     max_number_of_raw_input = settings.max_number_of_raw_input
     logging_level = settings.logging_level
-
-    # read in the sensor data as a pandas data frame
-    raw_sensor_data = read_in_sensor_data()
 
     # limits the number of data points by max_number_of_raw_input
     raw_sensor_data = limit_raw_sensor_data_points(raw_sensor_data=raw_sensor_data,
@@ -541,47 +540,3 @@ def convert_raw_data_to_traces(raw_sensor_data,
     logger.info("Traces were saved as csv file '../%s", data_sources_path + dir_runtime_files + filename_traces_raw)
 
     return pd_df_all_traces
-
-
-def read_in_sensor_data():
-    """
-    Reads the sensor data file and returns the content of the file as pandas data frame.
-    Uses the following parameters from the settings file:
-        data_sources_path: Path where the source files can be found
-        filename_sensor_data: Name of the file
-        rel_dir_name_sensor_data:  Name of the folder where the sensor data is located
-        csv_delimiter_sensor_data: Char that separates columns in csv files
-        csv_header_sensor_data: Row number/s to use as the column names, and the start of the data.
-        csv_parse_dates_sensor_data: columns that get passed as dates.
-        csv_dtype_sensor_data: data types of the columns
-        logging_level: level of logging
-    :return: Pandas data frame containing the sensor information of file in given folder
-    """
-
-    # start timer
-    t0_read_csv_files = timeit.default_timer()
-
-    # creates pandas data frame out of input of a csv file
-    data_frame = utils.read_csv_file(filedir=settings.path_data_sources,
-                                     filename=settings.filename_sensor_data,
-                                     separator=settings.csv_delimiter_sensor_data,
-                                     header=settings.csv_header_sensor_data,
-                                     parse_dates=settings.csv_parse_dates_sensor_data,
-                                     dtype=settings.csv_dtype_sensor_data,
-                                     logging_level=settings.logging_level)
-
-    # calculate how many data points there are
-    number_of_data_points = data_frame.shape[0]
-
-    # stop timer
-    t1_read_csv_files = timeit.default_timer()
-    # calculate runtime
-    runtime_read_csv_files = np.round(t1_read_csv_files - t0_read_csv_files, 1)
-
-    # logger
-    logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(settings.logging_level)
-    logger.info("Extracted %s data points from csv-File on disc in %s seconds",
-                number_of_data_points, runtime_read_csv_files)
-
-    return data_frame
