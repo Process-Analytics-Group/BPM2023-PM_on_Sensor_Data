@@ -117,6 +117,11 @@ filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
 # threshold for filtering out sensors in dfg relative to max occurrences of a sensor (value in range 0-1)
 rel_proportion_dfg_threshold = 0.5
 
+# # FreFraLa Method
+# parameter how high the threshold for errors per day are until they get dropped
+max_errors_per_day_min = 100
+max_errors_per_day_max = 100
+
 # miner used for process model creation - choose between: heuristic, inductive
 miner_type = 'heuristic'
 miner_type_list = ['heuristic', 'inductive']

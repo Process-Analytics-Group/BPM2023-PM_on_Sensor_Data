@@ -90,13 +90,14 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
-        ecc.choose_event_case_correlation_method(method='Classic',
+        ecc.choose_event_case_correlation_method(method='FreFraLa',
                                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                  dir_runtime_files=dir_runtime_files,
                                                  distance_threshold=params['distance_threshold'],
                                                  traces_time_out_threshold=params['traces_time_out_threshold'],
                                                  trace_length_limit=params['trace_length_limit'],
-                                                 raw_sensor_data=raw_sensor_data)
+                                                 raw_sensor_data=raw_sensor_data,
+                                                 max_errors_per_day=params['max_errors_per_day'])
 
     # cut away the case number for SOM training
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
@@ -206,7 +207,9 @@ space = {
                                      settings.trace_length_limit_max + 1),
     'k_means_number_of_clusters': hp.randint('k_means_number_of_clusters', settings.k_means_number_of_clusters_min,
                                              settings.k_means_number_of_clusters_max + 1),
-    'distance_threshold': hp.choice('distance_threshold', distance_threshold_list)
+    'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
+    'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
+                                     settings.max_errors_per_day_max + 1)
 }
 
 # capture the iterations of hyperopt parameter tuning

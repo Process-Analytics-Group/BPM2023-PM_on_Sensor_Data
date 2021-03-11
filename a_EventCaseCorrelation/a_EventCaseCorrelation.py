@@ -7,6 +7,7 @@ import math
 from u_utils import u_utils as utils, u_helper as helper
 import z_setting_parameters as settings
 import inspect
+import a_EventCaseCorrelation.FreFraLa.a_FreFlaLa as FreFraLa
 
 
 def choose_event_case_correlation_method(method,
@@ -15,7 +16,8 @@ def choose_event_case_correlation_method(method,
                                          trace_length_limit,
                                          distance_threshold=1.5,
                                          traces_time_out_threshold=300,
-                                         raw_sensor_data=None):
+                                         raw_sensor_data=None,
+                                         max_errors_per_day=100):
     if method == 'Classic':
         # Classical Method
         trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
@@ -26,7 +28,12 @@ def choose_event_case_correlation_method(method,
                                    trace_length_limit=trace_length_limit,
                                    raw_sensor_data=raw_sensor_data)
     elif method == 'FreFraLa':
-        pass
+        trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
+            FreFraLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                               max_errors_per_day=max_errors_per_day,
+                                               traces_time_out_threshold=traces_time_out_threshold,
+                                               trace_length_limit=trace_length_limit,
+                                               raw_sensor_data=raw_sensor_data)
     else:
         return None
 
