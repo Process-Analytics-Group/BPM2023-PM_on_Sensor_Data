@@ -90,7 +90,7 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
-        ecc.choose_event_case_correlation_method(method='FreFraLa',
+        ecc.choose_event_case_correlation_method(method='Classic',
                                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                  dir_runtime_files=dir_runtime_files,
                                                  distance_threshold=params['distance_threshold'],
