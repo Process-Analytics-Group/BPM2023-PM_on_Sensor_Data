@@ -40,6 +40,12 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
                                  dtype=dtype,
                                  error_bad_lines=False)
 
+        # drop all lines without motion sensor
+        # ToDo: in future versions allow for more sensor types if implemented
+        index_names = data_frame[data_frame['SensorID'].str.startswith(settings.prefix_motion_sensor_id)].index
+        data_frame = data_frame.loc[index_names]
+        data_frame.reset_index(inplace=True, drop=True)
+
         # calculate how many data points there are
         number_of_data_points = data_frame.shape[0]
 

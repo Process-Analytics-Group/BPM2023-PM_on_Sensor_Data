@@ -9,6 +9,30 @@ import z_setting_parameters as settings
 import inspect
 
 
+def choose_event_case_correlation_method(method,
+                                         dict_distance_adjacency_sensor,
+                                         dir_runtime_files,
+                                         trace_length_limit,
+                                         distance_threshold=1.5,
+                                         traces_time_out_threshold=300,
+                                         raw_sensor_data=None):
+    if method == 'Classic':
+        # Classical Method
+        trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
+            create_trace_from_file(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                   dir_runtime_files=dir_runtime_files,
+                                   distance_threshold=distance_threshold,
+                                   traces_time_out_threshold=traces_time_out_threshold,
+                                   trace_length_limit=trace_length_limit,
+                                   raw_sensor_data=raw_sensor_data)
+    elif method == 'FreFraLa':
+        pass
+    else:
+        return None
+
+    return trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations
+
+
 def create_trace_from_file(dict_distance_adjacency_sensor,
                            dir_runtime_files,
                            trace_length_limit,

@@ -1,6 +1,9 @@
 2021-03-11
 DJ: Moved load_raw_data from a_EventCaseCorrelation to utils folder.
     No need to load the raw file every iteration.
+DJ: Only keep motion sensors (data_frame[data_frame['SensorID'].str.startswith('M')].index) in u_utils
+DJ: Added choose_event_case_correlation_method to be able to choose between the old raw data to
+    traces method and the new one implemented by Master Project
 
 2021-03-10
 KD: added possibility to choose between heuristic and inductive miner

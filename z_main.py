@@ -90,12 +90,13 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
-        ecc.create_trace_from_file(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                   dir_runtime_files=dir_runtime_files,
-                                   distance_threshold=params['distance_threshold'],
-                                   traces_time_out_threshold=params['traces_time_out_threshold'],
-                                   trace_length_limit=params['trace_length_limit'],
-                                   raw_sensor_data=raw_sensor_data)
+        ecc.choose_event_case_correlation_method(method='Classic',
+                                                 dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                                 dir_runtime_files=dir_runtime_files,
+                                                 distance_threshold=params['distance_threshold'],
+                                                 traces_time_out_threshold=params['traces_time_out_threshold'],
+                                                 trace_length_limit=params['trace_length_limit'],
+                                                 raw_sensor_data=raw_sensor_data)
 
     # cut away the case number for SOM training
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
