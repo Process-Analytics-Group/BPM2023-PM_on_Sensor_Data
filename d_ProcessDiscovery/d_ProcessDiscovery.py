@@ -62,7 +62,7 @@ def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_ru
         end_activities = ea_get.get_end_activities(log)
 
         # create png of dfg (if the graph does not show a graph, it is possible that the sensors did not trigger often)
-        # parameter has to be dfg0, because apply method requires a dfg0 mehtod, maybe depending on the pm4py version?
+        # parameter has to be dfg0, because apply method requires a dfg0 method, maybe depending on the pm4py version?
         gviz = dfg_visualization.apply(dfg0=dfg, log=log, variant=dfg_visualization.Variants.FREQUENCY,
                                        parameters={'start_activities': start_activities,
                                                    'end_activities': end_activities})
