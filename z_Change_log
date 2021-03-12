@@ -1,3 +1,6 @@
+2021-03-12
+DJ: check if runtime folder exists, if not create it (in z_main)
+
 2021-03-11
 DJ: Moved load_raw_data from a_EventCaseCorrelation to utils folder.
     No need to load the raw file every iteration.

@@ -6,6 +6,7 @@ import timeit
 import numpy as np
 from hyperopt import hp, fmin, Trials, STATUS_OK
 import os
+import pathlib
 
 # import settings file
 from u_utils import u_helper as helper, u_DistanceMatrixCreation as create_dm
@@ -19,9 +20,14 @@ from d_ProcessDiscovery import d_ProcessDiscovery as prd
 # start timer
 t0_main = timeit.default_timer()
 
+# check if runtime folder exists, if not create it
+path = pathlib.Path(settings.path_data_sources + settings.dir_runtime_files )
+path.mkdir(parents=True, exist_ok=True)
+
 # Logger configuration
 logging.basicConfig(
-    level=settings.logging_level, format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
+    level=settings.logging_level,
+    format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
     handlers=[
         logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
         logging.StreamHandler()])

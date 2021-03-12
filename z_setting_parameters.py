@@ -123,5 +123,5 @@ max_errors_per_day_min = 100
 max_errors_per_day_max = 100
 
 # miner used for process model creation - choose between: heuristic, inductive
-miner_type = 'heuristic'
+miner_type = 'inductive'
 miner_type_list = ['heuristic', 'inductive']
