@@ -86,6 +86,9 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)
 
+    # ToDo: Kai, DFG creating probably here
+    #  https://pm4py.fit.fraunhofer.de/documentation#item-3-4
+
     if miner_type == 'heuristic':
         metrics = apply_heuristic_miner(log=pm4py_log,
                                         path_data_sources=path_data_sources,
@@ -105,6 +108,8 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
                                         logging_level=logging_level)
         logger.info("Applied inductive miner to log.")
 
+    # ToDo: Kai export XES here or in def convert_log_to_pm4py(log)
+    #  https://pm4py.fit.fraunhofer.de/documentation#item-export-xes
     return metrics
 
 

@@ -30,7 +30,7 @@ def apply_heuristic_miner(log,
     # generalization = generalization_evaluator.apply(log, net, im, fm)
     # simplicity = simplicity_evaluator.apply(net)
 
-    # ToDo uncomment metrics & metrics calculation above
+    # ToDo: DJ uncomment metrics & metrics calculation above
     metrics = {'fitness': fitness,
                #           'precision': precision,
                #           'generalization': generalization,
@@ -41,6 +41,7 @@ def apply_heuristic_miner(log,
     pn_visualizer.save(gviz,
                        path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelHM.png')))
 
+    # ToDo: Kai remove view stuff
     pn_visualizer.view(gviz)
 
     return metrics
