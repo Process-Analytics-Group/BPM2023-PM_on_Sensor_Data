@@ -63,6 +63,7 @@ def filter_visitor_days(dict_distance_adjacency_sensor,
         currently_active_sensors.append(data_row.SensorID)
 
     # ToDo: @Kai: Put number of days removed into the log
+    # count number of entries in dates_to_remove and save to log
     # remove all dates from error list
     raw_sensor_data = raw_sensor_data[~raw_sensor_data_sensor_int.DateTime.isin(dates_to_remove)]
 
