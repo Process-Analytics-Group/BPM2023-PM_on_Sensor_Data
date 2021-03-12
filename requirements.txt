@@ -2,3 +2,4 @@ pm4py
 pandas
 hyperopt
 numpy
+graphviz
