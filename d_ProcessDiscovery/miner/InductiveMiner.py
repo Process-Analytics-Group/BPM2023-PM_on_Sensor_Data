@@ -1,5 +1,9 @@
 ##Interface section
 ## Pm4py Section
+import inspect
+import logging
+import os
+
 from pm4py.algo.discovery.inductive import algorithm as inductive_miner
 from pm4py.visualization.petrinet import visualizer as pn_visualizer
 from pm4py.evaluation.replay_fitness import evaluator as replay_fitness_evaluator
@@ -7,13 +11,14 @@ from pm4py.evaluation.precision import evaluator as precision_evaluator
 from pm4py.evaluation.generalization import evaluator as generalization_evaluator
 from pm4py.evaluation.simplicity import evaluator as simplicity_evaluator
 from pm4py.objects.conversion.log import converter as log_converter
+from pm4py.objects.petri.exporter import exporter as pnml_exporter
 
 
 def apply_inductive_miner(log,
                           path_data_sources,
                           dir_runtime_files,
-                          dir_dfg_cluster_files,
-                          filename_dfg_cluster,
+                          dir_petri_net_files,
+                          filename_petri_net,
                           rel_proportion_dfg_threshold,
                           logging_level):
     parameters = {log_converter.Variants.TO_EVENT_LOG.value.Parameters.CASE_ID_KEY: 'case:concept:name'}
@@ -35,13 +40,25 @@ def apply_inductive_miner(log,
                #           'simplicity': simplicity
                }
 
+    # logger
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
+
+    # create directory for petri net files
+    os.mkdir(path_data_sources + dir_runtime_files + dir_petri_net_files)
+
+    # export petri net png
     parameters = {pn_visualizer.Variants.FREQUENCY.value.Parameters.FORMAT: "png"}
     gviz = pn_visualizer.apply(net, initial_marking, final_marking, parameters=parameters,
                                variant=pn_visualizer.Variants.FREQUENCY, log=log)
-
     pn_visualizer.save(gviz,
-                       path_data_sources + dir_runtime_files + dir_dfg_cluster_files + (str('ProcessModelIM.png')))
+                       path_data_sources + dir_runtime_files + dir_petri_net_files + (str('ProcessModelIM.png')))
 
-    pn_visualizer.view(gviz)
+    # export petri net pnml
+    pnml_exporter.apply(net, initial_marking,
+                        path_data_sources + dir_runtime_files + dir_petri_net_files + filename_petri_net,
+                        final_marking=final_marking)
+    logger.info("Exported petri net pnml file into '../%s'.",
+                path_data_sources + dir_runtime_files + dir_petri_net_files + filename_petri_net)
 
     return metrics

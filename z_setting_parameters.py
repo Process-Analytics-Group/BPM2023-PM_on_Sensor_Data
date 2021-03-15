@@ -43,37 +43,19 @@ csv_delimiter_benchmark = ';'
 # indicator at which line the data starts
 csv_header_benchmark = 0
 
-
-# output files
 # hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
 opt_algorithm = tpe.suggest
 # number of optimization attempts
 opt_attempts = 2
 
-# filename of trace file
-filename_traces_raw = 'traces_raw.csv'
-# csv delimiter of trace file
-csv_delimiter_traces = ';'
-
-# filename of divided trace file
-filename_traces_basic = 'traces_basic.csv'
-# csv delimiter of divided trace file
-csv_delimiter_traces_basic = ';'
-
-# filename of cluster file
-filename_cluster = 'Cluster.csv'
-# csv delimiter of cluster file
-csv_delimiter_cluster = ';'
-
-# filename of cases cluster file
-filename_cases_cluster = 'Cases_Cluster.csv'
-# csv delimiter of cases_cluster file
-csv_delimiter_cases_cluster = ';'
-
 # choose between: quantity, time, quantity_time
 data_types = 'time'
 data_types_list = ['quantity', 'time', 'quantity_time']
+
+# choose between: Classic (classical approach), FreFraLa (filter out days with visitors)
+event_case_correlation_method = 'Classic'
+event_case_correlation_method_list = ['Classic', 'FreFraLa']
 
 # number of motion sensors
 number_of_motion_sensors = 31
@@ -110,10 +92,6 @@ trace_length_limit_max = 10
 k_means_number_of_clusters_min = 6
 k_means_number_of_clusters_max = 16
 
-# folder containing dfg png files
-dir_dfg_cluster_files = 'directly_follows_graphs/'
-# filename of dfg file (per cluster)
-filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
 # threshold for filtering out sensors in dfg relative to max occurrences of a sensor (value in range 0-1)
 rel_proportion_dfg_threshold = 0.5
 
@@ -123,5 +101,42 @@ max_errors_per_day_min = 100
 max_errors_per_day_max = 100
 
 # miner used for process model creation - choose between: heuristic, inductive
-miner_type = 'inductive'
+miner_type = 'heuristic'
 miner_type_list = ['heuristic', 'inductive']
+
+# output files
+# filename of trace file
+filename_traces_raw = 'traces_raw.csv'
+# csv delimiter of trace file
+csv_delimiter_traces = ';'
+
+# filename of divided trace file
+filename_traces_basic = 'traces_basic.csv'
+# csv delimiter of divided trace file
+csv_delimiter_traces_basic = ';'
+
+# filename of cluster file
+filename_cluster = 'Cluster.csv'
+# csv delimiter of cluster file
+csv_delimiter_cluster = ';'
+
+# filename of cases cluster file
+filename_cases_cluster = 'Cases_Cluster.csv'
+# csv delimiter of cases_cluster file
+csv_delimiter_cases_cluster = ';'
+
+# filename of log export file
+filename_log_export = 'log_export.xes'
+
+# folder containing petri net file
+dir_petri_net_files = 'petri_nets/'
+# filename of petri net .pnml file
+filename_petri_net = 'petri_net.pnml'
+
+# folder containing dfg png files
+dir_dfg_files = 'directly_follows_graphs/'
+# filename of dfg file (per cluster)
+filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
+# filename of dfg file
+filename_dfg = 'DFG.png'
+

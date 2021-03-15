@@ -48,9 +48,12 @@ def create_parameters_log_file(dir_runtime_files, params):
           'A word, letter, or number placed before motion sensor number.'],
          ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house,
           'Maximum number of persons which were in the house while the recording of sensor data.'],
-         ['exogenous_dir_dfg_cluster_files', settings.dir_dfg_cluster_files,
-          'Directory of folder in which dfg images are saved.'],
-         ['exogenous_filename_dfg_cluster', settings.filename_dfg_cluster, 'Filename of dfg image files.'],
+         ['exogenous_filename_log_export', settings.filename_log_export, 'Filename of log export file.'],
+         ['exogenous_dir_petri_net_files', settings.dir_petri_net_files, 'Directory in which petri net export files are saved.'],
+         ['exogenous_filename_petri_net', settings.filename_petri_net, 'Filename of petri net pnml file.'],
+         ['exogenous_dir_dfg_files', settings.dir_dfg_files, 'Directory in which dfg images are saved.'],
+         ['exogenous_filename_dfg_cluster', settings.filename_dfg_cluster, 'Filename of dfg cluster image files.'],
+         ['exogenous_filename_dfg', settings.filename_dfg, 'Filename of dfg image file.'],
          ['exogenous_rel_proportion_dfg_threshold', settings.rel_proportion_dfg_threshold,
           'Threshold for number of sensor activations at which a sensor is shown in dfg (relative to max occurrences of a sensor).'],
          ['filename_log_file', settings.filename_log_file + '.log', 'Filename of logfile.'],
@@ -158,8 +161,9 @@ def create_distance_threshold_list(distance_threshold_min,
 
 def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
                    traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
-                   trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max, data_types,
-                   data_types_list, miner_type, miner_type_list, logging_level):
+                   trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max,
+                   event_case_correlation_method, event_case_correlation_method_list, data_types, data_types_list,
+                   miner_type, miner_type_list, logging_level):
     # checks settings for correctness (if they are invalid the execution get stopped)
     settings_valid = True
 
@@ -193,6 +197,13 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
         error_msg = str("'" + data_types +
                         "' is not a valid choice for data types. Please choose one of the following: " +
                         str(data_types_list))
+        logger.error(error_msg)
+        settings_valid = False
+
+    if event_case_correlation_method not in event_case_correlation_method_list:
+        error_msg = str("'" + event_case_correlation_method +
+                        "' is not a valid event case correlation method choice. Please choose one of the following: " +
+                        str(event_case_correlation_method_list))
         logger.error(error_msg)
         settings_valid = False
 

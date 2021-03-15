@@ -17,7 +17,8 @@ def choose_event_case_correlation_method(method,
                                          distance_threshold=1.5,
                                          traces_time_out_threshold=300,
                                          raw_sensor_data=None,
-                                         max_errors_per_day=100):
+                                         max_errors_per_day=100,
+                                         logging_level=None):
     if method == 'Classic':
         # Classical Method
         trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
@@ -33,9 +34,8 @@ def choose_event_case_correlation_method(method,
                                                max_errors_per_day=max_errors_per_day,
                                                traces_time_out_threshold=traces_time_out_threshold,
                                                trace_length_limit=trace_length_limit,
-                                               raw_sensor_data=raw_sensor_data)
-    else:
-        return None
+                                               raw_sensor_data=raw_sensor_data,
+                                               logging_level=logging_level)
 
     return trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations
 

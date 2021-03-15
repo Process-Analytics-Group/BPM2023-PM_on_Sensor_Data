@@ -1,14 +1,19 @@
+import inspect
+import logging
+
 import pandas as pd
 
 
 def filter_visitor_days(dict_distance_adjacency_sensor,
                         threshold,
-                        raw_sensor_data):
+                        raw_sensor_data,
+                        logging_level):
     """
     Shorts the full dataset (creates new one) depending on time window and error threshold
     :param threshold: error threshold for each day
     :param dict_distance_adjacency_sensor: contains information about the adjacency of the sensors
     :param raw_sensor_data: Data containing the sensor information raw, unamended
+    :param logging_level: from which level logging statements should get executed
     """
 
     raw_sensor_data_sensor_int = raw_sensor_data.copy(deep=True)
@@ -65,5 +70,9 @@ def filter_visitor_days(dict_distance_adjacency_sensor,
     # ToDo: @Kai: Put number of days removed into the log
     # remove all dates from error list
     raw_sensor_data = raw_sensor_data[~raw_sensor_data_sensor_int.DateTime.isin(dates_to_remove)]
+
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
+    logger.info("Filtered %s days of log file", dates_to_remove.count())
 
     return raw_sensor_data

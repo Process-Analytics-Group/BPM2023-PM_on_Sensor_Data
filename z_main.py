@@ -21,7 +21,7 @@ from d_ProcessDiscovery import d_ProcessDiscovery as prd
 t0_main = timeit.default_timer()
 
 # check if runtime folder exists, if not create it
-path = pathlib.Path(settings.path_data_sources + settings.dir_runtime_files )
+path = pathlib.Path(settings.path_data_sources + settings.dir_runtime_files)
 path.mkdir(parents=True, exist_ok=True)
 
 # Logger configuration
@@ -46,6 +46,8 @@ helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
                       trace_length_limit_max=settings.trace_length_limit_max,
                       k_means_number_of_clusters_min=settings.k_means_number_of_clusters_min,
                       k_means_number_of_clusters_max=settings.k_means_number_of_clusters_max,
+                      event_case_correlation_method=settings.event_case_correlation_method,
+                      event_case_correlation_method_list=settings.event_case_correlation_method_list,
                       data_types=settings.data_types,
                       data_types_list=settings.data_types_list,
                       miner_type=settings.miner_type,
@@ -96,14 +98,15 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
-        ecc.choose_event_case_correlation_method(method='Classic',
+        ecc.choose_event_case_correlation_method(method=settings.event_case_correlation_method,
                                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                  dir_runtime_files=dir_runtime_files,
                                                  distance_threshold=params['distance_threshold'],
                                                  traces_time_out_threshold=params['traces_time_out_threshold'],
                                                  trace_length_limit=params['trace_length_limit'],
                                                  raw_sensor_data=raw_sensor_data,
-                                                 max_errors_per_day=params['max_errors_per_day'])
+                                                 max_errors_per_day=params['max_errors_per_day'],
+                                                 logging_level=settings.logging_level)
 
     # cut away the case number for SOM training
     trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
@@ -132,7 +135,7 @@ def perform_process_model_discovery(params):
     # ################### ProcessDiscovery ####################
     prd.create_activtiy_models(output_case_traces_cluster=output_case_traces_cluster,
                                path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
-                               dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
+                               dir_dfg_cluster_files=settings.dir_dfg_files,
                                filename_dfg_cluster=settings.filename_dfg_cluster,
                                rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
                                logging_level=settings.logging_level)
@@ -140,11 +143,13 @@ def perform_process_model_discovery(params):
     metrics = prd.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
                                        path_data_sources=settings.path_data_sources,
                                        dir_runtime_files=dir_runtime_files,
-                                       dir_dfg_cluster_files=settings.dir_dfg_cluster_files,
-                                       filename_dfg_cluster=settings.filename_dfg_cluster,
+                                       filename_log_export=settings.filename_log_export,
+                                       dir_petri_net_files=settings.dir_petri_net_files,
+                                       filename_petri_net=settings.filename_petri_net,
+                                       dir_dfg_files=settings.dir_dfg_files,
+                                       filename_dfg=settings.filename_dfg,
                                        rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
                                        miner_type=settings.miner_type,
-                                       miner_type_list=settings.miner_type_list,
                                        logging_level=settings.logging_level)
 
     # stop timer
@@ -231,7 +236,8 @@ fmin(fn=perform_process_model_discovery,
 
 # additional information of the best iteration
 best = trials.best_trial
-information_string = '\n\toptimised function value = ' + str(-best['result']['loss']) + '\n\toptimised parameters:'
+information_string = '\nbest iteration:\n\toptimised function value = ' + \
+                     str(-best['result']['loss']) + '\n\toptimised parameters:'
 for key, value in best['result']['opt_params'].items():
     information_string += '\n\t\t' + str(key) + ' = ' + str(value)
 information_string += '\n\tfiles directory = ' + str(best['result']['dir_runtime_files']) + '\n\titeration = ' + str(
