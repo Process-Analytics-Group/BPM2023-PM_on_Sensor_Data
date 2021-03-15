@@ -50,8 +50,8 @@ opt_algorithm = tpe.suggest
 opt_attempts = 2
 
 # choose between: quantity, time, quantity_time
-data_types = 'time'
-data_types_list = ['quantity', 'time', 'quantity_time']
+vectorization_types = 'time'
+vectorization_types_list = ['quantity', 'time', 'quantity_time']
 
 # choose between: Classic (classical approach), FreFraLa (filter out days with visitors)
 event_case_correlation_method = 'Classic'

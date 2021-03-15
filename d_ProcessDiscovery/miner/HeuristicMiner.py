@@ -33,7 +33,7 @@ def apply_heuristic_miner(log,
     # generalization = generalization_evaluator.apply(log, net, im, fm)
     # simplicity = simplicity_evaluator.apply(net)
 
-    # ToDo uncomment metrics & metrics calculation above
+    # ToDo: DJ uncomment metrics & metrics calculation above
     metrics = {'fitness': fitness,
                #           'precision': precision,
                #           'generalization': generalization,
