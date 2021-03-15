@@ -48,8 +48,6 @@ helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
                       k_means_number_of_clusters_max=settings.k_means_number_of_clusters_max,
                       event_case_correlation_method=settings.event_case_correlation_method,
                       event_case_correlation_method_list=settings.event_case_correlation_method_list,
-                      data_types=settings.vectorization_types,
-                      data_types_list=settings.vectorization_types_list,
                       miner_type=settings.miner_type,
                       miner_type_list=settings.miner_type_list,
                       logging_level=settings.logging_level)
@@ -104,6 +102,7 @@ def perform_process_model_discovery(params):
                                                  distance_threshold=params['distance_threshold'],
                                                  traces_time_out_threshold=params['traces_time_out_threshold'],
                                                  trace_length_limit=params['trace_length_limit'],
+                                                 vectorization_method=params['vectorization_type'],
                                                  raw_sensor_data=raw_sensor_data,
                                                  max_errors_per_day=params['max_errors_per_day'])
 
@@ -166,7 +165,7 @@ def perform_process_model_discovery(params):
                             'max_number_of_people_in_house': settings.max_number_of_people_in_house,
                             'traces_time_out_threshold': params['traces_time_out_threshold'],
                             'trace_length_limit': params['trace_length_limit'],
-                            'data_types': settings.data_types,
+                            'vectorization_type': params['vectorization_type'],
                             'k_means_number_of_clusters': params['k_means_number_of_clusters']})
 
     helper.append_to_log_file(
@@ -205,7 +204,6 @@ distance_threshold_list = helper.create_distance_threshold_list(
 
 # hyperopt parameter tuning
 # parameter's search space
-# ToDo: Kai Please add vectorization_types_list as a parameter for the hyperopt-method
 space = {
     'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
                                       settings.zero_distance_value_max + 1),
@@ -217,7 +215,8 @@ space = {
                                              settings.k_means_number_of_clusters_max + 1),
     'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
     'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
-                                     settings.max_errors_per_day_max + 1)
+                                     settings.max_errors_per_day_max + 1),
+    'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list)
 }
 
 # capture the iterations of hyperopt parameter tuning

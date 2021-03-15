@@ -43,13 +43,14 @@ def create_parameters_log_file(dir_runtime_files, params):
           'An assignment of data types to columns in sensor data file.'],
          ['exogenous_filename_traces_raw', settings.filename_traces_raw, 'Filename of traces file.'],
          ['exogenous_csv_delimiter_traces', settings.csv_delimiter_traces, 'The char each column is divided by.'],
-         ['exogenous_data_types', settings.vectorization_types, 'choose between: quantity, time, quantity_time'],
+         ['exogenous_vectorization_type_list', settings.vectorization_type_list, 'range for vectorization type (parameter optimization)'],
          ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id,
           'A word, letter, or number placed before motion sensor number.'],
          ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house,
           'Maximum number of persons which were in the house while the recording of sensor data.'],
          ['exogenous_filename_log_export', settings.filename_log_export, 'Filename of log export file.'],
-         ['exogenous_dir_petri_net_files', settings.dir_petri_net_files, 'Directory in which petri net export files are saved.'],
+         ['exogenous_dir_petri_net_files', settings.dir_petri_net_files,
+          'Directory in which petri net export files are saved.'],
          ['exogenous_filename_petri_net', settings.filename_petri_net, 'Filename of petri net pnml file.'],
          ['exogenous_dir_dfg_files', settings.dir_dfg_files, 'Directory in which dfg images are saved.'],
          ['exogenous_filename_dfg_cluster', settings.filename_dfg_cluster, 'Filename of dfg cluster image files.'],
@@ -162,8 +163,8 @@ def create_distance_threshold_list(distance_threshold_min,
 def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
                    traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
                    trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max,
-                   event_case_correlation_method, event_case_correlation_method_list, data_types, data_types_list,
-                   miner_type, miner_type_list, logging_level):
+                   event_case_correlation_method, event_case_correlation_method_list, miner_type, miner_type_list,
+                   logging_level):
     # checks settings for correctness (if they are invalid the execution get stopped)
     settings_valid = True
 
@@ -190,14 +191,6 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
 
     if k_means_number_of_clusters_min > k_means_number_of_clusters_max:
         logger.error("'k_means_number_of_clusters_min' has to be <= 'k_means_number_of_clusters_max'")
-        settings_valid = False
-
-    if data_types not in data_types_list:
-        # if invalid data types are selected the final vector can't get created.
-        error_msg = str("'" + data_types +
-                        "' is not a valid choice for data types. Please choose one of the following: " +
-                        str(data_types_list))
-        logger.error(error_msg)
         settings_valid = False
 
     if event_case_correlation_method not in event_case_correlation_method_list:

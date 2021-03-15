@@ -40,7 +40,7 @@ def choose_event_case_correlation_method(method,
                                                vectorization_method=vectorization_method,
                                                logging_level=logging_level)
 
-    return trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations
+    return trace_data_time, output_case_traces_cluster
 
 
 def create_trace_from_file(dict_distance_adjacency_sensor,

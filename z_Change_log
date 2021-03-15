@@ -1,7 +1,8 @@
 2021-03-15
-KD: added vistor days error count to log
+KD: added visitor days error count to log
 KD: added xes file log export
 KD: added export for DFG and petri net files
+KD: added vectorization_type_list as a parameter to hyperopt-optimization
 
 2021-03-12
 DJ: check if runtime folder exists, if not create it (in z_main)
