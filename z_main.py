@@ -107,13 +107,10 @@ def perform_process_model_discovery(params):
                                                  raw_sensor_data=raw_sensor_data,
                                                  max_errors_per_day=params['max_errors_per_day'])
 
-    # cut away the case number for SOM training
-    trace_data_without_case_number = trace_data_time[trace_data_time.columns[1:]]
-
     # ################### ActivityDiscovery ####################
     # k-means clustering and SOM classification
     k_means_cluster_ids, sm, km, quantization_error, topographic_error = ad.cluster_and_classify_activities(
-        trace_data_without_case_number=trace_data_without_case_number,
+        trace_data_without_case_number=trace_data_time,
         number_of_clusters=params['k_means_number_of_clusters'], K_opt=params['k_means_number_of_clusters'],
         path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
         filename_parameters_file=settings.filename_parameters_file,

@@ -332,6 +332,14 @@ def divide_raw_traces(traces_raw_pd,
     logger.info("Divided traces were saved as csv file '../%s",
                 data_sources_path + dir_runtime_files + filename_traces_basic)
 
+    # shift index, so it starts with 1
+    final_vector.index += 1
+    output_case_traces_cluster.index += 1
+
+    # drop cluster column, cause row is now cluster identifier
+    final_vector.drop(columns=final_vector.columns[[0]], inplace=True)
+    # reset column index, so first column is "sensor 0"
+    final_vector.columns = [x for x in range(final_vector.shape[1])]
     return final_vector, output_case_traces_cluster, list_of_final_vectors_activations
 
 

@@ -50,6 +50,7 @@ def get_vectors_by_rooms(dataset,
     latest_active_sensor = None
     # calculate the durations
     # subtract time of each row with the preceding row
+    # convert full datetime to seconds
     duration_list = ((dataset['DateTime'].diff(periods=1)).shift(-1)).dt.total_seconds()
 
     for data_row in dataset.itertuples():
@@ -94,14 +95,14 @@ def get_vectors_by_rooms(dataset,
         quantity_vector = pd.pivot_table(raw_sensor_data_sensor_int,
                                          index=['Case'], columns=['Sensor_Added'],
                                          values=['LC'], aggfunc='count', fill_value=0)
-        # ToDo: rename columns (not multiindexed)
+        quantity_vector.columns = ["Quantity " + str(x) for x in range(quantity_vector.shape[1])]
     # count how long a sensor has been activated in a case:
     if vectorization_method == 'time' or vectorization_method == 'quantity_time':
         time_vector = pd.pivot_table(raw_sensor_data_sensor_int,
                                      index=['Case'],
                                      columns=['Sensor_Added'],
                                      values=['Duration'], aggfunc='sum', fill_value=0)
-
+        time_vector.columns = ["Time " + str(x) for x in range(time_vector.shape[1])]
     if vectorization_method == 'time':
         return time_vector, raw_sensor_data_sensor_int
     elif vectorization_method == 'quantity':
