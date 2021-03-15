@@ -46,8 +46,8 @@ helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
                       trace_length_limit_max=settings.trace_length_limit_max,
                       k_means_number_of_clusters_min=settings.k_means_number_of_clusters_min,
                       k_means_number_of_clusters_max=settings.k_means_number_of_clusters_max,
-                      data_types=settings.data_types,
-                      data_types_list=settings.data_types_list,
+                      data_types=settings.vectorization_types,
+                      data_types_list=settings.vectorization_types_list,
                       miner_type=settings.miner_type,
                       miner_type_list=settings.miner_type_list,
                       logging_level=settings.logging_level)
@@ -95,10 +95,12 @@ def perform_process_model_discovery(params):
 
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
-    trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
-        ecc.choose_event_case_correlation_method(method='Classic',
+    # choose between 'Classic' and 'FreFraLa'
+    trace_data_time, output_case_traces_cluster = \
+        ecc.choose_event_case_correlation_method(method='FreFraLa',
                                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                  dir_runtime_files=dir_runtime_files,
+                                                 vectorization_method='quantity_time',
                                                  distance_threshold=params['distance_threshold'],
                                                  traces_time_out_threshold=params['traces_time_out_threshold'],
                                                  trace_length_limit=params['trace_length_limit'],
@@ -165,7 +167,7 @@ def perform_process_model_discovery(params):
                             'max_number_of_people_in_house': settings.max_number_of_people_in_house,
                             'traces_time_out_threshold': params['traces_time_out_threshold'],
                             'trace_length_limit': params['trace_length_limit'],
-                            'data_types': settings.data_types,
+                            'data_types': settings.vectorization_types,
                             'k_means_number_of_clusters': params['k_means_number_of_clusters']})
 
     helper.append_to_log_file(
@@ -204,6 +206,7 @@ distance_threshold_list = helper.create_distance_threshold_list(
 
 # hyperopt parameter tuning
 # parameter's search space
+# ToDo: Kai Please add vectorization_types_list as a parameter for the hyperopt-method
 space = {
     'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
                                       settings.zero_distance_value_max + 1),
@@ -221,7 +224,8 @@ space = {
 # capture the iterations of hyperopt parameter tuning
 perform_process_model_discovery.iteration_counter = 0
 trials = Trials()
-# perform process model discovery for different parameter combinations and find the best outcome (hyperopt parameter tuning)
+# perform process model discovery for different parameter combinations and find the best outcome
+# (hyperopt parameter tuning)
 fmin(fn=perform_process_model_discovery,
      space=space,
      algo=settings.opt_algorithm,

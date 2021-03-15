@@ -43,7 +43,7 @@ def create_parameters_log_file(dir_runtime_files, params):
           'An assignment of data types to columns in sensor data file.'],
          ['exogenous_filename_traces_raw', settings.filename_traces_raw, 'Filename of traces file.'],
          ['exogenous_csv_delimiter_traces', settings.csv_delimiter_traces, 'The char each column is divided by.'],
-         ['exogenous_data_types', settings.data_types, 'choose between: quantity, time, quantity_time'],
+         ['exogenous_data_types', settings.vectorization_types, 'choose between: quantity, time, quantity_time'],
          ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id,
           'A word, letter, or number placed before motion sensor number.'],
          ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house,

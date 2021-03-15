@@ -72,8 +72,8 @@ filename_cases_cluster = 'Cases_Cluster.csv'
 csv_delimiter_cases_cluster = ';'
 
 # choose between: quantity, time, quantity_time
-data_types = 'time'
-data_types_list = ['quantity', 'time', 'quantity_time']
+vectorization_types = 'time'
+vectorization_types_list = ['quantity', 'time', 'quantity_time']
 
 # number of motion sensors
 number_of_motion_sensors = 31

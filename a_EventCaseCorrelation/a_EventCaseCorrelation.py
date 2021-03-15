@@ -14,35 +14,39 @@ def choose_event_case_correlation_method(method,
                                          dict_distance_adjacency_sensor,
                                          dir_runtime_files,
                                          trace_length_limit,
+                                         vectorization_method,
                                          distance_threshold=1.5,
                                          traces_time_out_threshold=300,
                                          raw_sensor_data=None,
                                          max_errors_per_day=100):
     if method == 'Classic':
         # Classical Method
-        trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
+        case_vectors, event_log_with_lc, list_of_final_vectors_activations = \
             create_trace_from_file(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                    dir_runtime_files=dir_runtime_files,
                                    distance_threshold=distance_threshold,
                                    traces_time_out_threshold=traces_time_out_threshold,
                                    trace_length_limit=trace_length_limit,
-                                   raw_sensor_data=raw_sensor_data)
+                                   raw_sensor_data=raw_sensor_data,
+                                   vectorization_method=vectorization_method)
     elif method == 'FreFraLa':
-        trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
+        case_vectors, event_log_with_lc = \
             FreFraLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                max_errors_per_day=max_errors_per_day,
                                                traces_time_out_threshold=traces_time_out_threshold,
                                                trace_length_limit=trace_length_limit,
-                                               raw_sensor_data=raw_sensor_data)
+                                               raw_sensor_data=raw_sensor_data,
+                                               vectorization_method=vectorization_method)
     else:
         return None
 
-    return trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations
+    return case_vectors, event_log_with_lc
 
 
 def create_trace_from_file(dict_distance_adjacency_sensor,
                            dir_runtime_files,
                            trace_length_limit,
+                           vectorization_method,
                            distance_threshold=1.5,
                            traces_time_out_threshold=300,
                            raw_sensor_data=None):
@@ -63,8 +67,6 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
     csv_delimiter_traces_basic = settings.csv_delimiter_traces_basic
     filename_parameters_file = settings.filename_parameters_file
     number_of_motion_sensors = settings.number_of_motion_sensors
-    data_types = settings.data_types
-    data_types_list = settings.data_types_list
     max_number_of_raw_input = settings.max_number_of_raw_input
     logging_level = settings.logging_level
 
@@ -90,8 +92,7 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
                             dir_runtime_files=dir_runtime_files,
                             filename_parameters_file=filename_parameters_file,
                             max_trace_length=trace_length_limit,
-                            data_types=data_types,
-                            data_types_list=data_types_list,
+                            vectorization_method=vectorization_method,
                             number_of_motion_sensors=number_of_motion_sensors,
                             logging_level=logging_level)
 
@@ -190,8 +191,7 @@ def divide_raw_traces(traces_raw_pd,
                       csv_delimiter_traces_basic,
                       filename_parameters_file,
                       max_trace_length,
-                      data_types,
-                      data_types_list,
+                      vectorization_method,
                       number_of_motion_sensors,
                       logging_level):
     """
@@ -204,8 +204,7 @@ def divide_raw_traces(traces_raw_pd,
     :param csv_delimiter_traces_basic: csv delimiter of divided trace file
     :param filename_parameters_file: filename of parameters file
     :param max_trace_length: the max length of one trace
-    :param data_types: column/s which is/are applied to divided traces
-    :param data_types_list: collection of all available data types
+    :param vectorization_method: collection of all available vectorization types
     :param number_of_motion_sensors: number of motion sensors
     :param logging_level: level of logging
     :return: The divided traces (final_vector), raw traces clustered into cases (output_case_traces_cluster), activated
@@ -290,13 +289,13 @@ def divide_raw_traces(traces_raw_pd,
     output_case_traces_cluster['Case'] = case_id_for_short_traces
 
     # which data types should the final vector contain?
-    if data_types == 'quantity':
+    if vectorization_method == 'quantity':
         # final vector contains how often a sensor was activated (in each trace)
         final_vector = final_vector_quantity
-    elif data_types == 'time':
+    elif vectorization_method == 'time':
         # final vector contains how long a sensor was activated (in each trace)
         final_vector = final_vector_time
-    elif data_types == 'quantity_time':
+    elif vectorization_method == 'quantity_time':
         # final vector contains both
         # drop caseID of second data frame
         final_vector_quantity = final_vector_quantity[final_vector_quantity.columns[1:]]
