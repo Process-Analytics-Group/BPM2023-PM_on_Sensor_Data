@@ -26,7 +26,7 @@ filename_adjacency_plot = 'adjacency_plot.pdf'
 
 # csv configuration for sensor data file
 # filename of the file that contains the sensor data
-filename_sensor_data = '19-Aruba_data'
+filename_sensor_data = '19-Aruba_Data'
 # delimiter of the columns in csv file of sensor data (input)
 csv_delimiter_sensor_data = '\t'
 # indicator at which line the data starts
