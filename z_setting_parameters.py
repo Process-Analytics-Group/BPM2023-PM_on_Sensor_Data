@@ -54,6 +54,7 @@ vectorization_type_list = ['quantity', 'time', 'quantity_time']
 
 # choose between: Classic (classical approach), FreFraLa (filter out days with visitors)
 event_case_correlation_method = 'Classic'
+# ToDo: Kai add to hyperparameter optimization
 event_case_correlation_method_list = ['Classic', 'FreFraLa']
 
 # number of motion sensors

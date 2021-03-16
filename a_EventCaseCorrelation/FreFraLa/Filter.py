@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 from datetime import datetime
 
+
 def filter_visitor_days(dict_distance_adjacency_sensor,
                         threshold,
                         raw_sensor_data_sensor_int,

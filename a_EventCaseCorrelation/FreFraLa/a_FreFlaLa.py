@@ -7,6 +7,7 @@ import a_EventCaseCorrelation.FreFraLa.vectoring as FreFraLa_Vectoring
 import timeit
 import numpy as np
 
+
 def apply_threshold_filtering(dict_distance_adjacency_sensor,
                               max_errors_per_day,
                               traces_time_out_threshold,
