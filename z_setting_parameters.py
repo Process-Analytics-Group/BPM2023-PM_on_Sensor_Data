@@ -71,7 +71,7 @@ zero_distance_value_min = 1
 zero_distance_value_max = 1
 
 # upper limit for input_data (set to None if there is no limit)
-max_number_of_raw_input = 6500
+max_number_of_raw_input = 100000
 
 # threshold when sensors are considered too far away (range for parameter optimization)
 distance_threshold_min = 1.2

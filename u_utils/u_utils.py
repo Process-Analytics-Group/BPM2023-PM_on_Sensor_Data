@@ -40,7 +40,7 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
                                  dtype=dtype,
                                  error_bad_lines=False)
 
-        # drop all lines without motion sensor
+        # drop all lines without motion sensor (identify by sensor ID-prefix)
         # ToDo: in future versions allow for more sensor types if implemented
         index_names = data_frame[data_frame['SensorID'].str.startswith(settings.prefix_motion_sensor_id)].index
         data_frame = data_frame.loc[index_names]
@@ -66,6 +66,13 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
         logger.error(err, err_msg)
         raise err
 
+    if number_of_data_points > settings.max_number_of_raw_input:
+        data_frame = data_frame.head(settings.max_number_of_raw_input)
+        # log the limitation
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(settings.logging_level)
+        logger.info("Limited %s data points from csv-File to %s data points", number_of_data_points,
+                    settings.max_number_of_raw_input)
 
     return data_frame
 

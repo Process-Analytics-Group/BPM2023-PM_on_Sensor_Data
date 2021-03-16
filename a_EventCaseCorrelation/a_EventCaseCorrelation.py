@@ -67,13 +67,7 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
     csv_delimiter_traces_basic = settings.csv_delimiter_traces_basic
     filename_parameters_file = settings.filename_parameters_file
     number_of_motion_sensors = settings.number_of_motion_sensors
-    max_number_of_raw_input = settings.max_number_of_raw_input
     logging_level = settings.logging_level
-
-    # limits the number of data points by max_number_of_raw_input
-    raw_sensor_data = limit_raw_sensor_data_points(raw_sensor_data=raw_sensor_data,
-                                                   max_number_of_raw_input=max_number_of_raw_input,
-                                                   logging_level=logging_level)
 
     # creates traces out of the raw data
     traces_raw_pd = convert_raw_data_to_traces(
@@ -105,29 +99,6 @@ def create_trace_from_file(dict_distance_adjacency_sensor,
     #     max_trace_length=max_trace_length)
     output_case_traces_cluster['Timestamp'] = pd.to_datetime(output_case_traces_cluster['Timestamp'])
     return traces_shortened, output_case_traces_cluster, list_of_final_vectors_activations
-
-
-def limit_raw_sensor_data_points(raw_sensor_data, max_number_of_raw_input, logging_level):
-    """
-    Limits the number of sensor points to be processed.
-
-    :param raw_sensor_data: the sensor data points
-    :param max_number_of_raw_input: limit for number of sensor activations
-    :param logging_level: level of logging
-    :return: the sensor data points limited by max_number_of_raw_input
-    """
-    number_of_data_points = raw_sensor_data.shape[0]
-    # number sensor data points is only limited if a limit is set and the limit is lower than the actual number of
-    # sensor data points
-    if max_number_of_raw_input is not None and max_number_of_raw_input < number_of_data_points:
-        # only keep sensor data points from 1 to max_number_of_raw_input
-        raw_sensor_data = raw_sensor_data.head(max_number_of_raw_input)
-        # log the limitation
-        logger = logging.getLogger(inspect.stack()[0][3])
-        logger.setLevel(logging_level)
-        logger.info("Limited %s data points from csv-File to %s data points", number_of_data_points,
-                    max_number_of_raw_input)
-    return raw_sensor_data
 
 
 def calculate_pairwise_dissimilarity(list_of_final_vectors_activations,
