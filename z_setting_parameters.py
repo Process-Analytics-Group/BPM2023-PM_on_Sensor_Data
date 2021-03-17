@@ -47,15 +47,15 @@ csv_header_benchmark = 0
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
 opt_algorithm = tpe.suggest
 # number of optimization attempts
-opt_attempts = 2
+opt_attempts = 10
 
 # range for vectorization type (parameter optimization)
 vectorization_type_list = ['quantity', 'time', 'quantity_time']
 
-# choose between: Classic (classical approach), FreFraLa (filter out days with visitors)
-event_case_correlation_method = 'Classic'
+# choose between: Classic (classical approach), FreFlaLa (filter out days with visitors)
+event_case_correlation_method = 'FreFlaLa'
 # ToDo: Kai add to hyperparameter optimization
-event_case_correlation_method_list = ['Classic', 'FreFraLa']
+event_case_correlation_method_list = ['Classic', 'FreFlaLa']
 
 # number of motion sensors
 number_of_motion_sensors = 31
@@ -71,7 +71,7 @@ zero_distance_value_min = 1
 zero_distance_value_max = 1
 
 # upper limit for input_data (set to None if there is no limit)
-max_number_of_raw_input = 100000
+max_number_of_raw_input = 10000
 
 # threshold when sensors are considered too far away (range for parameter optimization)
 distance_threshold_min = 1.2
@@ -95,7 +95,7 @@ k_means_number_of_clusters_max = 16
 # threshold for filtering out sensors in dfg relative to max occurrences of a sensor (value in range 0-1)
 rel_proportion_dfg_threshold = 0.5
 
-# # FreFraLa Method
+# # FreFlaLa Method
 # parameter how high the threshold for errors per day are until they get dropped
 max_errors_per_day_min = 100
 max_errors_per_day_max = 100

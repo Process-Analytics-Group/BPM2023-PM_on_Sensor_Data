@@ -1,20 +1,16 @@
 import inspect
 import logging
-
-import pandas as pd
-from datetime import datetime
+import z_setting_parameters as settings
 
 
 def filter_visitor_days(dict_distance_adjacency_sensor,
                         threshold,
-                        raw_sensor_data_sensor_int,
-                        logging_level):
+                        raw_sensor_data_sensor_int):
     """
     Shorts the full dataset (creates new one) depending on time window and error threshold
     :param threshold: error threshold for each day
     :param dict_distance_adjacency_sensor: contains information about the adjacency of the sensors
     :param raw_sensor_data_sensor_int: Data containing the sensor information raw, unamended
-    :param logging_level: from which level logging statements should get executed
     """
 
     error_count = 0
@@ -66,7 +62,7 @@ def filter_visitor_days(dict_distance_adjacency_sensor,
     raw_sensor_data_sensor_int = raw_sensor_data_sensor_int[~raw_sensor_data_sensor_int.DateTime.isin(dates_to_remove)]
 
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
-    logger.info("Filtered %s days of log file", dates_to_remove.count())
+    logger.setLevel(settings.logging_level)
+    logger.info("Filtered %s days of log file", len(dates_to_remove))
 
     return raw_sensor_data_sensor_int

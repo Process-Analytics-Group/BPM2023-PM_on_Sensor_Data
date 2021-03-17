@@ -1,9 +1,36 @@
 # Zuordnung Cluster und Aktivitäten
 import numpy as np
 import pandas as pd
+import z_setting_parameters as settings
 
 
-def create_event_log_files(trace_data_time, output_case_traces_cluster, k_means_cluster_ids, path_data_sources,
+def create_event_log_files(cluster,
+                           traces_vectorised,
+                           output_case_traces_cluster):
+
+    traces_vectorised['Cluster'] = pd.DataFrame(cluster)
+    output_case_traces_cluster['Cluster'] = \
+        traces_vectorised['Cluster'][output_case_traces_cluster['Case']].values
+
+    # drop column where cluster = nan -> ToDo: investigate, why there is nan values
+    output_case_traces_cluster = output_case_traces_cluster.dropna(subset=['Cluster'])
+
+    traces_vectorised = traces_vectorised.sort_values(by=['Cluster'])
+    traces_vectorised = traces_vectorised.reset_index(drop=True)
+
+    # write traces to disk
+    # time of sensor activations grouped by case
+    traces_vectorised.to_csv(settings.path_data_sources + settings.dir_runtime_files + settings.filename_cluster,
+                             sep=settings.csv_delimiter_cluster)
+
+    output_case_traces_cluster.to_csv(settings.path_data_sources + settings.dir_runtime_files +
+                                      settings.filename_cases_cluster,
+                                      sep=settings.csv_delimiter_cases_cluster)
+
+    return output_case_traces_cluster
+
+
+def create_event_log_files_deprecated(trace_data_time, output_case_traces_cluster, k_means_cluster_ids, path_data_sources,
                            dir_runtime_files, sm, km, filename_cluster, csv_delimiter_cluster, filename_cases_cluster,
                            csv_delimiter_cases_cluster):
     # write best matching units (BMU) to output file

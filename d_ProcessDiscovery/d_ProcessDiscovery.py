@@ -10,8 +10,18 @@ from pm4py.statistics.start_activities.log import get as sa_get
 from pm4py.statistics.end_activities.log import get as ea_get
 from pm4py.visualization.dfg import visualizer as dfg_visualization
 from pm4py.objects.log.exporter.xes import exporter as xes_exporter
-from d_ProcessDiscovery.miner.HeuristicMiner import apply_heuristic_miner
-from d_ProcessDiscovery.miner.InductiveMiner import apply_inductive_miner
+from pm4py.algo.discovery.heuristics import algorithm as heuristics_miner
+from pm4py.visualization.heuristics_net import visualizer as hn_visualizer
+from pm4py.visualization.petrinet import visualizer as pn_visualizer
+from pm4py.evaluation.replay_fitness import evaluator as replay_fitness_evaluator
+from pm4py.evaluation.precision import evaluator as precision_evaluator
+from pm4py.evaluation.generalization import evaluator as generalization_evaluator
+from pm4py.evaluation.simplicity import evaluator as simplicity_evaluator
+from pm4py.objects.conversion.log import converter as log_converter
+from pm4py.visualization.dfg import visualizer as dfg_visualization
+from pm4py.objects.petri.exporter import exporter as pnml_exporter
+from pm4py.algo.discovery.inductive import algorithm as inductive_miner
+import z_setting_parameters as settings
 
 
 def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
@@ -71,7 +81,7 @@ def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_ru
 
 def create_process_model(output_case_traces_cluster, path_data_sources, dir_runtime_files, filename_log_export,
                          dir_petri_net_files, filename_petri_net, dir_dfg_files, filename_dfg,
-                         rel_proportion_dfg_threshold, miner_type, logging_level):
+                         rel_proportion_dfg_threshold, miner_type, logging_level, metric_to_be_maximised):
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)
@@ -92,28 +102,14 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
 
     logger.info("Saved directly follows graph into '../%s'.",
                 path_data_sources + dir_runtime_files + dir_dfg_files + filename_dfg)
+    metrics = apply_miner(log=pm4py_log,
+                          path_data_sources=path_data_sources,
+                          dir_runtime_files=dir_runtime_files,
+                          dir_petri_net_files=dir_petri_net_files,
+                          filename_petri_net=filename_petri_net,
+                          miner_type=miner_type,
+                          metric_to_be_maximised=metric_to_be_maximised)
 
-
-    if miner_type == 'heuristic':
-        metrics = apply_heuristic_miner(log=pm4py_log,
-                                        path_data_sources=path_data_sources,
-                                        dir_runtime_files=dir_runtime_files,
-                                        dir_petri_net_files=dir_petri_net_files,
-                                        filename_petri_net=filename_petri_net,
-                                        rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
-                                        logging_level=logging_level)
-        logger.info("Applied heuristic miner to log.")
-    elif miner_type == 'inductive':
-        metrics = apply_inductive_miner(log=pm4py_log,
-                                        path_data_sources=path_data_sources,
-                                        dir_runtime_files=dir_runtime_files,
-                                        dir_petri_net_files=dir_petri_net_files,
-                                        filename_petri_net=filename_petri_net,
-                                        rel_proportion_dfg_threshold=rel_proportion_dfg_threshold,
-                                        logging_level=logging_level)
-        logger.info("Applied inductive miner to log.")
-    else:
-        return None
     return metrics
 
 
@@ -153,3 +149,69 @@ def exportDFGImageFile(log, path_data_sources, dir_runtime_files, dir_dfg_files,
         filename_dfg))
 
     return
+
+
+def apply_miner(log,
+                path_data_sources,
+                dir_runtime_files,
+                dir_petri_net_files,
+                filename_petri_net,
+                miner_type,
+                metric_to_be_maximised):
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(settings.logging_level)
+
+    parameters = {log_converter.Variants.TO_EVENT_LOG.value.Parameters.CASE_ID_KEY: 'case:concept:name'}
+    log_converted = log_converter.apply(log, parameters=parameters, variant=log_converter.Variants.TO_EVENT_LOG)
+
+    # Choose miner type:
+    if miner_type == 'heuristic':
+        logger.info("Applying heuristic miner to log.")
+        net, initial_marking, final_marking = heuristics_miner.apply(log_converted, parameters={
+            heuristics_miner.Variants.CLASSIC.value.Parameters.DEPENDENCY_THRESH: 0.8})
+        logger.info("Done with heuristic miner.")
+    elif miner_type == 'inductive':
+        logger.info("Applying inductive miner to log.")
+        net, initial_marking, final_marking = inductive_miner.apply(log_converted)
+        logger.info("Done with inductive miner.")
+    else:
+        return None
+
+    # Choose target value to be maximised
+    if metric_to_be_maximised == 'Fitness':
+        logger.info("Calculating replay fitness.")
+        precision = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
+                                                   variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
+        logger.info("Replay fitness calculated.")
+        metrics = precision['log_fitness']
+    elif metric_to_be_maximised == 'Precision':
+        logger.info("Calculating precision.")
+        metrics = precision_evaluator.apply(log, net, initial_marking, final_marking,
+                                            variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
+        logger.info("Precision calculated.")
+    else:
+        metrics = None
+
+    # alternative metrics
+    # generalization = generalization_evaluator.apply(log, net, im, fm)
+    # simplicity = simplicity_evaluator.apply(net)
+
+    # logger
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(settings.logging_level)
+
+    # create directory for petri net files
+    os.mkdir(path_data_sources + dir_runtime_files + dir_petri_net_files)
+
+    # export petri net png
+    gviz = pn_visualizer.apply(net, initial_marking, final_marking)
+    pn_visualizer.save(gviz, path_data_sources + dir_runtime_files + dir_petri_net_files + (str('ProcessModelHM.png')))
+
+    # export petri net pnml
+    pnml_exporter.apply(net, initial_marking,
+                        path_data_sources + dir_runtime_files + dir_petri_net_files + filename_petri_net,
+                        final_marking=final_marking)
+    logger.info("Exported petri net pnml file into '../%s'.",
+                path_data_sources + dir_runtime_files + dir_petri_net_files + filename_petri_net)
+
+    return metrics

@@ -28,14 +28,14 @@ def apply_inductive_miner(log,
 
     fitness = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
                                              variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
-    # precision = precision_evaluator.apply(log, net, initial_marking, final_marking,
-    #                                       variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
+    precision = precision_evaluator.apply(log, net, initial_marking, final_marking,
+                                          variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
     # generalization = generalization_evaluator.apply(log, net, initial_marking, final_marking)
     # simplicity = simplicity_evaluator.apply(net)
 
     # ToDo uncomment metrics & metrics calculation above
     metrics = {'fitness': fitness,
-               #           'precision': precision,
+               'precision': precision,
                #           'generalization': generalization,
                #           'simplicity': simplicity
                }

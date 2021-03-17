@@ -6,21 +6,41 @@ from sklearn.cluster import KMeans
 from b_ActivityDiscovery.self_organizing_map.sompy import SOMFactory
 import numpy as np
 from u_utils import u_helper as helper
+import z_setting_parameters as settings
 
 
-def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt, path_data_sources,
-                                    dir_runtime_files, filename_parameters_file, number_of_motion_sensors,
-                                    logging_level):
+def choose_clustering_method(clustering_method,
+                             number_of_clusters,
+                             trace_data_without_case_number,
+                             dir_runtime_files):
+
+    if clustering_method == 'SOM':
+        k_means_cluster_ids, sm, km = cluster_and_classify_activities(
+            trace_data_without_case_number=trace_data_without_case_number,
+            number_of_clusters=number_of_clusters, K_opt=number_of_clusters, dir_runtime_files=dir_runtime_files)
+        cluster = km.labels_[np.transpose(sm._bmu[0, :]).astype(int)]
+
+    elif clustering_method == 'CustomDistance':
+        # ToDo Frederik: Here you would call the method that uses your custom distance method
+        pass
+    elif clustering_method == 'k-Means':
+        # ToDo Frederik: Here you would call the method that uses your k-means method
+        pass
+    else:
+        return None
+
+    return cluster
+
+def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt,
+                                    dir_runtime_files):
     # k-means clustering
     k_means_cluster_ids = custom_kmeans(data=trace_data_without_case_number, number_of_clusters=number_of_clusters)
 
     sm, km, quantization_error, topographic_error = self_organising_map(
         trace_data_without_case_number=trace_data_without_case_number, K_opt=K_opt,
-        path_data_sources=path_data_sources, dir_runtime_files=dir_runtime_files,
-        filename_parameters_file=filename_parameters_file,
-        number_of_motion_sensors=number_of_motion_sensors, logging_level=logging_level)
+        dir_runtime_files=dir_runtime_files)
 
-    return k_means_cluster_ids, sm, km, quantization_error, topographic_error
+    return k_means_cluster_ids, sm, km
 
 
 # k-means Vanilla
@@ -31,8 +51,11 @@ def custom_kmeans(data, number_of_clusters):
 
 
 # SOM with k-means to cluster the best matching units
-def self_organising_map(trace_data_without_case_number, K_opt, path_data_sources, dir_runtime_files,
-                        filename_parameters_file, number_of_motion_sensors, logging_level):
+def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files):
+    path_data_sources = settings.path_data_sources
+    filename_parameters_file = settings.filename_parameters_file
+    number_of_motion_sensors = settings.number_of_motion_sensors
+    logging_level = settings.logging_level
     # create list with sensor names
     names = []
     for sensor_number in range(0, number_of_motion_sensors - 1):

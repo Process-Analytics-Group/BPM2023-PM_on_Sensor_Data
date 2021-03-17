@@ -2,8 +2,8 @@
 Code from Master Project
 """
 import pandas as pd
-import a_EventCaseCorrelation.FreFraLa.Filter as FreFraLa_Filter
-import a_EventCaseCorrelation.FreFraLa.vectoring as FreFraLa_Vectoring
+import a_EventCaseCorrelation.FreFlaLa.Filter as FreFraLa_Filter
+import a_EventCaseCorrelation.FreFlaLa.vectoring as FreFraLa_Vectoring
 import timeit
 import numpy as np
 
@@ -28,8 +28,7 @@ def apply_threshold_filtering(dict_distance_adjacency_sensor,
     filtered_dataset = \
         FreFraLa_Filter.filter_visitor_days(threshold=max_errors_per_day,
                                             raw_sensor_data_sensor_int=raw_sensor_data_sensor_int,
-                                            dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                            logging_level=logging_level)
+                                            dict_distance_adjacency_sensor=dict_distance_adjacency_sensor)
 
     # transform raw data into vectors
     FreFraLa_method = 'byRooms'
