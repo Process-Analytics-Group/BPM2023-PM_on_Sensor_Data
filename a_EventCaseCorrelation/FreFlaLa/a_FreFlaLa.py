@@ -36,11 +36,13 @@ def apply_threshold_filtering(dict_distance_adjacency_sensor,
         FreFraLa_Vectoring.choose_method(filtered_dataset=filtered_dataset,
                                          method=FreFraLa_method,
                                          dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                         vectorization_method=vectorization_method)
+                                         vectorization_method=vectorization_method,
+                                         logging_level=logging_level)
 
     # stop timer
     t1_main = timeit.default_timer()
 
+    # Todo: REMINDER remove runtime print if not needed anymore
     # calculate runtime
     print('#######' + str(np.round(t1_main - t0_main, 1)))
     return case_vectors, raw_sensor_data_sensor_int

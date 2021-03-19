@@ -63,6 +63,6 @@ def filter_visitor_days(dict_distance_adjacency_sensor,
 
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
-    logger.info("Filtered %s days of log file", len(dates_to_remove))
+    logger.info("Filtered %s days out of log file", len(dates_to_remove))
 
     return raw_sensor_data_sensor_int

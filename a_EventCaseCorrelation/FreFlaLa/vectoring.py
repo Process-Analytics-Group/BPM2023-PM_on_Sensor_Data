@@ -1,3 +1,6 @@
+import inspect
+import logging
+
 import numpy as np
 import pandas as pd
 from copy import deepcopy
@@ -6,12 +9,14 @@ from copy import deepcopy
 def choose_method(filtered_dataset,
                   dict_distance_adjacency_sensor,
                   method,
-                  vectorization_method):
+                  vectorization_method,
+                  logging_level):
     if method == 'byRooms':
         case_vectors, raw_sensor_data_sensor_int = \
             get_vectors_by_rooms(dataset=filtered_dataset,
                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                 vectorization_method=vectorization_method)
+                                 vectorization_method=vectorization_method,
+                                 logging_level=logging_level)
     else:
         return None
     return case_vectors, raw_sensor_data_sensor_int
@@ -19,7 +24,8 @@ def choose_method(filtered_dataset,
 
 def get_vectors_by_rooms(dataset,
                          dict_distance_adjacency_sensor,
-                         vectorization_method):
+                         vectorization_method,
+                         logging_level):
     # create a rooms dictionary to faster check if sensors are in the same room
     # key is the sensor and values are all sensors in the same room
     room_dict = {}
@@ -111,5 +117,8 @@ def get_vectors_by_rooms(dataset,
         quantity_time_vector = pd.concat([quantity_vector, time_vector], axis=1)
         return quantity_time_vector, raw_sensor_data_sensor_int
     else:
-        # ToDo Kai: Add to logger that wrong method was selected
-        return None
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(logging_level)
+        error_msg = "'" + vectorization_method + "' is not a valid vectorization method. Please check the settings."
+        logger.error(error_msg)
+        raise ValueError(error_msg)

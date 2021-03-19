@@ -43,7 +43,8 @@ def create_parameters_log_file(dir_runtime_files, params):
           'An assignment of data types to columns in sensor data file.'],
          ['exogenous_filename_traces_raw', settings.filename_traces_raw, 'Filename of traces file.'],
          ['exogenous_csv_delimiter_traces', settings.csv_delimiter_traces, 'The char each column is divided by.'],
-         ['exogenous_vectorization_type_list', settings.vectorization_type_list, 'range for vectorization type (parameter optimization)'],
+         ['exogenous_vectorization_type_list', settings.vectorization_type_list,
+          'range for vectorization type (parameter optimization)'],
          ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id,
           'A word, letter, or number placed before motion sensor number.'],
          ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house,
@@ -52,6 +53,7 @@ def create_parameters_log_file(dir_runtime_files, params):
          ['exogenous_dir_petri_net_files', settings.dir_petri_net_files,
           'Directory in which petri net export files are saved.'],
          ['exogenous_filename_petri_net', settings.filename_petri_net, 'Filename of petri net pnml file.'],
+         ['exogenous_filename_petri_net_image', settings.filename_petri_net_image, 'Filename of petri net image file.'],
          ['exogenous_dir_dfg_files', settings.dir_dfg_files, 'Directory in which dfg images are saved.'],
          ['exogenous_filename_dfg_cluster', settings.filename_dfg_cluster, 'Filename of dfg cluster image files.'],
          ['exogenous_filename_dfg', settings.filename_dfg, 'Filename of dfg image file.'],
@@ -87,10 +89,11 @@ def create_parameters_log_file(dir_runtime_files, params):
 
 def append_to_log_file(new_entry_to_log_variable,
                        new_entry_to_log_value,
+                       path_data_sources,
                        filename_parameters_file,
                        dir_runtime_files,
                        new_entry_to_log_description=None):
-    target_file = settings.path_data_sources + dir_runtime_files + filename_parameters_file
+    target_file = path_data_sources + dir_runtime_files + filename_parameters_file
     log_data = pd.read_csv(filepath_or_buffer=target_file,
                            sep=';')
     new_entry = pd.DataFrame([[new_entry_to_log_variable, new_entry_to_log_value, new_entry_to_log_description]],
@@ -162,9 +165,8 @@ def create_distance_threshold_list(distance_threshold_min,
 
 def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
                    traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
-                   trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max,
-                   event_case_correlation_method, event_case_correlation_method_list, miner_type, miner_type_list,
-                   logging_level):
+                   trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max, miner_type,
+                   miner_type_list, logging_level):
     # checks settings for correctness (if they are invalid the execution get stopped)
     settings_valid = True
 
@@ -193,13 +195,6 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
         logger.error("'k_means_number_of_clusters_min' has to be <= 'k_means_number_of_clusters_max'")
         settings_valid = False
 
-    if event_case_correlation_method not in event_case_correlation_method_list:
-        error_msg = str("'" + event_case_correlation_method +
-                        "' is not a valid event case correlation method choice. Please choose one of the following: " +
-                        str(event_case_correlation_method_list))
-        logger.error(error_msg)
-        settings_valid = False
-
     if miner_type not in miner_type_list:
         error_msg = str("'" + miner_type +
                         "' is not a valid choice for a miner. Please choose one of the following: " +
@@ -212,5 +207,5 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
         raise ValueError()
 
     # if all settings are valid the program get executed
-    logger.info("The chosen settings are valid")
+    logger.info("The chosen settings are valid.")
     return

@@ -43,6 +43,9 @@ csv_delimiter_benchmark = ';'
 # indicator at which line the data starts
 csv_header_benchmark = 0
 
+# ToDo comment 'metric_to_be_maximised'
+metric_to_be_maximised = 'Precision'
+
 # hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
 opt_algorithm = tpe.suggest
@@ -50,12 +53,17 @@ opt_algorithm = tpe.suggest
 opt_attempts = 10
 
 # range for vectorization type (parameter optimization)
+# possible types: 'quantity', 'time', 'quantity_time'
 vectorization_type_list = ['quantity', 'time', 'quantity_time']
 
-# choose between: Classic (classical approach), FreFlaLa (filter out days with visitors)
-event_case_correlation_method = 'FreFlaLa'
-# ToDo: Kai add to hyperparameter optimization
+# range for clustering method (parameter optimization)
+# possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
 event_case_correlation_method_list = ['Classic', 'FreFlaLa']
+
+# range for clustering method (parameter optimization)
+# possible methods: 'SOM', 'CustomDistance', 'k-Means'
+clustering_method_list = ['SOM']
+# clustering_method_list = ['SOM', 'CustomDistance', 'k-Means']
 
 # number of motion sensors
 number_of_motion_sensors = 31
@@ -132,6 +140,8 @@ filename_log_export = 'log_export.xes'
 dir_petri_net_files = 'petri_nets/'
 # filename of petri net .pnml file
 filename_petri_net = 'petri_net.pnml'
+# filename of petri net image file
+filename_petri_net_image = 'ProcessModelHM.png'
 
 # folder containing dfg png files
 dir_dfg_files = 'directly_follows_graphs/'

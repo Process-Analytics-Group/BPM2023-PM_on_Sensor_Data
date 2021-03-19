@@ -34,6 +34,7 @@ logging.basicConfig(
 # "disable" specific logger
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 logging.getLogger('hyperopt').setLevel(logging.WARNING)
+logging.getLogger('numexpr').setLevel(logging.WARNING)
 
 # checks settings for correctness
 helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
@@ -46,8 +47,6 @@ helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
                       trace_length_limit_max=settings.trace_length_limit_max,
                       k_means_number_of_clusters_min=settings.k_means_number_of_clusters_min,
                       k_means_number_of_clusters_max=settings.k_means_number_of_clusters_max,
-                      event_case_correlation_method=settings.event_case_correlation_method,
-                      event_case_correlation_method_list=settings.event_case_correlation_method_list,
                       miner_type=settings.miner_type,
                       miner_type_list=settings.miner_type_list,
                       logging_level=settings.logging_level)
@@ -67,12 +66,10 @@ raw_sensor_data = u_utils.read_csv_file(filedir=settings.path_data_sources,
                                         separator=settings.csv_delimiter_sensor_data,
                                         header=settings.csv_header_sensor_data,
                                         parse_dates=settings.csv_parse_dates_sensor_data,
-                                        dtype=settings.csv_dtype_sensor_data,
-                                        )
+                                        dtype=settings.csv_dtype_sensor_data)
 
 
 def perform_process_model_discovery(params):
-
     # count number of iterations
     perform_process_model_discovery.iteration_counter += 1
 
@@ -97,7 +94,7 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     traces_vectorised, output_case_traces_cluster = \
-        ecc.choose_event_case_correlation_method(method=settings.event_case_correlation_method,
+        ecc.choose_event_case_correlation_method(method=params['event_case_correlation_method'],
                                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                  dir_runtime_files=dir_runtime_files,
                                                  distance_threshold=params['distance_threshold'],
@@ -105,15 +102,15 @@ def perform_process_model_discovery(params):
                                                  trace_length_limit=params['trace_length_limit'],
                                                  vectorization_method=params['vectorization_type'],
                                                  raw_sensor_data=raw_sensor_data,
-                                                 max_errors_per_day=params['max_errors_per_day'])
+                                                 max_errors_per_day=params['max_errors_per_day'],
+                                                 logging_level=settings.logging_level)
 
     # ################### ActivityDiscovery ####################
-    # ToDo: @Kai: Can you add clustering method to the hyperparemter search space please
-
-    cluster = ad.choose_clustering_method(clustering_method="SOM",
+    cluster = ad.choose_clustering_method(clustering_method=params['clustering_method'],
                                           number_of_clusters=params['k_means_number_of_clusters'],
                                           trace_data_without_case_number=traces_vectorised,
-                                          dir_runtime_files=dir_runtime_files)
+                                          dir_runtime_files=dir_runtime_files,
+                                          logging_level=settings.logging_level)
 
     # ################### EventActivityAbstraction ####################
     output_case_traces_cluster = \
@@ -129,20 +126,19 @@ def perform_process_model_discovery(params):
                                rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
                                logging_level=settings.logging_level)
 
-    # ToDo: Kai metric_to_be_maximised should be in the settings file
-    metric_to_be_maximised = 'Precision'
     metrics = prd.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
                                        path_data_sources=settings.path_data_sources,
                                        dir_runtime_files=dir_runtime_files,
                                        filename_log_export=settings.filename_log_export,
                                        dir_petri_net_files=settings.dir_petri_net_files,
                                        filename_petri_net=settings.filename_petri_net,
+                                       filename_petri_net_image=settings.filename_petri_net_image,
                                        dir_dfg_files=settings.dir_dfg_files,
                                        filename_dfg=settings.filename_dfg,
                                        rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
                                        miner_type=settings.miner_type,
-                                       logging_level=settings.logging_level,
-                                       metric_to_be_maximised=metric_to_be_maximised)
+                                       metric_to_be_maximised=settings.metric_to_be_maximised,
+                                       logging_level=settings.logging_level)
 
     # stop timer
     t1_main = timeit.default_timer()
@@ -156,7 +152,7 @@ def perform_process_model_discovery(params):
         filename_benchmark=settings.filename_benchmark,
         csv_delimiter_benchmark=settings.csv_delimiter_benchmark,
         list_of_properties={'FunctionValue': metrics,
-                            'FunctionValueType': metric_to_be_maximised,
+                            'FunctionValueType': settings.metric_to_be_maximised,
                             'runtime_main': runtime_main,
                             'iteration': perform_process_model_discovery.iteration_counter,
                             'zero_distance_value': params['zero_distance_value'],
@@ -167,11 +163,13 @@ def perform_process_model_discovery(params):
                             'k_means_number_of_clusters': params['k_means_number_of_clusters'],
                             'max_errors_per_day': params['max_errors_per_day'],
                             'MinerType': settings.miner_type,
-                            'EventCaseCorrelationMethod': settings.event_case_correlation_method})
+                            'event_case_correlation_method': params['event_case_correlation_method'],
+                            'clustering_method': params['clustering_method']})
 
     helper.append_to_log_file(
         new_entry_to_log_variable='runtime_main',
         new_entry_to_log_value=runtime_main,
+        path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=settings.filename_parameters_file,
         new_entry_to_log_description='Total runtime in seconds.')
@@ -179,6 +177,7 @@ def perform_process_model_discovery(params):
     helper.append_to_log_file(
         new_entry_to_log_variable='execution_completed',
         new_entry_to_log_value=True,
+        path_data_sources=settings.path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=settings.filename_parameters_file,
         new_entry_to_log_description='Successfully executed code.')
@@ -216,7 +215,10 @@ space = {
     'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
     'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
                                      settings.max_errors_per_day_max + 1),
-    'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list)
+    'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
+    'event_case_correlation_method': hp.choice('event_case_correlation_method',
+                                               settings.event_case_correlation_method_list),
+    'clustering_method': hp.choice('clustering_method', settings.clustering_method_list)
 }
 
 # capture the iterations of hyperopt parameter tuning
@@ -233,8 +235,8 @@ fmin(fn=perform_process_model_discovery,
 
 # additional information of the best iteration
 best = trials.best_trial
-information_string = '\nbest iteration:\n\toptimised function value = ' + \
-                     str(-best['result']['loss']) + '\n\toptimised parameters:'
+information_string = '\nbest iteration:\n\toptimised function value = ' + str(-best['result']['loss']) + \
+                     '\n\tfunction value type = ' + settings.metric_to_be_maximised + '\n\toptimised parameters:'
 for key, value in best['result']['opt_params'].items():
     information_string += '\n\t\t' + str(key) + ' = ' + str(value)
 information_string += '\n\tfiles directory = ' + str(best['result']['dir_runtime_files']) + '\n\titeration = ' + str(

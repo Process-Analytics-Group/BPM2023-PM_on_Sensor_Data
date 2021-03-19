@@ -39,6 +39,12 @@ def choose_event_case_correlation_method(method,
                                                raw_sensor_data=raw_sensor_data,
                                                vectorization_method=vectorization_method,
                                                logging_level=logging_level)
+    else:
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(logging_level)
+        error_msg = "'" + method + "' is not a valid event case correlation method. Please check the settings."
+        logger.error(error_msg)
+        raise ValueError(error_msg)
 
     return trace_data_time, output_case_traces_cluster
 
@@ -175,7 +181,7 @@ def divide_raw_traces(traces_raw_pd,
     :param csv_delimiter_traces_basic: csv delimiter of divided trace file
     :param filename_parameters_file: filename of parameters file
     :param max_trace_length: the max length of one trace
-:param vectorization_method: collection of all available vectorization types
+    :param vectorization_method: collection of all available vectorization types
     :param number_of_motion_sensors: number of motion sensors
     :param logging_level: level of logging
     :return: The divided traces (final_vector), raw traces clustered into cases (output_case_traces_cluster), activated
@@ -282,6 +288,7 @@ def divide_raw_traces(traces_raw_pd,
     helper.append_to_log_file(
         new_entry_to_log_variable='case_id_for_short_traces',
         new_entry_to_log_value=divided_trace_case_id - 1,
+        path_data_sources=data_sources_path,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Number of shorter traces of length ' + str(max_trace_length) + '.')
@@ -289,6 +296,7 @@ def divide_raw_traces(traces_raw_pd,
     helper.append_to_log_file(
         new_entry_to_log_variable='runtime_' + inspect.stack()[0][3],
         new_entry_to_log_value=runtime_divide_raw_traces,
+        path_data_sources=data_sources_path,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Seconds it took to divide long traces into shorter traces.')

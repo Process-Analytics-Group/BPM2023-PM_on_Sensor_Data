@@ -80,8 +80,8 @@ def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_ru
 
 
 def create_process_model(output_case_traces_cluster, path_data_sources, dir_runtime_files, filename_log_export,
-                         dir_petri_net_files, filename_petri_net, dir_dfg_files, filename_dfg,
-                         rel_proportion_dfg_threshold, miner_type, logging_level, metric_to_be_maximised):
+                         dir_petri_net_files, filename_petri_net, filename_petri_net_image, dir_dfg_files, filename_dfg,
+                         rel_proportion_dfg_threshold, miner_type, metric_to_be_maximised, logging_level):
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)
@@ -99,14 +99,15 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
                        dir_runtime_files=dir_runtime_files,
                        dir_dfg_files=dir_dfg_files,
                        filename_dfg=filename_dfg)
-
     logger.info("Saved directly follows graph into '../%s'.",
                 path_data_sources + dir_runtime_files + dir_dfg_files + filename_dfg)
+
     metrics = apply_miner(log=pm4py_log,
                           path_data_sources=path_data_sources,
                           dir_runtime_files=dir_runtime_files,
                           dir_petri_net_files=dir_petri_net_files,
                           filename_petri_net=filename_petri_net,
+                          filename_petri_net_image=filename_petri_net_image,
                           miner_type=miner_type,
                           metric_to_be_maximised=metric_to_be_maximised)
 
@@ -145,8 +146,7 @@ def exportDFGImageFile(log, path_data_sources, dir_runtime_files, dir_dfg_files,
     gviz = dfg_visualization.apply(dfg0=dfg, log=log, variant=dfg_visualization.Variants.FREQUENCY,
                                    parameters={'start_activities': start_activities,
                                                'end_activities': end_activities})
-    dfg_visualization.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_files + (
-        filename_dfg))
+    dfg_visualization.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_files + filename_dfg)
 
     return
 
@@ -156,6 +156,7 @@ def apply_miner(log,
                 dir_runtime_files,
                 dir_petri_net_files,
                 filename_petri_net,
+                filename_petri_net_image,
                 miner_type,
                 metric_to_be_maximised):
     logger = logging.getLogger(inspect.stack()[0][3])
@@ -205,7 +206,9 @@ def apply_miner(log,
 
     # export petri net png
     gviz = pn_visualizer.apply(net, initial_marking, final_marking)
-    pn_visualizer.save(gviz, path_data_sources + dir_runtime_files + dir_petri_net_files + (str('ProcessModelHM.png')))
+    pn_visualizer.save(gviz, path_data_sources + dir_runtime_files + dir_petri_net_files + filename_petri_net_image)
+    logger.info("Exported petri net image file into '../%s'.",
+                path_data_sources + dir_runtime_files + dir_petri_net_files + filename_petri_net_image)
 
     # export petri net pnml
     pnml_exporter.apply(net, initial_marking,

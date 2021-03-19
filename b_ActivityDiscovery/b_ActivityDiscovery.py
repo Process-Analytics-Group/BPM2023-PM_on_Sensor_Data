@@ -12,8 +12,9 @@ import z_setting_parameters as settings
 def choose_clustering_method(clustering_method,
                              number_of_clusters,
                              trace_data_without_case_number,
-                             dir_runtime_files):
-
+                             dir_runtime_files,
+                             logging_level):
+    cluster = None
     if clustering_method == 'SOM':
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(
             trace_data_without_case_number=trace_data_without_case_number,
@@ -27,9 +28,14 @@ def choose_clustering_method(clustering_method,
         # ToDo Frederik: Here you would call the method that uses your k-means method
         pass
     else:
-        return None
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(logging_level)
+        error_msg = "'" + clustering_method + "' is not a valid clustering method. Please check the settings."
+        logger.error(error_msg)
+        raise ValueError(error_msg)
 
     return cluster
+
 
 def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt,
                                     dir_runtime_files):
@@ -74,6 +80,7 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
     helper.append_to_log_file(
         new_entry_to_log_variable='topographic_error',
         new_entry_to_log_value=topographic_error,
+        path_data_sources=path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='The topographic error: the proportion of all data '
@@ -81,6 +88,7 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
     helper.append_to_log_file(
         new_entry_to_log_variable='quantization_error',
         new_entry_to_log_value=quantization_error,
+        path_data_sources=path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='The quantization error: '
@@ -89,6 +97,7 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
     helper.append_to_log_file(
         new_entry_to_log_variable='k_means_number_of_clusters',
         new_entry_to_log_value=K_opt,
+        path_data_sources=path_data_sources,
         dir_runtime_files=dir_runtime_files,
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Number of clusters used to do the vanilla k-means '
