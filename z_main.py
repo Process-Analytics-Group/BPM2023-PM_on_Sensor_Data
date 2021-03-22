@@ -110,10 +110,13 @@ def perform_process_model_discovery(params):
     # ################### ActivityDiscovery ####################
     # ToDo: @Kai: Can you add clustering method to the hyperparemter search space please
 
-    cluster = ad.choose_clustering_method(clustering_method="SOM",
+    cluster = ad.choose_clustering_method(clustering_method="CustomDistance",
                                           number_of_clusters=params['k_means_number_of_clusters'],
                                           trace_data_without_case_number=traces_vectorised,
-                                          dir_runtime_files=dir_runtime_files)
+                                          dir_runtime_files=dir_runtime_files,
+                                          dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                          vectorization_type=params['vectorization_type']
+                                          )
 
     # ################### EventActivityAbstraction ####################
     output_case_traces_cluster = \

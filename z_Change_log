@@ -1,3 +1,9 @@
+2021-03-19
+FF: Added vectorization_type as a parameter to choose_clustering_method
+
+2021-03-19
+FF: Added dict_distance_adjacency_sensor as a parameter to choose_clustering_method
+
 2021-03-17
 DJ: Changed activity discovery method, so that one can choose between methods
 DJ: Added to do comments for Frederik
