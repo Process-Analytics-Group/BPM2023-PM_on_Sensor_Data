@@ -1,12 +1,5 @@
-import inspect
-import logging
-
 from scipy.cluster.hierarchy import fclusterdata
-from sklearn.cluster import KMeans
-from b_ActivityDiscovery.self_organizing_map.sompy import SOMFactory
 import numpy as np
-from u_utils import u_helper as helper
-import z_setting_parameters as settings
 
 
 def cluster_mod_1(allvectors, dict_distance_adjacency_sensor, vectorization_type, clustersize=15,

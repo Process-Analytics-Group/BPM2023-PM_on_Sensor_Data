@@ -92,6 +92,10 @@ trace_length_limit_max = 10
 k_means_number_of_clusters_min = 6
 k_means_number_of_clusters_max = 16
 
+# Specifies the linkage method for clustering with custom distance calculation
+linkage_method_for_clustering = 'ward'
+linkage_method_for_clustering_list = ['single', 'complete', 'average', 'weighted', 'median', 'centroid', 'ward']
+
 # threshold for filtering out sensors in dfg relative to max occurrences of a sensor (value in range 0-1)
 rel_proportion_dfg_threshold = 0.5
 
