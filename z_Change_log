@@ -1,3 +1,6 @@
+2021-03-22
+DJ: Fixed an issue where M0 activations would be counted even if other sensors where still active
+
 2021-03-19
 KD: added event_case_correlation_method and clustering_method to parameter optimization
 KD: added configurable petri net png file name

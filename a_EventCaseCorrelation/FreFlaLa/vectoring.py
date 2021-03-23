@@ -78,7 +78,13 @@ def get_vectors_by_rooms(dataset,
             # remove sensor from active sensors
             if data_row.SensorID in currently_active_sensors:
                 currently_active_sensors.remove(data_row.SensorID)
-            sensor_added.append(0)
+            # check if no sensor is currently active
+            if not currently_active_sensors:
+                # if no sensor is currently active, create virtual '0' sensor to indicate person is in an
+                # area without coverage
+                sensor_added.append(0)
+            else:
+                sensor_added.append(None)
             lc_list.append('c')
         lc_activity_list.append(data_row.SensorID)
         case.append(current_case)
@@ -96,6 +102,11 @@ def get_vectors_by_rooms(dataset,
     default_index = ['Activity', 'Sensor_Added', 'Duration', 'Timestamp', 'LC_Activity', 'LC', 'Case']
     raw_sensor_data_sensor_int = raw_sensor_data_sensor_int.reindex(columns=default_index)
 
+    # vectorization_method = 'quantity_time'  # ToDo: DJ: Delete
+    # ToDo DJ: Fix the time vectorization method. If sensor is deactivated it is at the moment counted as a "M0"
+    #  activation. Should only be counted as "M0" if no sensor at all is activated. Additionally a sensor's
+    #  activation time is only counted for as long as another sensor is activated, but should be added up until the
+    #  very same sensor is being deactivated
     # count how many times a sensor has been activated in a case:
     if vectorization_method == 'quantity' or vectorization_method == 'quantity_time':
         quantity_vector = pd.pivot_table(raw_sensor_data_sensor_int,
@@ -106,7 +117,7 @@ def get_vectors_by_rooms(dataset,
     if vectorization_method == 'time' or vectorization_method == 'quantity_time':
         time_vector = pd.pivot_table(raw_sensor_data_sensor_int,
                                      index=['Case'],
-                                     columns=['Sensor_Added'],
+                                     columns=['Sensor_Added', 'LC'],
                                      values=['Duration'], aggfunc='sum', fill_value=0)
         time_vector.columns = ["Time " + str(x) for x in range(time_vector.shape[1])]
     if vectorization_method == 'time':
