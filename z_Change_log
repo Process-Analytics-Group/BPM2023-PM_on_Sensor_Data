@@ -4,6 +4,8 @@ DJ: Fixed an issue where M0 activations would be counted even if other sensors w
 2021-03-19
 KD: added event_case_correlation_method and clustering_method to parameter optimization
 KD: added configurable petri net png file name
+FF: Added dict_distance_adjacency_sensor as a parameter to choose_clustering_method
+FF: Added vectorization_type as a parameter to choose_clustering_method
 
 2021-03-17
 DJ: Changed activity discovery method, so that one can choose between methods

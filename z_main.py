@@ -110,7 +110,9 @@ def perform_process_model_discovery(params):
                                           number_of_clusters=params['k_means_number_of_clusters'],
                                           trace_data_without_case_number=traces_vectorised,
                                           dir_runtime_files=dir_runtime_files,
-                                          logging_level=settings.logging_level)
+                                          logging_level=settings.logging_level,
+                                          dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                          vectorization_type=params['vectorization_type'])
 
     # ################### EventActivityAbstraction ####################
     output_case_traces_cluster = \

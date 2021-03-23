@@ -2,18 +2,22 @@
 import inspect
 import logging
 
+from scipy.cluster.hierarchy import fclusterdata
 from sklearn.cluster import KMeans
 from b_ActivityDiscovery.self_organizing_map.sompy import SOMFactory
 import numpy as np
 from u_utils import u_helper as helper
 import z_setting_parameters as settings
+import b_ActivityDiscovery.FreFlaLa.b_FreFlaLa as b_FreFlaLa
 
 
 def choose_clustering_method(clustering_method,
                              number_of_clusters,
                              trace_data_without_case_number,
                              dir_runtime_files,
-                             logging_level):
+                             logging_level,
+                             dict_distance_adjacency_sensor,
+                             vectorization_type):
     cluster = None
     if clustering_method == 'SOM':
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(
@@ -22,11 +26,18 @@ def choose_clustering_method(clustering_method,
         cluster = km.labels_[np.transpose(sm._bmu[0, :]).astype(int)]
 
     elif clustering_method == 'CustomDistance':
-        # ToDo Frederik: Here you would call the method that uses your custom distance method
+        # Clustering custom distance
+        cluster = b_FreFlaLa.clustering_with_custom_distance_calculation(
+            trace_data_without_case_number,
+            dict_distance_adjacency_sensor,
+            vectorization_type,
+            number_of_clusters
+            )
+
         pass
     elif clustering_method == 'k-Means':
-        # ToDo Frederik: Here you would call the method that uses your k-means method
-        pass
+
+        cluster = custom_kmeans(trace_data_without_case_number, number_of_clusters)
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
         logger.setLevel(logging_level)
@@ -35,7 +46,6 @@ def choose_clustering_method(clustering_method,
         raise ValueError(error_msg)
 
     return cluster
-
 
 def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt,
                                     dir_runtime_files):
