@@ -2,8 +2,10 @@ from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
 
 
-def cluster_mod_1(allvectors, dict_distance_adjacency_sensor, vectorization_type, clustersize=15,
-                  linkage_method_for_clustering='ward'):
+def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,
+                                                clustersize=15,
+                                                linkage_method_for_clustering='ward'):
+    # TODO @Kai Add to logger: "start modified clustering method"
     '''
     Clusters the dataset using custom calculation.
 
@@ -18,7 +20,7 @@ def cluster_mod_1(allvectors, dict_distance_adjacency_sensor, vectorization_type
     '''
 
     # distance calculation
-    def mydist(v1, v2):
+    def euclidean_and_most_used_sensor_dist(v1, v2):
         '''
         distance calculation between two vectors that is used for clustering.
 
@@ -31,16 +33,6 @@ def cluster_mod_1(allvectors, dict_distance_adjacency_sensor, vectorization_type
         @param v2: second vector
         @return: calculated distance between two vectors
         '''
-
-        # prints progress as % (every 500.000 calculations)
-        # total number of calculations: 88571395
-
-        """
-        global count
-        if count % 500000 == 0:
-            print(str((count / 88571395) * 100) + " %")
-        count += 1
-        """
 
         # finding the most used sensor in vector 1 & 2
 
@@ -64,13 +56,16 @@ def cluster_mod_1(allvectors, dict_distance_adjacency_sensor, vectorization_type
         main_sensor_v2 = l2_short.index(max(l2_short)) + 1
 
         # euclidean distance * Steps between most used sensors
-        return np.linalg.norm(v1 - v2) * dict_distance_adjacency_sensor["distance_matrix"][main_sensor_v1][main_sensor_v2]
+        return np.linalg.norm(v1 - v2) * dict_distance_adjacency_sensor["distance_matrix"][main_sensor_v1][
+            main_sensor_v2]
 
     # clustering method that can use a custom distance calculation. 'maxclust' and t=15 -> 15 cluster. method list below
-    result_clustering = fclusterdata(allvectors, t=clustersize, criterion='maxclust', metric=mydist,
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.fclusterdata.html
+    result_clustering = fclusterdata(allvectors, t=clustersize, criterion='maxclust',
+                                     metric=euclidean_and_most_used_sensor_dist,
                                      method=linkage_method_for_clustering)
     """
-        The linkage method to use (single, complete, average, weighted, median centroid, ward).
+        The linkage method to use (single, complete, average, weighted, median, centroid, ward).
         method: 
             singel:     bad
             complete:   ok
@@ -82,7 +77,7 @@ def cluster_mod_1(allvectors, dict_distance_adjacency_sensor, vectorization_type
     """
 
     # decreasing the indices by 1, from 1-15 to 0-14 to comply with other algorithms
-    for i in range(0, len(result_clustering)):
-        result_clustering[i] = result_clustering[i] - 1
+    result_clustering = result_clustering - 1
 
+    # TODO @Kai Add to logger: "end modified clustering method"
     return result_clustering

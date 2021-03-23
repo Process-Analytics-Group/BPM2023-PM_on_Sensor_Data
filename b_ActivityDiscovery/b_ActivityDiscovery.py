@@ -26,7 +26,7 @@ def choose_clustering_method(clustering_method,
 
     elif clustering_method == 'CustomDistance':
         # Clustering custom distance
-        cluster = b_FreFlaLa.cluster_mod_1(
+        cluster = b_FreFlaLa.clustering_with_custom_distance_calculation(
             trace_data_without_case_number,
             dict_distance_adjacency_sensor,
             vectorization_type,
