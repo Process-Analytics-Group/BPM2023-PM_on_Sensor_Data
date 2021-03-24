@@ -190,8 +190,11 @@ def apply_miner(log,
         metrics = precision_evaluator.apply(log, net, initial_marking, final_marking,
                                             variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
         logger.info("Precision calculated.")
-    elif metric_to_be_maximised == 'entropia':
-        # ToDo Kai: add entropia here
+    elif metric_to_be_maximised == 'entropia:Precision':
+        # ToDo Kai: add entropia here with parameter call 'pmp'
+        pass
+    elif metric_to_be_maximised == 'entropia:Fitness':
+        # ToDo Kai: add entropia here with parameter call 'pmr'
         pass
     else:
         metrics = None
