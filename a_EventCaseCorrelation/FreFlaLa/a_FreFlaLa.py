@@ -33,11 +33,11 @@ def apply_threshold_filtering(dict_distance_adjacency_sensor,
     # transform raw data into vectors
     FreFraLa_method = 'byRooms'
     case_vectors, raw_sensor_data_sensor_int = \
-        FreFraLa_Vectoring.choose_method(filtered_dataset=filtered_dataset,
-                                         method=FreFraLa_method,
-                                         dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                         vectorization_method=vectorization_method,
-                                         logging_level=logging_level)
+        FreFraLa_Vectoring.choose_and_perform_method(filtered_dataset=filtered_dataset,
+                                                     method=FreFraLa_method,
+                                                     dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                                     vectorization_method=vectorization_method,
+                                                     logging_level=logging_level)
 
     # stop timer
     t1_main = timeit.default_timer()

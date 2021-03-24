@@ -95,32 +95,32 @@ def perform_process_model_discovery(params):
     # transform raw-data to traces
     # TODO reset method to method=params['event_case_correlation_method']
     traces_vectorised, output_case_traces_cluster = \
-        ecc.choose_event_case_correlation_method(method='FreFlaLa',
-                                                 dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                                 dir_runtime_files=dir_runtime_files,
-                                                 distance_threshold=params['distance_threshold'],
-                                                 traces_time_out_threshold=params['traces_time_out_threshold'],
-                                                 trace_length_limit=params['trace_length_limit'],
-                                                 vectorization_method=params['vectorization_type'],
-                                                 raw_sensor_data=raw_sensor_data,
-                                                 max_errors_per_day=params['max_errors_per_day'],
-                                                 logging_level=settings.logging_level)
+        ecc.choose_and_perform_event_case_correlation_method(method=params['event_case_correlation_method'],
+                                                             dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                                             path_data_sources=settings.path_data_sources,
+                                                             dir_runtime_files=dir_runtime_files,
+                                                             distance_threshold=params['distance_threshold'],
+                                                             traces_time_out_threshold=params[
+                                                                 'traces_time_out_threshold'],
+                                                             trace_length_limit=params['trace_length_limit'],
+                                                             vectorization_method=params['vectorization_type'],
+                                                             raw_sensor_data=raw_sensor_data,
+                                                             max_errors_per_day=params['max_errors_per_day'],
+                                                             logging_level=settings.logging_level)
 
     # ################### ActivityDiscovery ####################
-    # TODO reset clustering_method to params['clustering_method']
-    cluster = ad.choose_clustering_method(clustering_method='CustomDistance',
-                                          number_of_clusters=params['k_means_number_of_clusters'],
-                                          trace_data_without_case_number=traces_vectorised,
-                                          dir_runtime_files=dir_runtime_files,
-                                          logging_level=settings.logging_level,
-                                          dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                          vectorization_type=params['vectorization_type'])
+    cluster = ad.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
+                                                      number_of_clusters=params['k_means_number_of_clusters'],
+                                                      trace_data_without_case_number=traces_vectorised,
+                                                      dir_runtime_files=dir_runtime_files,
+                                                      logging_level=settings.logging_level,
+                                                      dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                                      vectorization_type=params['vectorization_type'])
 
     # ################### EventActivityAbstraction ####################
-    output_case_traces_cluster = \
-        eaa.create_event_log_files(cluster=cluster,
-                                   traces_vectorised=traces_vectorised,
-                                   output_case_traces_cluster=output_case_traces_cluster)
+    output_case_traces_cluster = eaa.create_event_log_files(cluster=cluster,
+                                                            traces_vectorised=traces_vectorised,
+                                                            output_case_traces_cluster=output_case_traces_cluster)
 
     # ################### ProcessDiscovery ####################
     prd.create_activtiy_models(output_case_traces_cluster=output_case_traces_cluster,

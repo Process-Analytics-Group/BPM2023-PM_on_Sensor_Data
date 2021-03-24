@@ -11,13 +11,13 @@ import z_setting_parameters as settings
 import b_ActivityDiscovery.FreFlaLa.b_FreFlaLa as b_FreFlaLa
 
 
-def choose_clustering_method(clustering_method,
-                             number_of_clusters,
-                             trace_data_without_case_number,
-                             dir_runtime_files,
-                             logging_level,
-                             dict_distance_adjacency_sensor,
-                             vectorization_type):
+def choose_and_perform_clustering_method(clustering_method,
+                                         number_of_clusters,
+                                         trace_data_without_case_number,
+                                         dir_runtime_files,
+                                         logging_level,
+                                         dict_distance_adjacency_sensor,
+                                         vectorization_type):
     cluster = None
     if clustering_method == 'SOM':
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(

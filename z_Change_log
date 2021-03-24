@@ -1,3 +1,7 @@
+2021-03-24
+KD: Added check to avoid execution of EventCaseCorrelation methods with the same parameters
+KD: Renamed 'choose_...' method names to 'choose_and_perform_...'
+
 2021-03-22
 DJ: Fixed an issue where M0 activations would be counted even if other sensors where still active
 
