@@ -6,11 +6,11 @@ import pandas as pd
 from copy import deepcopy
 
 
-def choose_method(filtered_dataset,
-                  dict_distance_adjacency_sensor,
-                  method,
-                  vectorization_method,
-                  logging_level):
+def choose_and_perform_method(filtered_dataset,
+                              dict_distance_adjacency_sensor,
+                              method,
+                              vectorization_method,
+                              logging_level):
     if method == 'byRooms':
         case_vectors, raw_sensor_data_sensor_int = \
             get_vectors_by_rooms(dataset=filtered_dataset,

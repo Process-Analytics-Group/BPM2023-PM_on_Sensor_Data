@@ -10,35 +10,54 @@ import inspect
 import a_EventCaseCorrelation.FreFlaLa.a_FreFlaLa as FreFlaLa
 
 
-def choose_event_case_correlation_method(method,
-                                         dict_distance_adjacency_sensor,
-                                         dir_runtime_files,
-                                         trace_length_limit,
-                                         vectorization_method,
-                                         distance_threshold=1.5,
-                                         traces_time_out_threshold=300,
-                                         raw_sensor_data=None,
-                                         max_errors_per_day=100,
-                                         logging_level=None):
+def choose_and_perform_event_case_correlation_method(method,
+                                                     dict_distance_adjacency_sensor,
+                                                     path_data_sources,
+                                                     dir_runtime_files,
+                                                     trace_length_limit,
+                                                     vectorization_method,
+                                                     distance_threshold=1.5,
+                                                     traces_time_out_threshold=300,
+                                                     raw_sensor_data=None,
+                                                     max_errors_per_day=100,
+                                                     trials=None,
+                                                     logging_level=None):
     if method == 'Classic':
-        # Classical Method
-        trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
-            create_trace_from_file(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                   dir_runtime_files=dir_runtime_files,
-                                   distance_threshold=distance_threshold,
-                                   traces_time_out_threshold=traces_time_out_threshold,
-                                   trace_length_limit=trace_length_limit,
-                                   raw_sensor_data=raw_sensor_data,
-                                   vectorization_method=vectorization_method)
+        same_param_trial = helper.param_combination_already_executed(trials=trials,
+                                                                     current_params={
+                                                                         'event_case_correlation_method': method,
+                                                                         'distance_threshold': distance_threshold,
+                                                                         'traces_time_out_threshold': traces_time_out_threshold,
+                                                                         'trace_length_limit': trace_length_limit,
+                                                                         'vectorization_type': vectorization_method})
+        if same_param_trial is None:
+            # Classical Method
+            trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
+                create_trace_from_file(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                       dir_runtime_files=dir_runtime_files,
+                                       distance_threshold=distance_threshold,
+                                       traces_time_out_threshold=traces_time_out_threshold,
+                                       trace_length_limit=trace_length_limit,
+                                       raw_sensor_data=raw_sensor_data,
+                                       vectorization_method=vectorization_method)
+
     elif method == 'FreFlaLa':
-        trace_data_time, output_case_traces_cluster = \
-            FreFlaLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                               max_errors_per_day=max_errors_per_day,
-                                               traces_time_out_threshold=traces_time_out_threshold,
-                                               trace_length_limit=trace_length_limit,
-                                               raw_sensor_data=raw_sensor_data,
-                                               vectorization_method=vectorization_method,
-                                               logging_level=logging_level)
+        same_param_trial = helper.param_combination_already_executed(trials=trials,
+                                                                     current_params={
+                                                                         'event_case_correlation_method': method,
+                                                                         'max_errors_per_day': max_errors_per_day,
+                                                                         'traces_time_out_threshold': traces_time_out_threshold,
+                                                                         'trace_length_limit': trace_length_limit,
+                                                                         'vectorization_type': vectorization_method})
+        if same_param_trial is None:
+            trace_data_time, output_case_traces_cluster = \
+                FreFlaLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                                   max_errors_per_day=max_errors_per_day,
+                                                   traces_time_out_threshold=traces_time_out_threshold,
+                                                   trace_length_limit=trace_length_limit,
+                                                   raw_sensor_data=raw_sensor_data,
+                                                   vectorization_method=vectorization_method,
+                                                   logging_level=logging_level)
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
         logger.setLevel(logging_level)
@@ -46,6 +65,23 @@ def choose_event_case_correlation_method(method,
         logger.error(error_msg)
         raise ValueError(error_msg)
 
+    if same_param_trial is not None:
+        # Todo Kai: Add logger
+        # create_trace_from_file method with the current parameters were executed already
+        trace_data_time = utils.read_csv_file(
+            filedir=path_data_sources + same_param_trial['result']['dir_runtime_files'],
+            filename='trace_data_time.csv', separator=';', header=0)
+        output_case_traces_cluster = utils.read_csv_file(
+            filedir=path_data_sources + same_param_trial['result']['dir_runtime_files'],
+            filename='output_case_traces_cluster.csv', separator=';',
+            header=0)
+
+    # export trace_data_time and output_case_traces_cluster in folder of current run
+    utils.write_csv_file(trace_data_time, path_data_sources + dir_runtime_files, 'trace_data_time.csv', ';',
+                         logging_level)
+    utils.write_csv_file(output_case_traces_cluster, path_data_sources + dir_runtime_files,
+                         'output_case_traces_cluster.csv', ';',
+                         logging_level)
     return trace_data_time, output_case_traces_cluster
 
 
