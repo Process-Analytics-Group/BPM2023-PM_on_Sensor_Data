@@ -93,8 +93,9 @@ def perform_process_model_discovery(params):
 
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
+    # TODO reset method to method=params['event_case_correlation_method']
     traces_vectorised, output_case_traces_cluster = \
-        ecc.choose_event_case_correlation_method(method=params['event_case_correlation_method'],
+        ecc.choose_event_case_correlation_method(method='FreFlaLa',
                                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                  dir_runtime_files=dir_runtime_files,
                                                  distance_threshold=params['distance_threshold'],
@@ -106,7 +107,8 @@ def perform_process_model_discovery(params):
                                                  logging_level=settings.logging_level)
 
     # ################### ActivityDiscovery ####################
-    cluster = ad.choose_clustering_method(clustering_method=params['clustering_method'],
+    # TODO reset clustering_method to params['clustering_method']
+    cluster = ad.choose_clustering_method(clustering_method='CustomDistance',
                                           number_of_clusters=params['k_means_number_of_clusters'],
                                           trace_data_without_case_number=traces_vectorised,
                                           dir_runtime_files=dir_runtime_files,

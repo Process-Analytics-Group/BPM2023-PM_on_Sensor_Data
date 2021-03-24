@@ -1,5 +1,6 @@
 from scipy.cluster.hierarchy import fclusterdata
 import numpy as np
+import pandas as pd
 
 
 def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,
@@ -9,7 +10,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
     '''
     Clusters the dataset using custom calculation.
 
-    @param allvectors:                      A lIst of all vectors that should be clustered.
+    @param allvectors:                      A list of all vectors that should be clustered.
     @param dict_distance_adjacency_sensor:  A Dictionary with a "distance_matrix" inside
     @param vectorization_type:              Specifies if the vector is only time or sensor quantity or if its both
     @param clustersize:                     Specifies the number of cluster. Default is 15.
@@ -33,31 +34,53 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
         @param v2: second vector
         @return: calculated distance between two vectors
         '''
+        # TODO choose alternative
+        # alternative 1:
 
-        # finding the most used sensor in vector 1 & 2
+        # euclidean distance * Steps between most used sensors.
+            # euclidean distance: first value is deleted because it is just for identifing the vector
+        return np.linalg.norm(np.delete(v1, 0) - np.delete(v2, 0)) * \
+               dict_distance_adjacency_sensor["distance_matrix"][the_most_used_sensor[v1[0]]][
+                   the_most_used_sensor[v2[0]]]
 
-        # Transforming the np array into a python list. Working on a standard python list has proven to be faster in this case.
-        l1 = list(v1)
-        l2 = list(v2)
-
-        vector_length = len(l1)
-
-        # special case for 'quantity_time'. Most used sensor is determent by time. (Second half of array)
-        # first entry of the vector is not used, because it is the "no sensor" time
-        if vectorization_type == 'quantity_time':
-            l1_short = l1[((vector_length // 2) + 1):]
-            l2_short = l2[((vector_length // 2) + 1):]
-        else:
-            l1_short = l1[1:]
-            l2_short = l2[1:]
-
-        # getting the index of the most used sensor
-        main_sensor_v1 = l1_short.index(max(l1_short)) + 1
-        main_sensor_v2 = l2_short.index(max(l2_short)) + 1
+        # alternative 2:
+        """
+        # get vector-index form first value in the vector
+        v1_index = v1[0]
+        v2_index = v2[0]
+        # deleting the in vector-index
+        v1 = np.delete(v1, 0)
+        v2 = np.delete(v2, 0)
 
         # euclidean distance * Steps between most used sensors
-        return np.linalg.norm(v1 - v2) * dict_distance_adjacency_sensor["distance_matrix"][main_sensor_v1][
-            main_sensor_v2]
+        
+
+        return np.linalg.norm(v1 - v2) * \
+               dict_distance_adjacency_sensor["distance_matrix"][the_most_used_sensor[v1_index]][
+                   the_most_used_sensor[v2_index]]
+        """
+
+    # decision between 'quantity_time' and 'quantity'/'time', because of different vector length
+    if vectorization_type == 'quantity_time':
+
+        # slicing the "Zero-sensor" and the quantity count off
+        allvectors_short = allvectors.iloc[:, ((len(allvectors.columns) // 2) + 1):]
+
+    else:
+        # slicing the "Zero-sensor" off
+        allvectors_short = allvectors.iloc[:, 1:]
+
+    # replace sensornames with index number
+    allvectors_short_t = allvectors_short.T.reset_index(drop=True)
+    allvectors_short_t.index += 1
+    allvectors_short = allvectors_short_t.T
+
+    # find the most used sensor in every vector and create a Series with the corresponding sensor number
+    the_most_used_sensor = allvectors_short.idxmax(axis=1)
+
+    # adding the vector-index as first element in vector to identify the vector in the custom distace calculation.
+    # This value is removed before clustering
+    allvectors.insert(loc=0, column='index', value=(range(1, len(allvectors.index) + 1)))
 
     # clustering method that can use a custom distance calculation. 'maxclust' and t=15 -> 15 cluster. method list below
     # https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.fclusterdata.html
@@ -80,4 +103,41 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
     result_clustering = result_clustering - 1
 
     # TODO @Kai Add to logger: "end modified clustering method"
+
     return result_clustering
+
+
+def create_sensor_relevance_matrix(allvectors, allvectors_short):
+    """
+    Creates a dataframe the has a sensor-list for every vector. The sensors a ordered by amount of usage.
+    The lists only contain used sensors, the rest is just NaN
+
+    @param allvectors:          A Dataframe of all vectors that should be clustered.
+    @param allvectors_short:    A Dataframe of all vectors that should be clustered without the "Zero-Sensor"
+
+    @return: Dataframe with most uses sensors
+    """
+
+    vector_lenth = len(allvectors_short.columns)
+    # create an empty Dataframe for the results
+    most_used_sensors = pd.DataFrame(index=range(1, len(allvectors) + 1), columns=range(1, vector_lenth))
+
+    # iterate thought every vector
+    for i in range(1, len(allvectors) + 1):
+        # get the vector
+        vector = allvectors_short.loc[i]
+        # reset the index, so that it is just the sensor-number as integer
+        vector.reset_index(drop=True, inplace=True)
+        # increase by 1 because there is no sensor 0
+        vector.index += 1
+        # sort sensors and delete 0s
+        vector = vector.sort_values(0, ascending=False)
+        vector = vector[vector != 0]
+        # override the value of how much the sensor is used with the actual sensor number, to get the ordered sensor list
+        vector = pd.Series(data=vector.index)
+        # increase by 1 because there is no sensor 0
+        vector.index += 1
+        # write it in the Dataframe
+        most_used_sensors.loc[i, :] = vector
+
+    return most_used_sensors
