@@ -23,6 +23,8 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
     # distance calculation
     def euclidean_and_most_used_sensor_dist(v1, v2):
         '''
+        -- FIRST ENTRIES OF THE VECTORS IS ONLY INDEX AND WILL BE DELETED BEFORE CLUSTERING OR CALCULATION --
+
         distance calculation between two vectors that is used for clustering.
 
         1. The Euclidean distance between the Vectors is calculated.
@@ -30,35 +32,17 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
            neighbouring sensors, between this two sensors, are counted.
         3. Euclidean distance * needed steps = calculated distance between two vectors
 
-        @param v1: first vector
-        @param v2: second vector
-        @return: calculated distance between two vectors
+        @param v1: first vector (first entry is only index for identification, has to be deleted before clustering or
+            calculation)
+        @param v2: second vector @return: calculated distance between two vectors (first entry is only index for
+            identification, has to be deleted before clustering or calculation)
         '''
-        # TODO choose alternative
-        # alternative 1:
 
         # euclidean distance * Steps between most used sensors.
-            # euclidean distance: first value is deleted because it is just for identifing the vector
+        # euclidean distance: first value is deleted because it is just for identifing the vector
         return np.linalg.norm(np.delete(v1, 0) - np.delete(v2, 0)) * \
-               dict_distance_adjacency_sensor["distance_matrix"][the_most_used_sensor[v1[0]]][
-                   the_most_used_sensor[v2[0]]]
-
-        # alternative 2:
-        """
-        # get vector-index form first value in the vector
-        v1_index = v1[0]
-        v2_index = v2[0]
-        # deleting the in vector-index
-        v1 = np.delete(v1, 0)
-        v2 = np.delete(v2, 0)
-
-        # euclidean distance * Steps between most used sensors
-        
-
-        return np.linalg.norm(v1 - v2) * \
-               dict_distance_adjacency_sensor["distance_matrix"][the_most_used_sensor[v1_index]][
-                   the_most_used_sensor[v2_index]]
-        """
+               dict_distance_adjacency_sensor["distance_matrix"][indices_of_most_used_sensor_per_vector[v1[0]]][
+                   indices_of_most_used_sensor_per_vector[v2[0]]]
 
     # decision between 'quantity_time' and 'quantity'/'time', because of different vector length
     if vectorization_type == 'quantity_time':
@@ -71,12 +55,11 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
         allvectors_short = allvectors.iloc[:, 1:]
 
     # replace sensornames with index number
-    allvectors_short_t = allvectors_short.T.reset_index(drop=True)
-    allvectors_short_t.index += 1
-    allvectors_short = allvectors_short_t.T
+    allvectors_short.columns = range(1, len(allvectors_short.columns)+1)
+
 
     # find the most used sensor in every vector and create a Series with the corresponding sensor number
-    the_most_used_sensor = allvectors_short.idxmax(axis=1)
+    indices_of_most_used_sensor_per_vector = allvectors_short.idxmax(axis=1)
 
     # adding the vector-index as first element in vector to identify the vector in the custom distace calculation.
     # This value is removed before clustering
