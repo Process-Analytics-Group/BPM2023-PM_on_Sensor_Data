@@ -61,7 +61,7 @@ vectorization_type_list = ['quantity', 'time', 'quantity_time']
 event_case_correlation_method_list = ['Classic', 'FreFlaLa']
 
 # range for clustering method (parameter optimization)
-# possible methods: 'SOM', 'CustomDistance', 'k-Means'
+# possible methods: 'SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
 clustering_method_list = ['SOM']
 # clustering_method_list = ['SOM', 'CustomDistance', 'k-Means']
 

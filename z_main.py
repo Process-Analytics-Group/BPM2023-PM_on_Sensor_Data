@@ -93,7 +93,6 @@ def perform_process_model_discovery(params):
 
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
-    # TODO reset method to method=params['event_case_correlation_method']
     traces_vectorised, output_case_traces_cluster = \
         ecc.choose_and_perform_event_case_correlation_method(method=params['event_case_correlation_method'],
                                                              dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,

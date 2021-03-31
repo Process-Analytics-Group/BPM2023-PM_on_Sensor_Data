@@ -1,6 +1,20 @@
 from scipy.cluster.hierarchy import fclusterdata
+from sklearn_extra.cluster import KMedoids
 import numpy as np
 import pandas as pd
+
+
+def clustering_k_medoids(allvectors, clustersize):
+    '''
+    K-Medoids using sklearn_extra
+
+    @param allvectors:  list of all vectors that should be clustered.
+    @param clustersize: Specifies the number of cluster. Default is 15.
+
+    @return:            result list returns cluster for each vector
+    '''
+
+    return KMedoids(n_clusters=clustersize, random_state=0).fit(allvectors).labels_
 
 
 def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,
@@ -55,8 +69,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
         allvectors_short = allvectors.iloc[:, 1:]
 
     # replace sensornames with index number
-    allvectors_short.columns = range(1, len(allvectors_short.columns)+1)
-
+    allvectors_short.columns = range(1, len(allvectors_short.columns) + 1)
 
     # find the most used sensor in every vector and create a Series with the corresponding sensor number
     indices_of_most_used_sensor_per_vector = allvectors_short.idxmax(axis=1)

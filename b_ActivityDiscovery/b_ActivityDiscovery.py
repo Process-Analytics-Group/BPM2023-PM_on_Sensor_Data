@@ -38,6 +38,11 @@ def choose_and_perform_clustering_method(clustering_method,
     elif clustering_method == 'k-Means':
 
         cluster = custom_kmeans(trace_data_without_case_number, number_of_clusters)
+
+    elif clustering_method == 'k-Medoids':
+
+        cluster = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number,number_of_clusters)
+
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
         logger.setLevel(logging_level)
