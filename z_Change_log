@@ -1,3 +1,6 @@
+2021-04-02
+KD: Restructured ecc export folder structure
+
 2021-03-24
 KD: Added check to avoid execution of EventCaseCorrelation methods with the same parameters
 KD: Renamed 'choose_...' method names to 'choose_and_perform_...'

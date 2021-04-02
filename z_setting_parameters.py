@@ -60,6 +60,26 @@ vectorization_type_list = ['quantity', 'time', 'quantity_time']
 # possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
 event_case_correlation_method_list = ['Classic', 'FreFlaLa']
 
+# event case correlation export files
+# folder containing files read and written during ecc classical method
+dir_classic_event_case_correlation = 'ecc/' \
+                                     'method-{event_case_correlation_method}/' \
+                                     'vec_type-{vectorization_type}/' \
+                                     'trace_length-{trace_length_limit}/' \
+                                     'traces_time_out-{traces_time_out_threshold}/' \
+                                     'distance-{distance_threshold}/'
+# folder containing files read and written during ecc freflala method
+dir_freflala_event_case_correlation = 'ecc/' \
+                                      'method-{event_case_correlation_method}/' \
+                                      'vec_type-{vectorization_type}/' \
+                                      'trace_length-{trace_length_limit}/' \
+                                      'traces_time_out-{traces_time_out_threshold}/' \
+                                      'max_errors-{max_errors_per_day}/'
+# filename of trace data file
+filename_trace_data_time = 'trace_data_time.csv'
+# filename of traces cluster file
+filename_output_case_traces_cluster = 'o_c_t_cluster.csv'
+
 # range for clustering method (parameter optimization)
 # possible methods: 'SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
 clustering_method_list = ['SOM']
@@ -153,4 +173,3 @@ dir_dfg_files = 'directly_follows_graphs/'
 filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
 # filename of dfg file
 filename_dfg = 'DFG.png'
-

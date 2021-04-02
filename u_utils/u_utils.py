@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import logging
 import pathlib
@@ -78,7 +80,11 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
 
 
 def write_csv_file(data, filedir, filename, separator, logging_level):
-    # creates path out of file dir and file name
+    # creates the directory if it not exists
+    path = pathlib.Path(filedir)
+    path.mkdir(parents=True, exist_ok=True)
+
+    # creates path out of file dir and file name (absolute path)
     file_path = pathlib.Path(filedir + filename)
 
     # logger
@@ -86,4 +92,7 @@ def write_csv_file(data, filedir, filename, separator, logging_level):
     logger.setLevel(logging_level)
     logger.info("Writing csv file to disk '../%s'.", file_path)
 
+    # export csv file
     data.to_csv(file_path, sep=separator)
+
+    return

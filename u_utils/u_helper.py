@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import numpy as np
 import sys
@@ -211,35 +213,27 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
     return
 
 
-def param_combination_already_executed(trials, current_params):
+def param_combination_already_executed(path_data_sources, dir_export_files, current_params):
     '''
-    Checks if the current parameter combination was already executed in previous iterations.
+    Checks if the current parameter combination was already executed in previous iterations or other runs. Therefore the
+    method checks if the directory at which the export files are saved is already created.
 
-    :param trials: information about the previous iterations
     :param current_params: parameter combination of the current iteration
-    :return: information about the iteration the current parameter combination already was executed in
+    :param path_data_sources: directory of data sources
+    :param dir_export_files: directory at which the export files are saved
+    :return: if there are already files and the directory in which the export files are saved
     '''
-    # trial in which the current parameter combination already was executed
-    same_param_trial = None
-    # trials empty in first iteration
-    if trials is not None:
-        # runs through all used parameter combinations
-        for previous_trial in trials:
-            # help variable to memorize if execution status of parameter configurations
-            param_combination_already_executed = True
-            # parameter combinations that were already used in previous trials
-            used_params = previous_trial['result']['opt_params']
 
-            # runs through all parameters of the current combination and checks if it already been used before
-            for param_name, param_value in current_params:
-                if used_params[param_name] != param_value:
-                    # there is a parameter which is not the same
-                    param_combination_already_executed = False
-                    break
+    same_params_executed = False
 
-            if param_combination_already_executed:
-                # the param combination was already executed in a previous trial
-                same_param_trial = previous_trial
-                break
+    # the current working directory
+    cwd = os.getcwd()
 
-    return same_param_trial
+    # checks if path already exists (creating whole folder path and replacing placeholders)
+    dir_same_param = path_data_sources + dir_export_files.format(**current_params)
+
+    # if the directory does not exist the method returns None
+    if os.path.exists(dir_same_param):
+        same_params_executed = True
+
+    return same_params_executed, dir_same_param

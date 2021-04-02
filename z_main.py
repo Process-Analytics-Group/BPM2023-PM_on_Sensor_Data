@@ -98,6 +98,10 @@ def perform_process_model_discovery(params):
                                                              dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                              path_data_sources=settings.path_data_sources,
                                                              dir_runtime_files=dir_runtime_files,
+                                                             dir_classic_event_case_correlation=settings.dir_classic_event_case_correlation,
+                                                             dir_freflala_event_case_correlation=settings.dir_freflala_event_case_correlation,
+                                                             filename_trace_data_time=settings.filename_trace_data_time,
+                                                             filename_output_case_traces_cluster=settings.filename_output_case_traces_cluster,
                                                              distance_threshold=params['distance_threshold'],
                                                              traces_time_out_threshold=params[
                                                                  'traces_time_out_threshold'],

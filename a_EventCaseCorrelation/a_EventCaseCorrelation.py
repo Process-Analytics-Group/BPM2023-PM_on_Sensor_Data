@@ -1,4 +1,6 @@
 # Personentrennung und Tracelängenbestimmung
+import os
+
 import pandas as pd
 import numpy as np
 import logging
@@ -14,23 +16,30 @@ def choose_and_perform_event_case_correlation_method(method,
                                                      dict_distance_adjacency_sensor,
                                                      path_data_sources,
                                                      dir_runtime_files,
+                                                     dir_classic_event_case_correlation,
+                                                     dir_freflala_event_case_correlation,
+                                                     filename_trace_data_time,
+                                                     filename_output_case_traces_cluster,
                                                      trace_length_limit,
                                                      vectorization_method,
                                                      distance_threshold=1.5,
                                                      traces_time_out_threshold=300,
                                                      raw_sensor_data=None,
                                                      max_errors_per_day=100,
-                                                     trials=None,
                                                      logging_level=None):
+    trace_data_time = None
+    output_case_traces_cluster = None
     if method == 'Classic':
-        same_param_trial = helper.param_combination_already_executed(trials=trials,
-                                                                     current_params={
-                                                                         'event_case_correlation_method': method,
-                                                                         'distance_threshold': distance_threshold,
-                                                                         'traces_time_out_threshold': traces_time_out_threshold,
-                                                                         'trace_length_limit': trace_length_limit,
-                                                                         'vectorization_type': vectorization_method})
-        if same_param_trial is None:
+        same_params_executed, dir_same_param = \
+            helper.param_combination_already_executed(path_data_sources=path_data_sources,
+                                                      dir_export_files=dir_classic_event_case_correlation,
+                                                      current_params={
+                                                          'event_case_correlation_method': str(method),
+                                                          'distance_threshold': str(distance_threshold),
+                                                          'traces_time_out_threshold': str(traces_time_out_threshold),
+                                                          'trace_length_limit': str(trace_length_limit),
+                                                          'vectorization_type': str(vectorization_method)})
+        if not same_params_executed:
             # Classical Method
             trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
                 create_trace_from_file(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
@@ -42,14 +51,16 @@ def choose_and_perform_event_case_correlation_method(method,
                                        vectorization_method=vectorization_method)
 
     elif method == 'FreFlaLa':
-        same_param_trial = helper.param_combination_already_executed(trials=trials,
-                                                                     current_params={
-                                                                         'event_case_correlation_method': method,
-                                                                         'max_errors_per_day': max_errors_per_day,
-                                                                         'traces_time_out_threshold': traces_time_out_threshold,
-                                                                         'trace_length_limit': trace_length_limit,
-                                                                         'vectorization_type': vectorization_method})
-        if same_param_trial is None:
+        same_params_executed, dir_same_param = \
+            helper.param_combination_already_executed(path_data_sources=path_data_sources,
+                                                      dir_export_files=dir_freflala_event_case_correlation,
+                                                      current_params={
+                                                          'event_case_correlation_method': str(method),
+                                                          'max_errors_per_day': str(max_errors_per_day),
+                                                          'traces_time_out_threshold': str(traces_time_out_threshold),
+                                                          'trace_length_limit': str(trace_length_limit),
+                                                          'vectorization_type': str(vectorization_method)})
+        if not same_params_executed:
             trace_data_time, output_case_traces_cluster = \
                 FreFlaLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                    max_errors_per_day=max_errors_per_day,
@@ -65,23 +76,20 @@ def choose_and_perform_event_case_correlation_method(method,
         logger.error(error_msg)
         raise ValueError(error_msg)
 
-    if same_param_trial is not None:
+    if same_params_executed:
         # Todo Kai: Add logger
         # create_trace_from_file method with the current parameters were executed already
-        trace_data_time = utils.read_csv_file(
-            filedir=path_data_sources + same_param_trial['result']['dir_runtime_files'],
-            filename='trace_data_time.csv', separator=';', header=0)
-        output_case_traces_cluster = utils.read_csv_file(
-            filedir=path_data_sources + same_param_trial['result']['dir_runtime_files'],
-            filename='output_case_traces_cluster.csv', separator=';',
-            header=0)
-
-    # export trace_data_time and output_case_traces_cluster in folder of current run
-    utils.write_csv_file(trace_data_time, path_data_sources + dir_runtime_files, 'trace_data_time.csv', ';',
-                         logging_level)
-    utils.write_csv_file(output_case_traces_cluster, path_data_sources + dir_runtime_files,
-                         'output_case_traces_cluster.csv', ';',
-                         logging_level)
+        trace_data_time = utils.read_csv_file(filedir=dir_same_param, filename=filename_trace_data_time, separator=';',
+                                              header=0)
+        output_case_traces_cluster = utils.read_csv_file(filedir=dir_same_param,
+                                                         filename=filename_output_case_traces_cluster, separator=';',
+                                                         header=0)
+    else:
+        # export trace_data_time and output_case_traces_cluster in folder of current run
+        utils.write_csv_file(data=trace_data_time, filedir=dir_same_param, filename=filename_trace_data_time,
+                             separator=';', logging_level=logging_level)
+        utils.write_csv_file(data=output_case_traces_cluster, filedir=dir_same_param,
+                             filename=filename_output_case_traces_cluster, separator=';', logging_level=logging_level)
     return trace_data_time, output_case_traces_cluster
 
 
@@ -586,8 +594,7 @@ def convert_raw_data_to_traces(raw_sensor_data,
 
     # write traces to disk
     utils.write_csv_file(data=pd_df_all_traces, filedir=data_sources_path + dir_runtime_files,
-                         filename=filename_traces_raw,
-                         separator=csv_delimiter_traces,
+                         filename=filename_traces_raw, separator=csv_delimiter_traces,
                          logging_level=settings.logging_level)
     # logging
     logger.info("Traces were saved as csv file '../%s", data_sources_path + dir_runtime_files + filename_traces_raw)
