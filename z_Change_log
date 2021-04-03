@@ -1,3 +1,6 @@
+2021-04-03
+KD: Embedded entropia precision/fitness evaluation
+
 2021-03-16
 DJ: Moved limit_data_input method from a_EventCaseCorrelation to method that reads in csv, so input is pruned
     before any code is executed
