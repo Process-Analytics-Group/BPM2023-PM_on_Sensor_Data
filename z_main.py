@@ -16,6 +16,7 @@ from a_EventCaseCorrelation import a_EventCaseCorrelation as ecc
 from b_ActivityDiscovery import b_ActivityDiscovery as ad
 from c_EventActivityAbstraction import c_EventActivityAbstraction as eaa
 from d_ProcessDiscovery import d_ProcessDiscovery as prd
+from e_Evaluation import e_entropia as entropia
 
 # start timer
 t0_main = timeit.default_timer()
@@ -146,6 +147,14 @@ def perform_process_model_discovery(params):
                                        miner_type=settings.miner_type,
                                        metric_to_be_maximised=settings.metric_to_be_maximised,
                                        logging_level=settings.logging_level)
+
+    # ################### Evaluation ####################
+    # evaluate precision/fitness with entropia
+    xesFile = settings.path_data_sources + dir_runtime_files + settings.filename_log_export
+    pnmlFile = settings.path_data_sources + dir_runtime_files + settings.dir_petri_net_files + settings.filename_petri_net
+
+    entropia_precision = entropia.compute_entropia("pmp", xesFile=xesFile, pnmlFile=pnmlFile)
+    entropia_fitness = entropia.compute_entropia("pmr", xesFile=xesFile, pnmlFile=pnmlFile)
 
     # stop timer
     t1_main = timeit.default_timer()
