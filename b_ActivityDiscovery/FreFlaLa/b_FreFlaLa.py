@@ -86,7 +86,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
     """
         The linkage method to use (single, complete, average, weighted, median, centroid, ward).
         method: 
-            singel:     bad
+            single:     bad
             complete:   ok
             average:    bad
             weighted:   ok
@@ -114,9 +114,9 @@ def create_sensor_relevance_matrix(allvectors, allvectors_short):
     @return: Dataframe with most uses sensors
     """
 
-    vector_lenth = len(allvectors_short.columns)
+    vector_length = len(allvectors_short.columns)
     # create an empty Dataframe for the results
-    most_used_sensors = pd.DataFrame(index=range(1, len(allvectors) + 1), columns=range(1, vector_lenth))
+    most_used_sensors = pd.DataFrame(index=range(1, len(allvectors) + 1), columns=range(1, vector_length))
 
     # iterate thought every vector
     for i in range(1, len(allvectors) + 1):
