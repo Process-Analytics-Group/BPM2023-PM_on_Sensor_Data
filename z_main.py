@@ -128,7 +128,7 @@ def perform_process_model_discovery(params):
                                                             output_case_traces_cluster=output_case_traces_cluster)
 
     # ################### ProcessDiscovery ####################
-    prd.create_activtiy_models(output_case_traces_cluster=output_case_traces_cluster,
+    prd.create_activity_models(output_case_traces_cluster=output_case_traces_cluster,
                                path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
                                dir_dfg_cluster_files=settings.dir_dfg_files,
                                filename_dfg_cluster=settings.filename_dfg_cluster,

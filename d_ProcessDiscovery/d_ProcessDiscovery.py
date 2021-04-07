@@ -26,7 +26,7 @@ from e_Evaluation import e_entropia as entropia
 import z_setting_parameters as settings
 
 
-def create_activtiy_models(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
+def create_activity_models(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
                            filename_dfg_cluster, rel_proportion_dfg_threshold, logging_level):
     """
     Creates directly follows graphs out of an event log.
@@ -140,7 +140,7 @@ def exportDFGImageFile(log, path_data_sources, dir_runtime_files, dir_dfg_files,
     # create dfg out of event log
     dfg = dfg_discovery.apply(log)
 
-    # define start and
+    # define start and end
     start_activities = sa_get.get_start_activities(log)
     end_activities = ea_get.get_end_activities(log)
 

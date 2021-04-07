@@ -1,5 +1,6 @@
 from scipy.cluster.hierarchy import fclusterdata
-from sklearn_extra.cluster import KMedoids
+# ToDo @DJ: wieder einkommentieren
+#from sklearn_extra.cluster import KMedoids
 import numpy as np
 import pandas as pd
 
