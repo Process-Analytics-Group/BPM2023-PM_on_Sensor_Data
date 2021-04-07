@@ -10,7 +10,6 @@ import pathlib
 
 # import settings file
 from u_utils import u_helper as helper, u_DistanceMatrixCreation as create_dm
-from u_utils import u_utils
 import z_setting_parameters as settings
 from a_EventCaseCorrelation import a_EventCaseCorrelation as ecc
 from b_ActivityDiscovery import b_ActivityDiscovery as ad
@@ -63,12 +62,12 @@ create_dm.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sen
 
 # load data
 # read in the sensor data as a pandas data frame
-raw_sensor_data = u_utils.read_csv_file(filedir=settings.path_data_sources,
-                                        filename=settings.filename_sensor_data,
-                                        separator=settings.csv_delimiter_sensor_data,
-                                        header=settings.csv_header_sensor_data,
-                                        parse_dates=settings.csv_parse_dates_sensor_data,
-                                        dtype=settings.csv_dtype_sensor_data)
+raw_sensor_data = helper.import_raw_sensor_data(filedir=settings.path_data_sources,
+                                                filename=settings.filename_sensor_data,
+                                                separator=settings.csv_delimiter_sensor_data,
+                                                header=settings.csv_header_sensor_data,
+                                                parse_dates=settings.csv_parse_dates_sensor_data,
+                                                dtype=settings.csv_dtype_sensor_data)
 
 
 def perform_process_model_discovery(params):

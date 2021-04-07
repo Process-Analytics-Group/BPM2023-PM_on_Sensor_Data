@@ -1,5 +1,6 @@
 2021-04-07
 KD: Moved entropia method call into ProcessDiscovery
+KD: Moved raw sensor data import method
 KD: Added Logging
 
 2021-04-03

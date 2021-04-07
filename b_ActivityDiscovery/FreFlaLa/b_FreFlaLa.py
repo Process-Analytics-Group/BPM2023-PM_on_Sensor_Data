@@ -1,3 +1,6 @@
+import inspect
+import logging
+
 from scipy.cluster.hierarchy import fclusterdata
 # ToDo @DJ: wieder einkommentieren
 from sklearn_extra.cluster import KMedoids
@@ -19,9 +22,8 @@ def clustering_k_medoids(allvectors, clustersize):
 
 
 def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,
-                                                clustersize=15,
-                                                linkage_method_for_clustering='ward'):
-    # TODO @Kai Add to logger: "start modified clustering method"
+                                                clustersize=15, linkage_method_for_clustering='ward',
+                                                logging_level=None):
     '''
     Clusters the dataset using custom calculation.
 
@@ -34,6 +36,10 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
 
     @return:                                result list returns cluster for each vector
     '''
+
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
+    logger.info("start modified clustering method")
 
     # distance calculation
     def euclidean_and_most_used_sensor_dist(v1, v2):
@@ -99,7 +105,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
     # decreasing the indices by 1, from 1-15 to 0-14 to comply with other algorithms
     result_clustering = result_clustering - 1
 
-    # TODO @Kai Add to logger: "end modified clustering method"
+    logger.info("end modified clustering method")
 
     return result_clustering
 

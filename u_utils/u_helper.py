@@ -11,6 +11,7 @@ import logging
 
 # import settings file
 import z_setting_parameters as settings
+import u_utils.u_utils as utils
 
 
 def create_parameters_log_file(dir_runtime_files, params):
@@ -218,6 +219,31 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
     # if all settings are valid the program get executed
     logger.info("The chosen settings are valid.")
     return
+
+
+def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=None, dtype=None):
+    """Imports sensor data from csv file.
+
+    :param filedir: The folder the file lies in.
+    :param filename: Name of the File.
+    :param separator: The character the which saparates each column in a csv file.
+    :param header: Indicator at which line the data starts (length of the header)
+    :param logging_level: level of logging
+    :param parse_dates: Collection of the columns that should get parsed as a date.
+    :param dtype: A mapping of data types to the columns in the file.
+    :return: the sensor data in a pandas data frame
+    """
+
+    raw_sensor_data = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
+                                            parse_dates=parse_dates, dtype=dtype)
+
+    # drop all lines without motion sensor (identify by sensor ID-prefix)
+    # ToDo: in future versions allow for more sensor types if implemented
+    index_names = raw_sensor_data[raw_sensor_data['SensorID'].str.startswith(settings.prefix_motion_sensor_id)].index
+    raw_sensor_data = raw_sensor_data.loc[index_names]
+    raw_sensor_data.reset_index(inplace=True, drop=True)
+
+    return raw_sensor_data
 
 
 def param_combination_already_executed(path_data_sources, dir_export_files, current_params, step, logging_level):
