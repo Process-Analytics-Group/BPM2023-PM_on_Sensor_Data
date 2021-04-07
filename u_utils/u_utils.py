@@ -32,7 +32,7 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
         # logger
         logger = logging.getLogger(inspect.stack()[0][3])
         logger.setLevel(logging_level)
-        logger.info("Reading csv file '../%s'.", file_path)
+        logger.info("Reading csv file '../%s'.", filedir + filename)
 
         # reads csv file
         data_frame = pd.read_csv(file_path,
@@ -64,7 +64,7 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
 
     # if there is no file the program ends
     except FileNotFoundError as err:
-        err_msg = str('There is no file named "../' + str(file_path) + '".')
+        err_msg = str("There is no file named '../" + filedir + filename + "'.")
         logger.error(err, err_msg)
         raise err
 
@@ -90,7 +90,7 @@ def write_csv_file(data, filedir, filename, separator, logging_level):
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)
-    logger.info("Writing csv file to disk '../%s'.", file_path)
+    logger.info("Writing csv file to disk '../%s'.", filedir + filename)
 
     # export csv file
     data.to_csv(file_path, sep=separator)

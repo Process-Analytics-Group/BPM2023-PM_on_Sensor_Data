@@ -168,7 +168,7 @@ def create_distance_threshold_list(distance_threshold_min,
 def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
                    traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
                    trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max, miner_type,
-                   miner_type_list, logging_level):
+                   miner_type_list, metric_to_be_maximised, metric_to_be_maximised_list, logging_level):
     # checks settings for correctness (if they are invalid the execution get stopped)
     settings_valid = True
 
@@ -204,6 +204,13 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
         logger.error(error_msg)
         settings_valid = False
 
+    if metric_to_be_maximised not in metric_to_be_maximised_list:
+        error_msg = str("'" + metric_to_be_maximised +
+                        "' is not a valid choice for a metric to be maximised. Please choose one of the following: " +
+                        str(metric_to_be_maximised_list))
+        logger.error(error_msg)
+        settings_valid = False
+
     # if at least one parameter is wrong the execution stops with an value error
     if not settings_valid:
         raise ValueError()
@@ -213,7 +220,7 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
     return
 
 
-def param_combination_already_executed(path_data_sources, dir_export_files, current_params):
+def param_combination_already_executed(path_data_sources, dir_export_files, current_params, step, logging_level):
     '''
     Checks if the current parameter combination was already executed in previous iterations or other runs. Therefore the
     method checks if the directory at which the export files are saved is already created.
@@ -221,13 +228,12 @@ def param_combination_already_executed(path_data_sources, dir_export_files, curr
     :param current_params: parameter combination of the current iteration
     :param path_data_sources: directory of data sources
     :param dir_export_files: directory at which the export files are saved
+    :param step: the program step in which the parameter combination is executed
+    :param logging_level: level of logging
     :return: if there are already files and the directory in which the export files are saved
     '''
 
     same_params_executed = False
-
-    # the current working directory
-    cwd = os.getcwd()
 
     # checks if path already exists (creating whole folder path and replacing placeholders)
     dir_same_param = path_data_sources + dir_export_files.format(**current_params)
@@ -235,5 +241,9 @@ def param_combination_already_executed(path_data_sources, dir_export_files, curr
     # if the directory does not exist the method returns None
     if os.path.exists(dir_same_param):
         same_params_executed = True
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(logging_level)
+        logger.info("The current %s parameter combination was already executed in previous iterations or other runs.",
+                    step)
 
     return same_params_executed, dir_same_param

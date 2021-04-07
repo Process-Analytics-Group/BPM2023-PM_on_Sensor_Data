@@ -44,7 +44,8 @@ csv_delimiter_benchmark = ';'
 csv_header_benchmark = 0
 
 # ToDo comment 'metric_to_be_maximised'
-metric_to_be_maximised = 'Precision'
+metric_to_be_maximised = 'entropia:Precision'
+metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness']
 
 # hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
@@ -76,9 +77,9 @@ dir_freflala_event_case_correlation = 'ecc/' \
                                       'traces_time_out-{traces_time_out_threshold}/' \
                                       'max_errors-{max_errors_per_day}/'
 # filename of trace data file
-filename_trace_data_time = 'trace_data_time.csv'
+filename_trace_data_time = 'trace_data_time.pickle'
 # filename of traces cluster file
-filename_output_case_traces_cluster = 'o_c_t_cluster.csv'
+filename_output_case_traces_cluster = 'o_c_t_cluster.pickle'
 
 # range for clustering method (parameter optimization)
 # possible methods: 'SOM', 'CustomDistance', 'k-Means', 'k-Medoids'

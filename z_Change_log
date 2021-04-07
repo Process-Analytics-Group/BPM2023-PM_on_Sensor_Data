@@ -1,3 +1,7 @@
+2021-04-07
+KD: Moved entropia method call into ProcessDiscovery
+KD: Added Logging
+
 2021-04-03
 KD: Embedded entropia precision/fitness evaluation
 

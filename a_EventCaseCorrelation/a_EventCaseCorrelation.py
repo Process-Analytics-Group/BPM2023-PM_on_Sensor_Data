@@ -1,5 +1,6 @@
 # Personentrennung und Tracelängenbestimmung
 import os
+import pathlib
 
 import pandas as pd
 import numpy as np
@@ -27,6 +28,10 @@ def choose_and_perform_event_case_correlation_method(method,
                                                      raw_sensor_data=None,
                                                      max_errors_per_day=100,
                                                      logging_level=None):
+    # logger
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
+
     trace_data_time = None
     output_case_traces_cluster = None
     if method == 'Classic':
@@ -38,7 +43,8 @@ def choose_and_perform_event_case_correlation_method(method,
                                                           'distance_threshold': str(distance_threshold),
                                                           'traces_time_out_threshold': str(traces_time_out_threshold),
                                                           'trace_length_limit': str(trace_length_limit),
-                                                          'vectorization_type': str(vectorization_method)})
+                                                          'vectorization_type': str(vectorization_method)},
+                                                      step='event case correlation', logging_level=logging_level)
         if not same_params_executed:
             # Classical Method
             trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
@@ -59,7 +65,8 @@ def choose_and_perform_event_case_correlation_method(method,
                                                           'max_errors_per_day': str(max_errors_per_day),
                                                           'traces_time_out_threshold': str(traces_time_out_threshold),
                                                           'trace_length_limit': str(trace_length_limit),
-                                                          'vectorization_type': str(vectorization_method)})
+                                                          'vectorization_type': str(vectorization_method)},
+                                                      step='event case correlation', logging_level=logging_level)
         if not same_params_executed:
             trace_data_time, output_case_traces_cluster = \
                 FreFlaLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
@@ -70,26 +77,29 @@ def choose_and_perform_event_case_correlation_method(method,
                                                    vectorization_method=vectorization_method,
                                                    logging_level=logging_level)
     else:
-        logger = logging.getLogger(inspect.stack()[0][3])
-        logger.setLevel(logging_level)
         error_msg = "'" + method + "' is not a valid event case correlation method. Please check the settings."
         logger.error(error_msg)
         raise ValueError(error_msg)
 
     if same_params_executed:
-        # Todo Kai: Add logger
         # create_trace_from_file method with the current parameters were executed already
-        trace_data_time = utils.read_csv_file(filedir=dir_same_param, filename=filename_trace_data_time, separator=';',
-                                              header=0)
-        output_case_traces_cluster = utils.read_csv_file(filedir=dir_same_param,
-                                                         filename=filename_output_case_traces_cluster, separator=';',
-                                                         header=0)
+        trace_data_time = pd.read_pickle(dir_same_param + filename_trace_data_time)
+        output_case_traces_cluster = pd.read_pickle(dir_same_param + filename_output_case_traces_cluster)
+
+        logger.info("Imported ported event case correlation step result from '../%s'", dir_same_param)
+
     else:
         # export trace_data_time and output_case_traces_cluster in folder of current run
-        utils.write_csv_file(data=trace_data_time, filedir=dir_same_param, filename=filename_trace_data_time,
-                             separator=';', logging_level=logging_level)
-        utils.write_csv_file(data=output_case_traces_cluster, filedir=dir_same_param,
-                             filename=filename_output_case_traces_cluster, separator=';', logging_level=logging_level)
+        # creates the directory if it not exists
+        path = pathlib.Path(dir_same_param)
+        path.mkdir(parents=True, exist_ok=True)
+
+        # creates files
+        trace_data_time.to_pickle(dir_same_param + filename_trace_data_time)
+        output_case_traces_cluster.to_pickle(dir_same_param + filename_output_case_traces_cluster)
+
+        logger.info("Exported event case correlation step result into '../%s'", dir_same_param)
+
     return trace_data_time, output_case_traces_cluster
 
 

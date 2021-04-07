@@ -1,6 +1,7 @@
 import inspect
 import logging
 import os
+import re
 import pandas as pd
 from pm4py.objects.conversion.log import converter as log_converter
 from pm4py.statistics.attributes.log import get as attributes_get
@@ -21,6 +22,7 @@ from pm4py.objects.conversion.log import converter as log_converter
 from pm4py.visualization.dfg import visualizer as dfg_visualization
 from pm4py.objects.petri.exporter import exporter as pnml_exporter
 from pm4py.algo.discovery.inductive import algorithm as inductive_miner
+from e_Evaluation import e_entropia as entropia
 import z_setting_parameters as settings
 
 
@@ -108,6 +110,7 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
                           dir_petri_net_files=dir_petri_net_files,
                           filename_petri_net=filename_petri_net,
                           filename_petri_net_image=filename_petri_net_image,
+                          filename_log_export=filename_log_export,
                           miner_type=miner_type,
                           metric_to_be_maximised=metric_to_be_maximised)
 
@@ -157,6 +160,7 @@ def apply_miner(log,
                 dir_petri_net_files,
                 filename_petri_net,
                 filename_petri_net_image,
+                filename_log_export,
                 miner_type,
                 metric_to_be_maximised):
     logger = logging.getLogger(inspect.stack()[0][3])
@@ -178,35 +182,6 @@ def apply_miner(log,
     else:
         return None
 
-    # Choose target value to be maximised
-    if metric_to_be_maximised == 'Fitness':
-        logger.info("Calculating replay fitness.")
-        precision = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
-                                                   variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
-        logger.info("Replay fitness calculated.")
-        metrics = precision['log_fitness']
-    elif metric_to_be_maximised == 'Precision':
-        logger.info("Calculating precision.")
-        metrics = precision_evaluator.apply(log, net, initial_marking, final_marking,
-                                            variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
-        logger.info("Precision calculated.")
-    elif metric_to_be_maximised == 'entropia:Precision':
-        # ToDo Kai: add entropia here with parameter call 'pmp'
-        pass
-    elif metric_to_be_maximised == 'entropia:Fitness':
-        # ToDo Kai: add entropia here with parameter call 'pmr'
-        pass
-    else:
-        metrics = None
-
-    # alternative metrics
-    # generalization = generalization_evaluator.apply(log, net, im, fm)
-    # simplicity = simplicity_evaluator.apply(net)
-
-    # logger
-    logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(settings.logging_level)
-
     # create directory for petri net files
     os.mkdir(path_data_sources + dir_runtime_files + dir_petri_net_files)
 
@@ -222,5 +197,34 @@ def apply_miner(log,
                         final_marking=final_marking)
     logger.info("Exported petri net pnml file into '../%s'.",
                 path_data_sources + dir_runtime_files + dir_petri_net_files + filename_petri_net)
+
+    # logger
+    logger.info("Calculating %s.", metric_to_be_maximised)
+    # Choose target value to be maximised
+    if metric_to_be_maximised == 'Fitness':
+        precision = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
+                                                   variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
+        metrics = precision['log_fitness']
+    elif metric_to_be_maximised == 'Precision':
+        metrics = precision_evaluator.apply(log, net, initial_marking, final_marking,
+                                            variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
+    else:
+        # evaluate precision/fitness with entropia
+        # assemble paths for entropia evaluation
+        xes_file = path_data_sources + dir_runtime_files + filename_log_export
+        pnml_file = path_data_sources + dir_runtime_files + settings.dir_petri_net_files + filename_petri_net
+        entropia_res = None
+        if metric_to_be_maximised == 'entropia:Precision':
+            entropia_res = entropia.compute_entropia("pmp", xes_file=xes_file, pnml_file=pnml_file)
+        elif metric_to_be_maximised == 'entropia:Fitness':
+            entropia_res = entropia.compute_entropia("pmr", xes_file=xes_file, pnml_file=pnml_file)
+        # only keep the computed number of the entropia result and cut every other char
+        metrics = float(re.sub('[^\d.]', '', entropia_res))
+
+    logger.info("%s calculated: %s", metric_to_be_maximised, metrics)
+
+    # alternative metrics
+    # generalization = generalization_evaluator.apply(log, net, im, fm)
+    # simplicity = simplicity_evaluator.apply(net)
 
     return metrics
