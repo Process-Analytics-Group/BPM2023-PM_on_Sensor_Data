@@ -77,7 +77,7 @@ def elbow_method_kmedoids(data):
 def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,
                                                 clustersize=15, linkage_method_for_clustering='ward',
                                                 logging_level=None):
-    '''
+    """
     Clusters the dataset using custom calculation.
 
     @param allvectors:                      A list of all vectors that should be clustered.
