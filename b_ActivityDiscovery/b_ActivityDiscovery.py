@@ -19,6 +19,7 @@ def choose_and_perform_clustering_method(clustering_method,
                                          dict_distance_adjacency_sensor,
                                          vectorization_type):
     cluster = None
+    cluster_score = None
     if clustering_method == 'SOM':
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(
             trace_data_without_case_number=trace_data_without_case_number,
@@ -37,11 +38,17 @@ def choose_and_perform_clustering_method(clustering_method,
         pass
     elif clustering_method == 'k-Means':
 
-        cluster = custom_kmeans(trace_data_without_case_number, number_of_clusters)
+        # Plot for elbow method
+        b_FreFlaLa.elbow_method_kmeans(trace_data_without_case_number)
+
+        cluster, cluster_score = b_FreFlaLa.clustering_kmeans(trace_data_without_case_number,number_of_clusters)
 
     elif clustering_method == 'k-Medoids':
-        # ToDo @Frederik: Güte des clusering hier ausgeben
-        cluster = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number,number_of_clusters)
+
+        # Plot for elbow method
+        # b_FreFlaLa.elbow_method_kmedoids(trace_data_without_case_number)
+
+        cluster, cluster_score = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number,number_of_clusters)
 
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
@@ -49,7 +56,6 @@ def choose_and_perform_clustering_method(clustering_method,
         error_msg = "'" + clustering_method + "' is not a valid clustering method. Please check the settings."
         logger.error(error_msg)
         raise ValueError(error_msg)
-
     return cluster
 
 def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt,

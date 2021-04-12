@@ -4,21 +4,74 @@ import logging
 from scipy.cluster.hierarchy import fclusterdata
 # ToDo @DJ: wieder einkommentieren
 from sklearn_extra.cluster import KMedoids
+from sklearn.cluster import KMeans
 import numpy as np
 import pandas as pd
 
 
+def clustering_kmeans(data, number_of_clusters):
+    """
+    Uses K-Means form scikit-learn for clustering the given data.
+
+    @param data:                list of all vectors that should be clustered.
+    @param number_of_clusters:  Specifies the number of cluster.
+    @return:                    result list returns cluster for each vector, average distance to centroid
+    """
+    kmeans = KMeans(n_clusters=number_of_clusters, random_state=0).fit(data.values)
+
+    return kmeans.labels_, kmeans.inertia_
+
+
+def elbow_method_kmeans(data):
+    """
+    Graphic output od the elbow method with K-Means for the given data. Tested clustersize is 3 - 12 clusters
+
+    @param data:    list of all vectors
+    @return:        None
+    """
+    # ELLBOW METHOD (calculate optimal number of clusters)
+    from yellowbrick.cluster import KElbowVisualizer
+
+    model = KMeans()
+
+    # Instantiate the clustering model and visualizer
+    visualizer = KElbowVisualizer(model, k=(3, 12))
+
+    visualizer.fit(data)  # Fit the data to the visualizer
+    visualizer.show()  # Finalize and render the figure
+
+
 def clustering_k_medoids(allvectors, clustersize):
-    '''
+    """
     K-Medoids using sklearn_extra
 
     @param allvectors:  list of all vectors that should be clustered.
     @param clustersize: Specifies the number of cluster. Default is 15.
 
-    @return:            result list returns cluster for each vector
-    '''
+    @return:            result list returns cluster for each vector, average distance to centroid
+    """
 
-    return KMedoids(n_clusters=clustersize, random_state=0).fit(allvectors).labels_
+    kmedoids = KMedoids(n_clusters=clustersize, random_state=0).fit(allvectors)
+    return kmedoids.labels_, kmedoids.inertia_
+
+
+def elbow_method_kmedoids(data):
+    """
+    Graphic output od the elbow method with K-Medoids for the given data. Tested clustersize is 3 - 12 clusters
+
+    @param data:    list of all vectors
+    @return:        None
+    """
+    # ELLBOW METHOD (calculate optimal number of clusters)
+    from yellowbrick.cluster import KElbowVisualizer
+
+    model = KMedoids()
+
+    # Instantiate the clustering model and visualizer
+    visualizer = KElbowVisualizer(model, k=(3, 12))
+
+    visualizer.fit(data)  # Fit the data to the visualizer
+    visualizer.show()  # Finalize and render the figure
 
 
 def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,
@@ -35,7 +88,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
                                             (single, complete, average, weighted, median centroid, ward)
 
     @return:                                result list returns cluster for each vector
-    '''
+    """
 
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(logging_level)
@@ -43,7 +96,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
 
     # distance calculation
     def euclidean_and_most_used_sensor_dist(v1, v2):
-        '''
+        """
         -- FIRST ENTRIES OF THE VECTORS IS ONLY INDEX AND WILL BE DELETED BEFORE CLUSTERING OR CALCULATION --
 
         distance calculation between two vectors that is used for clustering.
@@ -57,7 +110,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
             calculation)
         @param v2: second vector @return: calculated distance between two vectors (first entry is only index for
             identification, has to be deleted before clustering or calculation)
-        '''
+        """
 
         # euclidean distance * Steps between most used sensors.
         # euclidean distance: first value is deleted because it is just for identifing the vector
@@ -136,7 +189,8 @@ def create_sensor_relevance_matrix(allvectors, allvectors_short):
         # sort sensors and delete 0s
         vector = vector.sort_values(0, ascending=False)
         vector = vector[vector != 0]
-        # override the value of how much the sensor is used with the actual sensor number, to get the ordered sensor list
+        # override the value of how much the sensor is used with the actual sensor number,
+        # to get the ordered sensor list
         vector = pd.Series(data=vector.index)
         # increase by 1 because there is no sensor 0
         vector.index += 1
