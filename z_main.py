@@ -34,6 +34,7 @@ logging.basicConfig(
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 logging.getLogger('hyperopt').setLevel(logging.WARNING)
 logging.getLogger('numexpr').setLevel(logging.WARNING)
+logging.getLogger('graphviz').setLevel(logging.WARNING)
 
 # checks settings for correctness
 helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
@@ -49,8 +50,7 @@ helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
                       miner_type=settings.miner_type,
                       miner_type_list=settings.miner_type_list,
                       metric_to_be_maximised=settings.metric_to_be_maximised,
-                      metric_to_be_maximised_list=settings.metric_to_be_maximised_list,
-                      logging_level=settings.logging_level)
+                      metric_to_be_maximised_list=settings.metric_to_be_maximised_list)
 
 # get distance Matrix from imported adjacency-matrix
 dict_distance_adjacency_sensor = create_dm.get_distance_matrix()
@@ -71,6 +71,12 @@ raw_sensor_data = helper.import_raw_sensor_data(filedir=settings.path_data_sourc
 
 
 def perform_process_model_discovery(params):
+    """
+    This method performs a process model discovery containing the steps event case correlation, activity discovery,
+    event activity abstraction and process discovery.
+    :param params: the parameter combination the steps are executed with
+    :return: the result of the execution describing how precise a petri net in comparison to the event log is
+    """
     # count number of iterations
     perform_process_model_discovery.iteration_counter += 1
 
@@ -81,6 +87,7 @@ def perform_process_model_discovery(params):
     if not os.path.exists(settings.path_data_sources + dir_runtime_files):
         os.makedirs(settings.path_data_sources + dir_runtime_files)
 
+    # write the parameters to the drive
     helper.create_parameters_log_file(dir_runtime_files=dir_runtime_files, params=params)
 
     logger = logging.getLogger(inspect.stack()[0][3])
@@ -109,15 +116,13 @@ def perform_process_model_discovery(params):
                                                              trace_length_limit=params['trace_length_limit'],
                                                              vectorization_method=params['vectorization_type'],
                                                              raw_sensor_data=raw_sensor_data,
-                                                             max_errors_per_day=params['max_errors_per_day'],
-                                                             logging_level=settings.logging_level)
+                                                             max_errors_per_day=params['max_errors_per_day'])
 
     # ################### ActivityDiscovery ####################
-    cluster = ad.choose_and_perform_clustering_method(clustering_method='k-Means',
+    cluster = ad.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
                                                       number_of_clusters=params['k_means_number_of_clusters'],
                                                       trace_data_without_case_number=traces_vectorised,
                                                       dir_runtime_files=dir_runtime_files,
-                                                      logging_level=settings.logging_level,
                                                       dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                       vectorization_type=params['vectorization_type'])
 
@@ -131,8 +136,7 @@ def perform_process_model_discovery(params):
                                path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
                                dir_dfg_cluster_files=settings.dir_dfg_files,
                                filename_dfg_cluster=settings.filename_dfg_cluster,
-                               rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
-                               logging_level=settings.logging_level)
+                               rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold)
 
     metrics = prd.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
                                        path_data_sources=settings.path_data_sources,
@@ -145,8 +149,7 @@ def perform_process_model_discovery(params):
                                        filename_dfg=settings.filename_dfg,
                                        rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
                                        miner_type=settings.miner_type,
-                                       metric_to_be_maximised=settings.metric_to_be_maximised,
-                                       logging_level=settings.logging_level)
+                                       metric_to_be_maximised=settings.metric_to_be_maximised)
 
     # stop timer
     t1_main = timeit.default_timer()

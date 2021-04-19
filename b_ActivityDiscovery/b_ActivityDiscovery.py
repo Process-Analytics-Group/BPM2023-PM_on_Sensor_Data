@@ -15,7 +15,6 @@ def choose_and_perform_clustering_method(clustering_method,
                                          number_of_clusters,
                                          trace_data_without_case_number,
                                          dir_runtime_files,
-                                         logging_level,
                                          dict_distance_adjacency_sensor,
                                          vectorization_type):
     cluster = None
@@ -33,7 +32,7 @@ def choose_and_perform_clustering_method(clustering_method,
             dict_distance_adjacency_sensor,
             vectorization_type,
             number_of_clusters
-            )
+        )
 
         pass
     elif clustering_method == 'k-Means':
@@ -52,14 +51,14 @@ def choose_and_perform_clustering_method(clustering_method,
 
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
-        logger.setLevel(logging_level)
+        logger.setLevel(settings.logging_level)
         error_msg = "'" + clustering_method + "' is not a valid clustering method. Please check the settings."
         logger.error(error_msg)
         raise ValueError(error_msg)
     return cluster
 
-def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt,
-                                    dir_runtime_files):
+
+def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt, dir_runtime_files):
     # k-means clustering
     k_means_cluster_ids = custom_kmeans(data=trace_data_without_case_number, number_of_clusters=number_of_clusters)
 

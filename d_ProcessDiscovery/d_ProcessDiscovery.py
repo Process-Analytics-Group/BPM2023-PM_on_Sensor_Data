@@ -27,7 +27,7 @@ import z_setting_parameters as settings
 
 
 def create_activity_models(output_case_traces_cluster, path_data_sources, dir_runtime_files, dir_dfg_cluster_files,
-                           filename_dfg_cluster, rel_proportion_dfg_threshold, logging_level):
+                           filename_dfg_cluster, rel_proportion_dfg_threshold):
     """
     Creates directly follows graphs out of an event log.
     :param output_case_traces_cluster: traces that are visualised
@@ -36,7 +36,6 @@ def create_activity_models(output_case_traces_cluster, path_data_sources, dir_ru
     :param dir_dfg_cluster_files: folder containing dfg png files
     :param filename_dfg_cluster: filename of dfg file (per cluster)
     :param rel_proportion_dfg_threshold: threshold for filtering out sensors in dfg relative to max occurrences of a sensor
-    :param logging_level: level of logging
     :return:
     """
 
@@ -68,25 +67,25 @@ def create_activity_models(output_case_traces_cluster, path_data_sources, dir_ru
         log = attributes_filter.apply(log, activities)
 
         # create png dfg file
-        exportDFGImageFile(log=log,
-                           path_data_sources=path_data_sources,
-                           dir_runtime_files=dir_runtime_files,
-                           dir_dfg_files=dir_dfg_cluster_files,
-                           filename_dfg=filename_dfg_cluster.format(cluster=str(cluster)))
+        export_dfg_imagefile(log=log,
+                             path_data_sources=path_data_sources,
+                             dir_runtime_files=dir_runtime_files,
+                             dir_dfg_files=dir_dfg_cluster_files,
+                             filename_dfg=filename_dfg_cluster.format(cluster=str(cluster)))
 
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
     logger.info("Saved directly follows graphs for each cluster into '../%s'.",
                 path_data_sources + dir_runtime_files + dir_dfg_cluster_files)
 
 
 def create_process_model(output_case_traces_cluster, path_data_sources, dir_runtime_files, filename_log_export,
                          dir_petri_net_files, filename_petri_net, filename_petri_net_image, dir_dfg_files, filename_dfg,
-                         rel_proportion_dfg_threshold, miner_type, metric_to_be_maximised, logging_level):
+                         rel_proportion_dfg_threshold, miner_type, metric_to_be_maximised):
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
 
     # create a log that can be understood by pm4py
     pm4py_log = convert_log_to_pm4py(log=output_case_traces_cluster)
@@ -96,11 +95,11 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
     logger.info("Exported log export into '../%s'.", path_data_sources + dir_runtime_files + filename_log_export)
 
     # create png dfg file
-    exportDFGImageFile(log=pm4py_log,
-                       path_data_sources=path_data_sources,
-                       dir_runtime_files=dir_runtime_files,
-                       dir_dfg_files=dir_dfg_files,
-                       filename_dfg=filename_dfg)
+    export_dfg_imagefile(log=pm4py_log,
+                         path_data_sources=path_data_sources,
+                         dir_runtime_files=dir_runtime_files,
+                         dir_dfg_files=dir_dfg_files,
+                         filename_dfg=filename_dfg)
     logger.info("Saved directly follows graph into '../%s'.",
                 path_data_sources + dir_runtime_files + dir_dfg_files + filename_dfg)
 
@@ -118,6 +117,12 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
 
 
 def convert_log_to_pm4py(log):
+    """
+    Restructures a pandas log to a pm4py specific log.
+    :param log: the event log saved in a pandas data frame
+    :return: a log pm4py methods can get applied on
+    """
+
     log['Date'] = log['Timestamp'].dt.date
 
     log = log.reindex(columns={'Case', 'Timestamp', 'Cluster', 'Date'})
@@ -136,7 +141,17 @@ def convert_log_to_pm4py(log):
     return log
 
 
-def exportDFGImageFile(log, path_data_sources, dir_runtime_files, dir_dfg_files, filename_dfg):
+def export_dfg_imagefile(log, path_data_sources, dir_runtime_files, dir_dfg_files, filename_dfg):
+    """
+    Creates a directly follows graph (dfg) out of the given log.
+    :param log: log the dfg is based on
+    :param path_data_sources: path of sources and outputs
+    :param dir_runtime_files: folder containing files read and written during runtime
+    :param dir_dfg_files: folder the dfg image files are saved into
+    :param filename_dfg: name of the dfg image file
+    :return:
+    """
+
     # create dfg out of event log
     dfg = dfg_discovery.apply(log)
 
@@ -149,6 +164,7 @@ def exportDFGImageFile(log, path_data_sources, dir_runtime_files, dir_dfg_files,
     gviz = dfg_visualization.apply(dfg0=dfg, log=log, variant=dfg_visualization.Variants.FREQUENCY,
                                    parameters={'start_activities': start_activities,
                                                'end_activities': end_activities})
+    # save dfg image to the drive
     dfg_visualization.save(gviz, path_data_sources + dir_runtime_files + dir_dfg_files + filename_dfg)
 
     return
@@ -218,8 +234,17 @@ def apply_miner(log,
             entropia_res = entropia.compute_entropia("pmp", xes_file=xes_file, pnml_file=pnml_file)
         elif metric_to_be_maximised == 'entropia:Fitness':
             entropia_res = entropia.compute_entropia("pmr", xes_file=xes_file, pnml_file=pnml_file)
-        # only keep the computed number of the entropia result and cut every other char
-        metrics = float(re.sub('[^\d.]', '', entropia_res))
+
+        # ToDo which parameters cause an error?
+        if 'Exception' in entropia_res or 'NaN' in entropia_res:
+
+            logger.info("%s could not get calculated. The result is set to 0. The error was: %s",
+                        metric_to_be_maximised, entropia_res)
+            metrics = 0
+        else:
+            # the result is a number
+            # only keep the computed number of the entropia result and cut every other char
+            metrics = float(re.sub('[^\d.]', '', entropia_res))
 
     logger.info("%s calculated: %s", metric_to_be_maximised, metrics)
 

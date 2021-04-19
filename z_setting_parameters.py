@@ -83,8 +83,7 @@ filename_output_case_traces_cluster = 'o_c_t_cluster.pickle'
 
 # range for clustering method (parameter optimization)
 # possible methods: 'SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
-clustering_method_list = ['SOM']
-# clustering_method_list = ['SOM', 'CustomDistance', 'k-Means']
+clustering_method_list = ['SOM', 'CustomDistance', 'k-Means', 'k-Medoids']
 
 # number of motion sensors
 number_of_motion_sensors = 31
@@ -92,7 +91,7 @@ number_of_motion_sensors = 31
 prefix_motion_sensor_id = 'M'
 
 # set a level of logging
-logging_level = logging.DEBUG
+logging_level = logging.INFO
 
 # set distance for zero to other sensors (range for parameter optimization)
 # used in creation of the distance_matrix_real_world matrix

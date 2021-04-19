@@ -4,19 +4,18 @@ import logging
 import numpy as np
 import pandas as pd
 from copy import deepcopy
+import z_setting_parameters as settings
 
 
 def choose_and_perform_method(filtered_dataset,
                               dict_distance_adjacency_sensor,
                               method,
-                              vectorization_method,
-                              logging_level):
+                              vectorization_method):
     if method == 'byRooms':
         case_vectors, raw_sensor_data_sensor_int = \
             get_vectors_by_rooms(dataset=filtered_dataset,
                                  dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                 vectorization_method=vectorization_method,
-                                 logging_level=logging_level)
+                                 vectorization_method=vectorization_method)
     else:
         return None
     return case_vectors, raw_sensor_data_sensor_int
@@ -24,8 +23,7 @@ def choose_and_perform_method(filtered_dataset,
 
 def get_vectors_by_rooms(dataset,
                          dict_distance_adjacency_sensor,
-                         vectorization_method,
-                         logging_level):
+                         vectorization_method):
     # create a rooms dictionary to faster check if sensors are in the same room
     # key is the sensor and values are all sensors in the same room
     room_dict = {}
@@ -129,7 +127,7 @@ def get_vectors_by_rooms(dataset,
         return quantity_time_vector, raw_sensor_data_sensor_int
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
-        logger.setLevel(logging_level)
+        logger.setLevel(settings.logging_level)
         error_msg = "'" + vectorization_method + "' is not a valid vectorization method. Please check the settings."
         logger.error(error_msg)
         raise ValueError(error_msg)
