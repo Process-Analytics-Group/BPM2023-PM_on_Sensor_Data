@@ -5,6 +5,7 @@ from scipy.cluster.hierarchy import fclusterdata
 # ToDo @DJ: wieder einkommentieren
 from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import KMeans
+from yellowbrick.cluster import KElbowVisualizer
 import numpy as np
 import pandas as pd
 import z_setting_parameters as settings
@@ -34,7 +35,7 @@ def elbow_method_kmeans(data, min_number_of_clusters, max_number_of_clusters):
     @return:                        result list returns cluster for each vector, average distance to centroid
     """
     # ELLBOW METHOD (calculate optimal number of clusters)
-    from yellowbrick.cluster import KElbowVisualizer
+
 
     model = KMeans()
 
@@ -42,7 +43,7 @@ def elbow_method_kmeans(data, min_number_of_clusters, max_number_of_clusters):
     elbow_kmeans = KElbowVisualizer(model, k=(min_number_of_clusters, max_number_of_clusters))
 
     elbow_kmeans.fit(data)  # Fit the data to the visualizer
-    # visualizer.show()  # Finalize and render the figure
+    # elbow_kmeans.show()  # Finalize and render the figure
 
     # using the k-means clustering method with the result of the elbow method
     return clustering_kmeans(data, elbow_kmeans.elbow_value_)
@@ -74,7 +75,6 @@ def elbow_method_kmedoids(data, min_number_of_clusters, max_number_of_clusters):
        """
 
     # ELLBOW METHOD (calculate optimal number of clusters)
-    from yellowbrick.cluster import KElbowVisualizer
 
     model = KMedoids()
 
