@@ -22,12 +22,15 @@ def clustering_kmeans(data, number_of_clusters):
     return kmeans.labels_, kmeans.inertia_
 
 
-def elbow_method_kmeans(data):
+def elbow_method_kmeans(data, min_number_of_clusters, max_number_of_clusters):
     """
-    Graphic output od the elbow method with K-Means for the given data. Tested clustersize is 3 - 12 clusters
+    Determines the optimal number of clusters with the elbow method and than uses K-Means for clustering
 
-    @param data:    list of all vectors
-    @return:        None
+    @param data:                    list of all vectors
+    @param min_number_of_clusters:  minimum number of clusters
+    @param max_number_of_clusters:  maximum number of clusters
+
+    @return:                        result list returns cluster for each vector, average distance to centroid
     """
     # ELLBOW METHOD (calculate optimal number of clusters)
     from yellowbrick.cluster import KElbowVisualizer
@@ -35,10 +38,13 @@ def elbow_method_kmeans(data):
     model = KMeans()
 
     # Instantiate the clustering model and visualizer
-    visualizer = KElbowVisualizer(model, k=(3, 12))
+    elbow_kmeans = KElbowVisualizer(model, k=(min_number_of_clusters, max_number_of_clusters))
 
-    visualizer.fit(data)  # Fit the data to the visualizer
-    visualizer.show()  # Finalize and render the figure
+    elbow_kmeans.fit(data)  # Fit the data to the visualizer
+    # visualizer.show()  # Finalize and render the figure
+
+    # using the k-means clustering method with the result of the elbow method
+    return clustering_kmeans(data, elbow_kmeans.elbow_value_)
 
 
 def clustering_k_medoids(allvectors, clustersize):
@@ -55,23 +61,30 @@ def clustering_k_medoids(allvectors, clustersize):
     return kmedoids.labels_, kmedoids.inertia_
 
 
-def elbow_method_kmedoids(data):
+def elbow_method_kmedoids(data, min_number_of_clusters, max_number_of_clusters):
     """
-    Graphic output od the elbow method with K-Medoids for the given data. Tested clustersize is 3 - 12 clusters
+       Determines the optimal number of clusters with the elbow method and than uses K-Medoids for clustering
 
-    @param data:    list of all vectors
-    @return:        None
-    """
+       @param data:                    list of all vectors
+       @param min_number_of_clusters:  minimum number of clusters
+       @param max_number_of_clusters:  maximum number of clusters
+
+       @return:                        result list returns cluster for each vector, average distance to centroid
+       """
+
     # ELLBOW METHOD (calculate optimal number of clusters)
     from yellowbrick.cluster import KElbowVisualizer
 
     model = KMedoids()
 
     # Instantiate the clustering model and visualizer
-    visualizer = KElbowVisualizer(model, k=(3, 12))
+    elbow_kmedoids = KElbowVisualizer(model, k=(min_number_of_clusters, max_number_of_clusters))
 
-    visualizer.fit(data)  # Fit the data to the visualizer
-    visualizer.show()  # Finalize and render the figure
+    elbow_kmedoids.fit(data)  # Fit the data to the visualizer
+    # visualizer.show()  # Finalize and render the figure
+
+    # using the k-medoids clustering method with the result of the elbow method
+    return clustering_k_medoids(data, elbow_kmedoids.elbow_value_)
 
 
 def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,

@@ -17,38 +17,77 @@ def choose_and_perform_clustering_method(clustering_method,
                                          dir_runtime_files,
                                          logging_level,
                                          dict_distance_adjacency_sensor,
-                                         vectorization_type):
-    cluster = None
+                                         vectorization_type,
+                                         min_number_of_clusters = 3,
+                                         max_number_of_clusters = 20):
+    """
+    This method manages the different clustering methods and starts the selected method. The results of the different
+    clustering methods is in the same Format.
+
+    @param clustering_method:               Specifying the clustering method that is used
+    @param number_of_clusters:              Specifying the number of clusters. (not used for "k-Means-Elbow" and
+                                            "k-Medoids-Elbow")
+    @param trace_data_without_case_number:  List of all vectors that should be clustered
+    @param dir_runtime_files:
+    @param logging_level:
+    @param dict_distance_adjacency_sensor:  Dictionary with distance- and adjacency-matrix
+    @param vectorization_type:              Specifying if the values in the dataset are the number of occurrences of the
+                                            sensor or the time a sensor was activated
+    @param min_number_of_clusters:          minimum number of clusters for the elbow-method (only used in
+                                            "k-Means-Elbow" and "k-Medoids-Elbow")
+    @param max_number_of_clusters:          maximum number of clusters for the elbow-method (only used in
+                                            "k-Means-Elbow" and "k-Medoids-Elbow")
+
+    @return:                                result list returns cluster for each vector
+    """
+    # initialize variables
+
+    clustering_result = None
     cluster_score = None
+
+    # clustering with self organizing  map
     if clustering_method == 'SOM':
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(
             trace_data_without_case_number=trace_data_without_case_number,
             number_of_clusters=number_of_clusters, K_opt=number_of_clusters, dir_runtime_files=dir_runtime_files)
-        cluster = km.labels_[np.transpose(sm._bmu[0, :]).astype(int)]
+        # use the k-means inertia as clustering score. Average distance to centroids
+        cluster_score = km.inertia_
+        clustering_result = km.labels_[np.transpose(sm._bmu[0, :]).astype(int)]
 
+    # clustering with a custom distance calculation
     elif clustering_method == 'CustomDistance':
-        # Clustering custom distance
-        cluster = b_FreFlaLa.clustering_with_custom_distance_calculation(
+        clustering_result = b_FreFlaLa.clustering_with_custom_distance_calculation(
             trace_data_without_case_number,
             dict_distance_adjacency_sensor,
             vectorization_type,
             number_of_clusters
             )
 
-        pass
+    # clustering with k-means form sk-learn
     elif clustering_method == 'k-Means':
 
-        # Plot for elbow method
-        b_FreFlaLa.elbow_method_kmeans(trace_data_without_case_number)
+        clustering_result, cluster_score = b_FreFlaLa.clustering_kmeans(trace_data_without_case_number,
+                                                                        number_of_clusters)
 
-        cluster, cluster_score = b_FreFlaLa.clustering_kmeans(trace_data_without_case_number, number_of_clusters)
+    # elbow method to choose optimal number of clusters and clustering with k-means
+    elif clustering_method == 'k-Means-Elbow':
 
+        clustering_result, cluster_score = b_FreFlaLa.elbow_method_kmeans(trace_data_without_case_number,
+                                                                          min_number_of_clusters,
+                                                                          max_number_of_clusters)
+
+    # clustering with k-medoids form sk-learn-extra
     elif clustering_method == 'k-Medoids':
 
-        # Plot for elbow method
-        # b_FreFlaLa.elbow_method_kmedoids(trace_data_without_case_number)
+        clustering_result, cluster_score = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number,
+                                                                           number_of_clusters)
 
-        cluster, cluster_score = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number, number_of_clusters)
+    # elbow method to choose optimal number of clusters and clustering with k-medoids
+    elif clustering_method == 'k-Medoids-Elbow':
+
+        clustering_result, cluster_score = b_FreFlaLa.elbow_method_kmedoids(trace_data_without_case_number,
+                                                                            min_number_of_clusters,
+                                                                            max_number_of_clusters)
 
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
@@ -56,7 +95,8 @@ def choose_and_perform_clustering_method(clustering_method,
         error_msg = "'" + clustering_method + "' is not a valid clustering method. Please check the settings."
         logger.error(error_msg)
         raise ValueError(error_msg)
-    return cluster
+
+    return clustering_result
 
 def cluster_and_classify_activities(trace_data_without_case_number, number_of_clusters, K_opt,
                                     dir_runtime_files):
