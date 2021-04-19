@@ -13,8 +13,7 @@ def apply_threshold_filtering(dict_distance_adjacency_sensor,
                               traces_time_out_threshold,
                               trace_length_limit,
                               raw_sensor_data,
-                              vectorization_method,
-                              logging_level):
+                              vectorization_method):
     # start timer
     t0_main = timeit.default_timer()
 
@@ -36,8 +35,7 @@ def apply_threshold_filtering(dict_distance_adjacency_sensor,
         FreFraLa_Vectoring.choose_and_perform_method(filtered_dataset=filtered_dataset,
                                                      method=FreFraLa_method,
                                                      dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                                     vectorization_method=vectorization_method,
-                                                     logging_level=logging_level)
+                                                     vectorization_method=vectorization_method)
 
     # stop timer
     t1_main = timeit.default_timer()

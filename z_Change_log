@@ -1,3 +1,8 @@
+2021-04-19
+KD: Changed logging level parameter passing to direct import
+KD: Added entropia evaluation error handling
+KD: Added comments
+
 2021-04-07
 KD: Moved entropia method call into ProcessDiscovery
 KD: Moved raw sensor data import method

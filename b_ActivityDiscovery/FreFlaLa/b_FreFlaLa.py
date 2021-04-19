@@ -7,6 +7,7 @@ from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import KMeans
 import numpy as np
 import pandas as pd
+import z_setting_parameters as settings
 
 
 def clustering_kmeans(data, number_of_clusters):
@@ -88,8 +89,7 @@ def elbow_method_kmedoids(data, min_number_of_clusters, max_number_of_clusters):
 
 
 def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjacency_sensor, vectorization_type,
-                                                clustersize=15, linkage_method_for_clustering='ward',
-                                                logging_level=None):
+                                                clustersize=15, linkage_method_for_clustering='ward'):
     """
     Clusters the dataset using custom calculation.
 
@@ -104,7 +104,7 @@ def clustering_with_custom_distance_calculation(allvectors, dict_distance_adjace
     """
 
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
     logger.info("start modified clustering method")
 
     # distance calculation

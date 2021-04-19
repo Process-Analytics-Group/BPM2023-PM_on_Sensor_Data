@@ -26,11 +26,10 @@ def choose_and_perform_event_case_correlation_method(method,
                                                      distance_threshold=1.5,
                                                      traces_time_out_threshold=300,
                                                      raw_sensor_data=None,
-                                                     max_errors_per_day=100,
-                                                     logging_level=None):
+                                                     max_errors_per_day=100):
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
 
     trace_data_time = None
     output_case_traces_cluster = None
@@ -44,7 +43,7 @@ def choose_and_perform_event_case_correlation_method(method,
                                                           'traces_time_out_threshold': str(traces_time_out_threshold),
                                                           'trace_length_limit': str(trace_length_limit),
                                                           'vectorization_type': str(vectorization_method)},
-                                                      step='event case correlation', logging_level=logging_level)
+                                                      step='event case correlation')
         if not same_params_executed:
             # Classical Method
             trace_data_time, output_case_traces_cluster, list_of_final_vectors_activations = \
@@ -66,7 +65,7 @@ def choose_and_perform_event_case_correlation_method(method,
                                                           'traces_time_out_threshold': str(traces_time_out_threshold),
                                                           'trace_length_limit': str(trace_length_limit),
                                                           'vectorization_type': str(vectorization_method)},
-                                                      step='event case correlation', logging_level=logging_level)
+                                                      step='event case correlation')
         if not same_params_executed:
             trace_data_time, output_case_traces_cluster = \
                 FreFlaLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
@@ -74,8 +73,7 @@ def choose_and_perform_event_case_correlation_method(method,
                                                    traces_time_out_threshold=traces_time_out_threshold,
                                                    trace_length_limit=trace_length_limit,
                                                    raw_sensor_data=raw_sensor_data,
-                                                   vectorization_method=vectorization_method,
-                                                   logging_level=logging_level)
+                                                   vectorization_method=vectorization_method)
     else:
         error_msg = "'" + method + "' is not a valid event case correlation method. Please check the settings."
         logger.error(error_msg)
@@ -86,19 +84,18 @@ def choose_and_perform_event_case_correlation_method(method,
         trace_data_time = pd.read_pickle(dir_same_param + filename_trace_data_time)
         output_case_traces_cluster = pd.read_pickle(dir_same_param + filename_output_case_traces_cluster)
 
-        logger.info("Imported ported event case correlation step result from '../%s'", dir_same_param)
+        logger.info("Imported event case correlation result from '../%s'", dir_same_param)
 
     else:
         # export trace_data_time and output_case_traces_cluster in folder of current run
         # creates the directory if it not exists
         path = pathlib.Path(dir_same_param)
         path.mkdir(parents=True, exist_ok=True)
-
         # creates files
         trace_data_time.to_pickle(dir_same_param + filename_trace_data_time)
         output_case_traces_cluster.to_pickle(dir_same_param + filename_output_case_traces_cluster)
 
-        logger.info("Exported event case correlation step result into '../%s'", dir_same_param)
+        logger.info("Exported event case correlation result into '../%s'", dir_same_param)
 
     return trace_data_time, output_case_traces_cluster
 

@@ -146,7 +146,7 @@ def append_to_performance_documentation_file(path_data_sources,
         # calculate runtime
         runtime = np.round(t1_runtime - t0_runtime, 1)
 
-        logger.info("Saving entry to benchmark file took %s seconds.",
+        logger.debug("Saving entry to benchmark file took %s seconds.",
                     runtime)
 
 
@@ -169,13 +169,13 @@ def create_distance_threshold_list(distance_threshold_min,
 def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
                    traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
                    trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max, miner_type,
-                   miner_type_list, metric_to_be_maximised, metric_to_be_maximised_list, logging_level):
+                   miner_type_list, metric_to_be_maximised, metric_to_be_maximised_list):
     # checks settings for correctness (if they are invalid the execution get stopped)
     settings_valid = True
 
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
 
     # checking different settings
     if zero_distance_value_min > zero_distance_value_max:
@@ -246,7 +246,7 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     return raw_sensor_data
 
 
-def param_combination_already_executed(path_data_sources, dir_export_files, current_params, step, logging_level):
+def param_combination_already_executed(path_data_sources, dir_export_files, current_params, step):
     '''
     Checks if the current parameter combination was already executed in previous iterations or other runs. Therefore the
     method checks if the directory at which the export files are saved is already created.
@@ -255,7 +255,6 @@ def param_combination_already_executed(path_data_sources, dir_export_files, curr
     :param path_data_sources: directory of data sources
     :param dir_export_files: directory at which the export files are saved
     :param step: the program step in which the parameter combination is executed
-    :param logging_level: level of logging
     :return: if there are already files and the directory in which the export files are saved
     '''
 
@@ -268,7 +267,7 @@ def param_combination_already_executed(path_data_sources, dir_export_files, curr
     if os.path.exists(dir_same_param):
         same_params_executed = True
         logger = logging.getLogger(inspect.stack()[0][3])
-        logger.setLevel(logging_level)
+        logger.setLevel(settings.logging_level)
         logger.info("The current %s parameter combination was already executed in previous iterations or other runs.",
                     step)
 
