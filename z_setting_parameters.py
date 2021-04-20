@@ -47,11 +47,27 @@ csv_header_benchmark = 0
 metric_to_be_maximised = 'entropia:Precision'
 metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness']
 
+# Program execution type - Choose between the possible types:
+# 'fixed_params' (the parameters are set before the program is executed),
+# 'param_optimization' (uses a search space in which the parameters are optimized during execution)
+execution_type = 'param_optimization'
+# number of times the process model discovery gets executed
+number_of_runs = 10
+
+# fixed params execution parameters
+fixed_params = {'zero_distance_value': 1,
+                'traces_time_out_threshold': 300,
+                'trace_length_limit': 8,
+                'k_means_number_of_clusters': 10,
+                'distance_threshold': 1.2,
+                'max_errors_per_day': 100,
+                'vectorization_type': 'quantity',
+                'event_case_correlation_method': 'FreFlaLa',
+                'clustering_method': 'k-Means'}
+
 # hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
 opt_algorithm = tpe.suggest
-# number of optimization attempts
-opt_attempts = 10
 
 # range for vectorization type (parameter optimization)
 # possible types: 'quantity', 'time', 'quantity_time'
@@ -60,26 +76,6 @@ vectorization_type_list = ['quantity', 'time', 'quantity_time']
 # range for clustering method (parameter optimization)
 # possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
 event_case_correlation_method_list = ['Classic', 'FreFlaLa']
-
-# event case correlation export files
-# folder containing files read and written during ecc classical method
-dir_classic_event_case_correlation = 'ecc/' \
-                                     'method-{event_case_correlation_method}/' \
-                                     'vec_type-{vectorization_type}/' \
-                                     'trace_length-{trace_length_limit}/' \
-                                     'traces_time_out-{traces_time_out_threshold}/' \
-                                     'distance-{distance_threshold}/'
-# folder containing files read and written during ecc freflala method
-dir_freflala_event_case_correlation = 'ecc/' \
-                                      'method-{event_case_correlation_method}/' \
-                                      'vec_type-{vectorization_type}/' \
-                                      'trace_length-{trace_length_limit}/' \
-                                      'traces_time_out-{traces_time_out_threshold}/' \
-                                      'max_errors-{max_errors_per_day}/'
-# filename of trace data file
-filename_trace_data_time = 'trace_data_time.pickle'
-# filename of traces cluster file
-filename_output_case_traces_cluster = 'o_c_t_cluster.pickle'
 
 # range for clustering method (parameter optimization)
 # possible methods: 'SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
@@ -135,6 +131,26 @@ max_errors_per_day_max = 100
 # miner used for process model creation - choose between: heuristic, inductive
 miner_type = 'heuristic'
 miner_type_list = ['heuristic', 'inductive']
+
+# event case correlation export files
+# folder containing files read and written during ecc classical method
+dir_classic_event_case_correlation = 'ecc/' \
+                                     'method-{event_case_correlation_method}/' \
+                                     'vec_type-{vectorization_type}/' \
+                                     'trace_length-{trace_length_limit}/' \
+                                     'traces_time_out-{traces_time_out_threshold}/' \
+                                     'distance-{distance_threshold}/'
+# folder containing files read and written during ecc freflala method
+dir_freflala_event_case_correlation = 'ecc/' \
+                                      'method-{event_case_correlation_method}/' \
+                                      'vec_type-{vectorization_type}/' \
+                                      'trace_length-{trace_length_limit}/' \
+                                      'traces_time_out-{traces_time_out_threshold}/' \
+                                      'max_errors-{max_errors_per_day}/'
+# filename of trace data file
+filename_trace_data_time = 'trace_data_time.pickle'
+# filename of traces cluster file
+filename_output_case_traces_cluster = 'o_c_t_cluster.pickle'
 
 # output files
 # filename of trace file

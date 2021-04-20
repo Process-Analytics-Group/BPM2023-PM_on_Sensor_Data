@@ -93,7 +93,7 @@ def perform_process_model_discovery(params):
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
     logger.info("################# Start iteration %s of %s #################",
-                perform_process_model_discovery.iteration_counter, settings.opt_attempts)
+                perform_process_model_discovery.iteration_counter, settings.number_of_runs)
 
     dict_distance_adjacency_sensor['distance_matrix'] = \
         create_dm.set_zero_distance_value(distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
@@ -101,9 +101,8 @@ def perform_process_model_discovery(params):
 
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
-    #TODO reset method
     traces_vectorised, output_case_traces_cluster = \
-        ecc.choose_and_perform_event_case_correlation_method(method='FreFlaLa',
+        ecc.choose_and_perform_event_case_correlation_method(method=params['event_case_correlation_method'],
                                                              dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                              path_data_sources=settings.path_data_sources,
                                                              dir_runtime_files=dir_runtime_files,
@@ -196,7 +195,7 @@ def perform_process_model_discovery(params):
 
     logger.info("Total runtime: %s", runtime_main)
     logger.info("################# End iteration %s of %s #################",
-                perform_process_model_discovery.iteration_counter, settings.opt_attempts)
+                perform_process_model_discovery.iteration_counter, settings.number_of_runs)
 
     return {
         'loss': -metrics,
@@ -207,55 +206,62 @@ def perform_process_model_discovery(params):
     }
 
 
-# creates a selection of thresholds out of min, max and threshold length
-distance_threshold_list = helper.create_distance_threshold_list(
-    distance_threshold_min=settings.distance_threshold_min,
-    distance_threshold_max=settings.distance_threshold_max,
-    distance_threshold_step_length=settings.distance_threshold_step_length)
-
-# hyperopt parameter tuning
-# parameter's search space
-space = {
-    'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
-                                      settings.zero_distance_value_max + 1),
-    'traces_time_out_threshold': hp.randint('traces_time_out_threshold', settings.traces_time_out_threshold_min,
-                                            settings.traces_time_out_threshold_max + 1),
-    'trace_length_limit': hp.randint('trace_length_limit', settings.trace_length_limit_min,
-                                     settings.trace_length_limit_max + 1),
-    'k_means_number_of_clusters': hp.randint('k_means_number_of_clusters', settings.k_means_number_of_clusters_min,
-                                             settings.k_means_number_of_clusters_max + 1),
-    'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
-    'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
-                                     settings.max_errors_per_day_max + 1),
-    'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
-    'event_case_correlation_method': hp.choice('event_case_correlation_method',
-                                               settings.event_case_correlation_method_list),
-    'clustering_method': hp.choice('clustering_method', settings.clustering_method_list)
-}
-
-# capture the iterations of hyperopt parameter tuning
+# capture the iterations of perform_process_model_discovery method
 perform_process_model_discovery.iteration_counter = 0
-trials = Trials()
-# perform process model discovery for different parameter combinations and find the best outcome
-# (hyperopt parameter tuning)
-fmin(fn=perform_process_model_discovery,
-     space=space,
-     algo=settings.opt_algorithm,
-     max_evals=settings.opt_attempts,
-     verbose=False,
-     trials=trials)
 
-# additional information of the best iteration
-best = trials.best_trial
-information_string = '\nbest iteration:\n\toptimised function value = ' + str(-best['result']['loss']) + \
-                     '\n\tfunction value type = ' + settings.metric_to_be_maximised + '\n\toptimised parameters:'
-for key, value in best['result']['opt_params'].items():
-    information_string += '\n\t\t' + str(key) + ' = ' + str(value)
-information_string += '\n\tfiles directory = ' + str(best['result']['dir_runtime_files']) + '\n\titeration = ' + str(
-    best['result']['iteration'])
+# execute process model discovery with fixed parameters
+if settings.execution_type == 'fixed_params':
+    while perform_process_model_discovery.iteration_counter < settings.number_of_runs:
+        perform_process_model_discovery(settings.fixed_params)
 
-# logger to print and save the information
-logger = logging.getLogger('main')
-logger.setLevel(settings.logging_level)
-logger.info(information_string)
+# execute process model discovery with parameter search space (hyperopt parameter tuning)
+elif settings.execution_type == 'param_optimization':
+    # creates a selection of thresholds out of min, max and threshold length
+    distance_threshold_list = helper.create_distance_threshold_list(
+        distance_threshold_min=settings.distance_threshold_min,
+        distance_threshold_max=settings.distance_threshold_max,
+        distance_threshold_step_length=settings.distance_threshold_step_length)
+
+    # parameter's search space
+    space = {
+        'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
+                                          settings.zero_distance_value_max + 1),
+        'traces_time_out_threshold': hp.randint('traces_time_out_threshold', settings.traces_time_out_threshold_min,
+                                                settings.traces_time_out_threshold_max + 1),
+        'trace_length_limit': hp.randint('trace_length_limit', settings.trace_length_limit_min,
+                                         settings.trace_length_limit_max + 1),
+        'k_means_number_of_clusters': hp.randint('k_means_number_of_clusters', settings.k_means_number_of_clusters_min,
+                                                 settings.k_means_number_of_clusters_max + 1),
+        'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
+        'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
+                                         settings.max_errors_per_day_max + 1),
+        'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
+        'event_case_correlation_method': hp.choice('event_case_correlation_method',
+                                                   settings.event_case_correlation_method_list),
+        'clustering_method': hp.choice('clustering_method', settings.clustering_method_list)
+    }
+
+    trials = Trials()
+    # perform process model discovery for different parameter combinations and find the best outcome
+    fmin(fn=perform_process_model_discovery,
+         space=space,
+         algo=settings.opt_algorithm,
+         max_evals=settings.number_of_runs,
+         verbose=False,
+         trials=trials)
+
+    # additional information of the best iteration
+    best = trials.best_trial
+    information_string = '\nbest iteration:\n\toptimised function value = ' + str(-best['result']['loss']) + \
+                         '\n\tfunction value type = ' + settings.metric_to_be_maximised + '\n\toptimised parameters:'
+    for key, value in best['result']['opt_params'].items():
+        information_string += '\n\t\t' + str(key) + ' = ' + str(value)
+    information_string += '\n\tfiles directory = ' + str(best['result']['dir_runtime_files']) + '\n\titeration = ' \
+                          + str(best['result']['iteration'])
+
+    # logger to print and save the information
+    logger = logging.getLogger('main')
+    logger.setLevel(settings.logging_level)
+    logger.info(information_string)
+
 pass

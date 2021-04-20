@@ -1,3 +1,6 @@
+2021-04-20
+KD: Added way to call perform_process_model_discovery() with fixed parameters
+
 2021-04-19
 KD: Changed logging level parameter passing to direct import
 KD: Added entropia evaluation error handling
