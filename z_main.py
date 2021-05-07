@@ -4,7 +4,8 @@ import logging
 from datetime import datetime
 import timeit
 import numpy as np
-from hyperopt import hp, fmin, Trials, STATUS_OK
+from hyperopt import fmin, Trials, STATUS_OK
+from matplotlib import pyplot as plt
 import os
 import pathlib
 
@@ -45,8 +46,8 @@ helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
                       traces_time_out_threshold_max=settings.traces_time_out_threshold_max,
                       trace_length_limit_min=settings.trace_length_limit_min,
                       trace_length_limit_max=settings.trace_length_limit_max,
-                      k_means_number_of_clusters_min=settings.k_means_number_of_clusters_min,
-                      k_means_number_of_clusters_max=settings.k_means_number_of_clusters_max,
+                      custom_distance_clusters_min=settings.custom_distance_clusters_min,
+                      custom_distance_clusters_max=settings.custom_distance_clusters_max,
                       miner_type=settings.miner_type,
                       miner_type_list=settings.miner_type_list,
                       metric_to_be_maximised=settings.metric_to_be_maximised,
@@ -120,11 +121,13 @@ def perform_process_model_discovery(params):
 
     # ################### ActivityDiscovery ####################
     cluster = ad.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
-                                                      number_of_clusters=params['k_means_number_of_clusters'],
+                                                      number_of_clusters=params['custom_distance_number_of_clusters'],
                                                       trace_data_without_case_number=traces_vectorised,
                                                       dir_runtime_files=dir_runtime_files,
                                                       dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                                      vectorization_type=params['vectorization_type'])
+                                                      vectorization_type=params['vectorization_type'],
+                                                      min_number_of_clusters=settings.min_number_of_clusters,
+                                                      max_number_of_clusters=settings.max_number_of_clusters)
 
     # ################### EventActivityAbstraction ####################
     output_case_traces_cluster = eaa.create_event_log_files(cluster=cluster,
@@ -171,7 +174,7 @@ def perform_process_model_discovery(params):
                             'traces_time_out_threshold': params['traces_time_out_threshold'],
                             'trace_length_limit': params['trace_length_limit'],
                             'vectorization_type': params['vectorization_type'],
-                            'k_means_number_of_clusters': params['k_means_number_of_clusters'],
+                            'custom_distance_number_of_clusters': params['custom_distance_number_of_clusters'],
                             'max_errors_per_day': params['max_errors_per_day'],
                             'MinerType': settings.miner_type,
                             'event_case_correlation_method': params['event_case_correlation_method'],
@@ -216,31 +219,8 @@ if settings.execution_type == 'fixed_params':
 
 # execute process model discovery with parameter search space (hyperopt parameter tuning)
 elif settings.execution_type == 'param_optimization':
-    # creates a selection of thresholds out of min, max and threshold length
-    distance_threshold_list = helper.create_distance_threshold_list(
-        distance_threshold_min=settings.distance_threshold_min,
-        distance_threshold_max=settings.distance_threshold_max,
-        distance_threshold_step_length=settings.distance_threshold_step_length)
-
     # parameter's search space
-    space = {
-        'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
-                                          settings.zero_distance_value_max + 1),
-        'traces_time_out_threshold': hp.randint('traces_time_out_threshold', settings.traces_time_out_threshold_min,
-                                                settings.traces_time_out_threshold_max + 1),
-        'trace_length_limit': hp.randint('trace_length_limit', settings.trace_length_limit_min,
-                                         settings.trace_length_limit_max + 1),
-        'k_means_number_of_clusters': hp.randint('k_means_number_of_clusters', settings.k_means_number_of_clusters_min,
-                                                 settings.k_means_number_of_clusters_max + 1),
-        'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
-        'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
-                                         settings.max_errors_per_day_max + 1),
-        'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
-        'event_case_correlation_method': hp.choice('event_case_correlation_method',
-                                                   settings.event_case_correlation_method_list),
-        'clustering_method': hp.choice('clustering_method', settings.clustering_method_list)
-    }
-
+    space = helper.create_param_opt_space()
     trials = Trials()
     # perform process model discovery for different parameter combinations and find the best outcome
     fmin(fn=perform_process_model_discovery,
@@ -263,5 +243,20 @@ elif settings.execution_type == 'param_optimization':
     logger = logging.getLogger('main')
     logger.setLevel(settings.logging_level)
     logger.info(information_string)
+
+    function_values = []
+    # show function value history in a graph
+    for i in range(0, settings.number_of_runs):
+        function_value_i = -trials.trials.__getitem__(i)['result']['loss']
+        function_values.append(function_value_i)
+
+    plt.xlabel('iteration')
+    plt.ylabel(settings.metric_to_be_maximised)
+    plt.title(settings.metric_to_be_maximised + ' value progress')
+    iterations = range(1, settings.number_of_runs + 1)
+    plt.plot(iterations, function_values, marker='o')
+    plt.ylim(bottom=0)
+    plt.xticks(iterations)
+    plt.show()
 
 pass

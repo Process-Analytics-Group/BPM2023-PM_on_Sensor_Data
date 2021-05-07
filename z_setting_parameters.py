@@ -47,6 +47,11 @@ csv_header_benchmark = 0
 metric_to_be_maximised = 'entropia:Precision'
 metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness']
 
+# range for number of clusters for the elbow-method (only used in "k-Means-Elbow" and "k-Medoids-Elbow")
+# is not effected by parameter optimization
+min_number_of_clusters = 3
+max_number_of_clusters = 20
+
 # Program execution type - Choose between the possible types:
 # 'fixed_params' (the parameters are set before the program is executed),
 # 'param_optimization' (uses a search space in which the parameters are optimized during execution)
@@ -54,16 +59,19 @@ execution_type = 'param_optimization'
 # number of times the process model discovery gets executed
 number_of_runs = 10
 
+# upper limit for input_data (set to None if there is no limit)
+max_number_of_raw_input = 10000
+
 # fixed params execution parameters
 fixed_params = {'zero_distance_value': 1,
                 'traces_time_out_threshold': 300,
-                'trace_length_limit': 8,
+                'trace_length_limit': 6,
                 'k_means_number_of_clusters': 10,
                 'distance_threshold': 1.2,
                 'max_errors_per_day': 100,
-                'vectorization_type': 'quantity',
-                'event_case_correlation_method': 'FreFlaLa',
-                'clustering_method': 'k-Means'}
+                'vectorization_type': 'time',
+                'event_case_correlation_method': 'Classic',
+                'clustering_method': 'SOM'}
 
 # hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
@@ -79,7 +87,7 @@ event_case_correlation_method_list = ['Classic', 'FreFlaLa']
 
 # range for clustering method (parameter optimization)
 # possible methods: 'SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
-clustering_method_list = ['SOM', 'CustomDistance', 'k-Means', 'k-Medoids']
+clustering_method_list = ['SOM']
 
 # number of motion sensors
 number_of_motion_sensors = 31
@@ -93,9 +101,6 @@ logging_level = logging.INFO
 # used in creation of the distance_matrix_real_world matrix
 zero_distance_value_min = 1
 zero_distance_value_max = 1
-
-# upper limit for input_data (set to None if there is no limit)
-max_number_of_raw_input = 10000
 
 # threshold when sensors are considered too far away (range for parameter optimization)
 distance_threshold_min = 1.2
@@ -112,9 +117,9 @@ traces_time_out_threshold_max = 300
 trace_length_limit_min = 4
 trace_length_limit_max = 10
 
-# range of k-means cluster (parameter optimization)
-k_means_number_of_clusters_min = 6
-k_means_number_of_clusters_max = 16
+# range for number of CustomDistance cluster (parameter optimization)
+custom_distance_clusters_min = 6
+custom_distance_clusters_max = 16
 
 # Specifies the linkage method for clustering with custom distance calculation
 linkage_method_for_clustering = 'ward'

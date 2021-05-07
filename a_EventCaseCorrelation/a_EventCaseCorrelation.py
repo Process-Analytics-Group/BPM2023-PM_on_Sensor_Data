@@ -1,16 +1,16 @@
 # Personentrennung und Tracelängenbestimmung
-import os
-import pathlib
-
-import pandas as pd
-import numpy as np
-import logging
-import timeit
-import math
-from u_utils import u_utils as utils, u_helper as helper
-import z_setting_parameters as settings
 import inspect
+import logging
+import math
+import pathlib
+import timeit
+
+import numpy as np
+import pandas as pd
+
 import a_EventCaseCorrelation.FreFlaLa.a_FreFlaLa as FreFlaLa
+import z_setting_parameters as settings
+from u_utils import u_utils as utils, u_helper as helper
 
 
 def choose_and_perform_event_case_correlation_method(method,

@@ -2,14 +2,15 @@
 import inspect
 import logging
 
-from scipy.cluster.hierarchy import fclusterdata
-from sklearn.cluster import KMeans
-from b_ActivityDiscovery.self_organizing_map.sompy import SOMFactory
 import numpy as np
-from u_utils import u_helper as helper
+from sklearn.cluster import KMeans
+from sklearn_som.som import SOM
 from yellowbrick.cluster import KElbowVisualizer
-import z_setting_parameters as settings
+
 import b_ActivityDiscovery.FreFlaLa.b_FreFlaLa as b_FreFlaLa
+import z_setting_parameters as settings
+from b_ActivityDiscovery.self_organizing_map.sompy import SOMFactory
+from u_utils import u_helper as helper
 
 
 def choose_and_perform_clustering_method(clustering_method,
@@ -18,8 +19,8 @@ def choose_and_perform_clustering_method(clustering_method,
                                          dir_runtime_files,
                                          dict_distance_adjacency_sensor,
                                          vectorization_type,
-                                         min_number_of_clusters=3,
-                                         max_number_of_clusters=20):
+                                         min_number_of_clusters,
+                                         max_number_of_clusters):
     """
     This method manages the different clustering methods and starts the selected method. The results of the different
     clustering methods is in the same Format.
@@ -40,13 +41,10 @@ def choose_and_perform_clustering_method(clustering_method,
 
     @return:                                result list returns cluster for each vector
     """
-    # initialize variables
-
-    clustering_result = None
-    cluster_score = None
 
     # clustering with self organizing  map
     if clustering_method == 'SOM':
+
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(
             trace_data_without_case_number=trace_data_without_case_number,
             max_number_of_clusters=max_number_of_clusters, min_number_of_clusters=min_number_of_clusters,
@@ -61,8 +59,7 @@ def choose_and_perform_clustering_method(clustering_method,
             trace_data_without_case_number,
             dict_distance_adjacency_sensor,
             vectorization_type,
-            number_of_clusters
-        )
+            number_of_clusters)
 
     # clustering with k-means form sk-learn
     elif clustering_method == 'k-Means':
@@ -150,8 +147,7 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
     names = []
     for sensor_number in range(0, number_of_motion_sensors - 1):
         names.append(str("Sensor " + str(sensor_number)))
-    # create the SOM network and train it.
-    # You can experiment with different normalizations and initializations
+    # create the sompy SOM network and train it
     sm = SOMFactory().build(trace_data_without_case_number.values, normalization='var',
                             initialization='pca',
                             component_names=names)
@@ -161,6 +157,14 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
     # The topographic error: the proportion of all data vectors for which first and second BMUs are not adjacent units.
     topographic_error = sm.calculate_topographic_error()
     quantization_error = np.mean(sm._bmu[1])
+
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(logging_level)
+    logger.info("Topographic error = %s; Quantization error = %s", topographic_error, quantization_error)
+
+    K = 20  # stop at this k for SSE sweep
+    [labels, km, norm_data] = sm.cluster(n_clusters=K, opt=K_opt)
+
     helper.append_to_log_file(
         new_entry_to_log_variable='topographic_error',
         new_entry_to_log_value=topographic_error,
@@ -186,32 +190,5 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
         filename_parameters_file=filename_parameters_file,
         new_entry_to_log_description='Number of clusters used to do the vanilla k-means '
                                      'and Cluster the SOM-Neurons. ')
-
-    logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
-    logger.info("Topographic error = %s; Quantization error = %s", topographic_error, quantization_error)
-
-    # component planes view
-    from visualization.mapview import View2D
-
-    view2D = View2D(10, 10, "rand data", text_size=12)
-    view2D.show(sm, col_sz=4, which_dim="all", desnormalize=True,
-                path_data_sources=path_data_sources)
-
-    # U-matrix plot
-    from visualization.umatrix import UMatrixView
-
-    umat = UMatrixView(width=10, height=10, title='U-matrix')
-    umat.show(sm, path_data_sources=path_data_sources, dir_runtime_files=dir_runtime_files)
-
-    # do the K-means clustering on the SOM grid, sweep across k = 2 to 20
-    from visualization.hitmap import HitMapView
-
-    K = 20  # stop at this k for SSE sweep
-    # K_opt = 18  # optimal K already found
-    [labels, km, norm_data] = sm.cluster(n_clusters=K, opt=K_opt)
-
-    hits = HitMapView(20, 20, "Clustering", text_size=12)
-    a = hits.show(sm, path_data_sources=path_data_sources, dir_runtime_files=dir_runtime_files)
 
     return sm, km, quantization_error, topographic_error

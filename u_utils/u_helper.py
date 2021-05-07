@@ -6,6 +6,7 @@ import sys
 import inspect
 import timeit
 from pathlib import Path
+from hyperopt import hp
 
 import logging
 
@@ -147,7 +148,7 @@ def append_to_performance_documentation_file(path_data_sources,
         runtime = np.round(t1_runtime - t0_runtime, 1)
 
         logger.debug("Saving entry to benchmark file took %s seconds.",
-                    runtime)
+                     runtime)
 
 
 def create_distance_threshold_list(distance_threshold_min,
@@ -168,7 +169,7 @@ def create_distance_threshold_list(distance_threshold_min,
 
 def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
                    traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
-                   trace_length_limit_max, k_means_number_of_clusters_min, k_means_number_of_clusters_max, miner_type,
+                   trace_length_limit_max, custom_distance_clusters_min, custom_distance_clusters_max, miner_type,
                    miner_type_list, metric_to_be_maximised, metric_to_be_maximised_list):
     # checks settings for correctness (if they are invalid the execution get stopped)
     settings_valid = True
@@ -194,8 +195,8 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
         logger.error("'trace_length_limit_min' has to be <= 'trace_length_limit_max'")
         settings_valid = False
 
-    if k_means_number_of_clusters_min > k_means_number_of_clusters_max:
-        logger.error("'k_means_number_of_clusters_min' has to be <= 'k_means_number_of_clusters_max'")
+    if custom_distance_clusters_min > custom_distance_clusters_max:
+        logger.error("'custom_distance_clusters_min' has to be <= 'custom_distance_clusters_max'")
         settings_valid = False
 
     if miner_type not in miner_type_list:
@@ -234,8 +235,8 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     :return: the sensor data in a pandas data frame
     """
 
-    raw_sensor_data = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
-                                            parse_dates=parse_dates, dtype=dtype)
+    raw_sensor_data, raw_sensor_data_long = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
+                                          parse_dates=parse_dates, dtype=dtype)
 
     # drop all lines without motion sensor (identify by sensor ID-prefix)
     # ToDo: in future versions allow for more sensor types if implemented
@@ -272,3 +273,34 @@ def param_combination_already_executed(path_data_sources, dir_export_files, curr
                     step)
 
     return same_params_executed, dir_same_param
+
+
+def create_param_opt_space():
+    """
+    Creates the search space for parameter optimization.
+    :return: The space which defines the bounds of the parameters in parameter optimization
+    """
+    # creates a selection of thresholds out of min, max and threshold length
+    distance_threshold_list = create_distance_threshold_list(
+        distance_threshold_min=settings.distance_threshold_min,
+        distance_threshold_max=settings.distance_threshold_max,
+        distance_threshold_step_length=settings.distance_threshold_step_length)
+
+    space = {
+        'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
+                                          settings.zero_distance_value_max + 1),
+        'traces_time_out_threshold': hp.randint('traces_time_out_threshold', settings.traces_time_out_threshold_min,
+                                                settings.traces_time_out_threshold_max + 1),
+        'trace_length_limit': hp.randint('trace_length_limit', settings.trace_length_limit_min,
+                                         settings.trace_length_limit_max + 1),
+        'custom_distance_number_of_clusters': hp.randint('custom_distance_number_of_clusters', settings.custom_distance_clusters_min,
+                                                 settings.custom_distance_clusters_max + 1),
+        'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
+        'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
+                                         settings.max_errors_per_day_max + 1),
+        'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
+        'event_case_correlation_method': hp.choice('event_case_correlation_method',
+                                                   settings.event_case_correlation_method_list),
+        'clustering_method': hp.choice('clustering_method', settings.clustering_method_list)
+    }
+    return space

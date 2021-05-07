@@ -1,3 +1,9 @@
+2021-05-07
+KD: Added function value history graph
+KD: Removed SOMPy visualization
+KD: Moved k-Means and k-Medoids cluster range to settings
+KD: Moved parameter search space creation in helper file
+
 2021-04-20
 KD: Added way to call perform_process_model_discovery() with fixed parameters
 
