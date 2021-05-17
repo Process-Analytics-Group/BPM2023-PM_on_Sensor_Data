@@ -77,9 +77,18 @@ def create_activity_models(output_case_traces_cluster, path_data_sources, dir_ru
                 path_data_sources + dir_runtime_files + dir_dfg_cluster_files)
 
 
-def create_process_model(output_case_traces_cluster, path_data_sources, dir_runtime_files, filename_log_export,
-                         dir_petri_net_files, filename_petri_net, filename_petri_net_image, dir_dfg_files, filename_dfg,
-                         rel_proportion_dfg_threshold, miner_type, metric_to_be_maximised):
+def create_process_model(output_case_traces_cluster, dir_runtime_files):
+
+    path_data_sources = settings.path_data_sources
+    filename_log_export = settings.filename_log_export
+    dir_petri_net_files = settings.dir_petri_net_files
+    filename_petri_net = settings.filename_petri_net
+    filename_petri_net_image = settings.filename_petri_net_image
+    dir_dfg_files = settings.dir_dfg_files
+    filename_dfg = settings.filename_dfg
+    miner_type = settings.miner_type
+    metric_to_be_maximised = settings.metric_to_be_maximised
+
     # logger
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
@@ -87,7 +96,7 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
     # create a log that can be understood by pm4py
     pm4py_log = convert_log_to_pm4py(log=output_case_traces_cluster)
 
-    # export log as xes file
+    # export log as XES-file
     xes_exporter.apply(pm4py_log, path_data_sources + dir_runtime_files + filename_log_export)
     logger.info("Exported log export into '../%s'.", path_data_sources + dir_runtime_files + filename_log_export)
 
@@ -100,6 +109,7 @@ def create_process_model(output_case_traces_cluster, path_data_sources, dir_runt
     logger.info("Saved directly follows graph into '../%s'.",
                 path_data_sources + dir_runtime_files + dir_dfg_files + filename_dfg)
 
+    # apply miner, export petri-nets and return selected metric (precision, fitness, ...)
     metrics = apply_miner(log=pm4py_log,
                           path_data_sources=path_data_sources,
                           dir_runtime_files=dir_runtime_files,
@@ -123,19 +133,19 @@ def convert_log_to_pm4py(log):
     log['Date'] = log['Timestamp'].dt.date
 
     log = log.reindex(columns={'Case', 'Timestamp', 'Cluster', 'Date'})
-    log = log.rename(columns={'Date': 'case:concept:name',
+    log_pm4py = log.rename(columns={'Date': 'case:concept:name',
                               'Cluster': 'concept:name',
                               'Timestamp': 'time:timestamp'})
-    log = log.astype(str)
-    log['time:timestamp'] = pd.to_datetime(log['time:timestamp'])
+    log_pm4py = log_pm4py.astype(str)
+    log_pm4py['time:timestamp'] = pd.to_datetime(log_pm4py['time:timestamp'])
 
     # reduce log entries, so that every case only appears once
-    log.drop_duplicates(subset=['Case'], inplace=True)
+    log_pm4py.drop_duplicates(subset=['Case'], inplace=True)
 
     # reset row index
-    log = log.reset_index(drop=True)
+    log_pm4py = log_pm4py.reset_index(drop=True)
 
-    return log
+    return log_pm4py
 
 
 def export_dfg_imagefile(log, path_data_sources, dir_runtime_files, dir_dfg_files, filename_dfg):

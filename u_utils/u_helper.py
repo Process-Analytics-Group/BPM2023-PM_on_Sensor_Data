@@ -235,8 +235,12 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     :return: the sensor data in a pandas data frame
     """
 
-    raw_sensor_data, raw_sensor_data_long = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
-                                          parse_dates=parse_dates, dtype=dtype)
+    raw_sensor_data = utils.read_csv_file(filedir=filedir,
+                                          filename=filename,
+                                          separator=separator,
+                                          header=header,
+                                          parse_dates=parse_dates,
+                                          dtype=dtype)
 
     # drop all lines without motion sensor (identify by sensor ID-prefix)
     # ToDo: in future versions allow for more sensor types if implemented
@@ -293,8 +297,9 @@ def create_param_opt_space():
                                                 settings.traces_time_out_threshold_max + 1),
         'trace_length_limit': hp.randint('trace_length_limit', settings.trace_length_limit_min,
                                          settings.trace_length_limit_max + 1),
-        'custom_distance_number_of_clusters': hp.randint('custom_distance_number_of_clusters', settings.custom_distance_clusters_min,
-                                                 settings.custom_distance_clusters_max + 1),
+        'custom_distance_number_of_clusters': hp.randint('custom_distance_number_of_clusters',
+                                                         settings.custom_distance_clusters_min,
+                                                         settings.custom_distance_clusters_max + 1),
         'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
         'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
                                          settings.max_errors_per_day_max + 1),
