@@ -1,16 +1,19 @@
 # SOM
 import inspect
 import logging
+import sys
 
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn_som.som import SOM
 from yellowbrick.cluster import KElbowVisualizer
+from hyperopt import fmin
+from functools import partial
 
 import b_ActivityDiscovery.FreFlaLa.b_FreFlaLa as b_FreFlaLa
 import z_setting_parameters as settings
 from b_ActivityDiscovery.self_organizing_map.sompy import SOMFactory
-from u_utils import u_helper as helper
+from u_utils import u_helper as helper, u_utils as utils
 
 
 def choose_and_perform_clustering_method(clustering_method,
@@ -42,9 +45,8 @@ def choose_and_perform_clustering_method(clustering_method,
     @return:                                result list returns cluster for each vector
     """
 
-    # clustering with self organizing  map
+    # clustering with self organizing map
     if clustering_method == 'SOM':
-
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(
             trace_data_without_case_number=trace_data_without_case_number,
             max_number_of_clusters=max_number_of_clusters, min_number_of_clusters=min_number_of_clusters,
@@ -52,6 +54,35 @@ def choose_and_perform_clustering_method(clustering_method,
         # use the k-means inertia as clustering score. Average distance to centroids
         cluster_score = km.inertia_
         clustering_result = km.labels_[np.transpose(sm._bmu[0, :]).astype(int)]
+
+    # clustering with the self organizing map by sklearn
+    elif clustering_method == 'sklearn-SOM':
+        # find all possible som dimensions
+        divisor_pairs = utils.find_divisor_pairs(number=number_of_clusters)
+        # only keep the most "squared" shape
+        som_dimensions = divisor_pairs[int((divisor_pairs.__len__() - 1) / 2)]
+
+        # perform process model discovery for different parameter combinations and find the best outcome
+        space = helper.create_som_param_opt_space()
+        # helper variables
+        choose_and_perform_clustering_method.predictions = []
+        choose_and_perform_clustering_method.inertia = sys.maxsize
+        # find the best matching SOM (hyperparameter optimization) with fixed dimensions
+        fmin(fn=partial(create_som_with_sklearn, m=som_dimensions[0], n=som_dimensions[1],
+                        trace_data_without_case_number=trace_data_without_case_number),
+             space=space,
+             algo=settings.som_opt_algorithm,
+             max_evals=settings.som_opt_attempts,
+             verbose=False)
+        clustering_result = choose_and_perform_clustering_method.predictions
+
+        # logger
+        number_of_clusters = max(clustering_result) + 1
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(settings.logging_level)
+        logger.info("Clustered data into %s clusters using a %sx%s sklearn SOM.", number_of_clusters, som_dimensions[0],
+                    som_dimensions[1])
+
 
     # clustering with a custom distance calculation
     elif clustering_method == 'CustomDistance':
@@ -106,6 +137,27 @@ def choose_and_perform_clustering_method(clustering_method,
     return clustering_result
 
 
+def create_som_with_sklearn(params, m, n, trace_data_without_case_number):
+    """
+    Creates a self organizing map for given dimensions, parameters and data.
+    :param params: hyperopt parameters to find the best SOM for given data
+    :param m: vertical dimension of the som
+    :param n: horizontal dimension of the som
+    :param trace_data_without_case_number: the data the SOM is build on
+    :return: the inertia of the current som
+    """
+    # creates a SOM
+    sklearn_som = SOM(m=m, n=n, lr=params['lr'], sigma=params['sigma'], dim=trace_data_without_case_number.shape[1])
+    # "adapts" the SOM to the data
+    sklearn_som.fit(trace_data_without_case_number.values)
+    # find the best performing SOM
+    if sklearn_som.inertia_ < choose_and_perform_clustering_method.inertia:
+        choose_and_perform_clustering_method.predictions = sklearn_som.predict(trace_data_without_case_number.values)
+        choose_and_perform_clustering_method.inertia = sklearn_som.inertia_
+
+    return sklearn_som.inertia_
+
+
 def cluster_and_classify_activities(trace_data_without_case_number, min_number_of_clusters, max_number_of_clusters,
                                     dir_runtime_files):
     # Instantiate the clustering model and visualizer
@@ -142,7 +194,6 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
     path_data_sources = settings.path_data_sources
     filename_parameters_file = settings.filename_parameters_file
     number_of_motion_sensors = settings.number_of_motion_sensors
-    logging_level = settings.logging_level
     # create list with sensor names
     names = []
     for sensor_number in range(0, number_of_motion_sensors - 1):
@@ -159,7 +210,7 @@ def self_organising_map(trace_data_without_case_number, K_opt, dir_runtime_files
     quantization_error = np.mean(sm._bmu[1])
 
     logger = logging.getLogger(inspect.stack()[0][3])
-    logger.setLevel(logging_level)
+    logger.setLevel(settings.logging_level)
     logger.info("Topographic error = %s; Quantization error = %s", topographic_error, quantization_error)
 
     K = 20  # stop at this k for SSE sweep

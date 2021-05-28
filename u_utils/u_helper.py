@@ -1,18 +1,38 @@
-import os
-
-import pandas as pd
-import numpy as np
-import sys
 import inspect
+import logging
+import os
+import sys
 import timeit
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from hyperopt import hp
+from matplotlib import pyplot as plt
 
-import logging
-
-# import settings file
-import z_setting_parameters as settings
 import u_utils.u_utils as utils
+import z_setting_parameters as settings
+
+
+def configure_logger():
+    """
+    Creates the logger configuration and disable logging in external libraries which is not needed.
+    :return:
+    """
+    logging.basicConfig(
+        level=settings.logging_level,
+        format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
+        handlers=[
+            logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
+            logging.StreamHandler()])
+
+    # "disable" specific logger
+    logging.getLogger('matplotlib').setLevel(logging.WARNING)
+    logging.getLogger('hyperopt').setLevel(logging.WARNING)
+    logging.getLogger('numexpr').setLevel(logging.WARNING)
+    logging.getLogger('graphviz').setLevel(logging.WARNING)
+
+    return
 
 
 def create_parameters_log_file(dir_runtime_files, params):
@@ -235,7 +255,7 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     :return: the sensor data in a pandas data frame
     """
 
-    raw_sensor_data, raw_sensor_data_long = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
+    raw_sensor_data = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
                                           parse_dates=parse_dates, dtype=dtype)
 
     # drop all lines without motion sensor (identify by sensor ID-prefix)
@@ -293,8 +313,9 @@ def create_param_opt_space():
                                                 settings.traces_time_out_threshold_max + 1),
         'trace_length_limit': hp.randint('trace_length_limit', settings.trace_length_limit_min,
                                          settings.trace_length_limit_max + 1),
-        'custom_distance_number_of_clusters': hp.randint('custom_distance_number_of_clusters', settings.custom_distance_clusters_min,
-                                                 settings.custom_distance_clusters_max + 1),
+        'custom_distance_number_of_clusters': hp.randint('custom_distance_number_of_clusters',
+                                                         settings.custom_distance_clusters_min,
+                                                         settings.custom_distance_clusters_max + 1),
         'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
         'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
                                          settings.max_errors_per_day_max + 1),
@@ -304,3 +325,32 @@ def create_param_opt_space():
         'clustering_method': hp.choice('clustering_method', settings.clustering_method_list)
     }
     return space
+
+
+def create_som_param_opt_space():
+    """
+    Creates the search space for som parameter optimization.
+    :return: The space which defines the bounds of the parameters in parameter optimization
+    """
+    space = {
+        'lr': hp.uniform('lr', settings.min_lr, settings.max_lr + 0.00000000001),
+        'sigma': hp.uniform('sigma', settings.min_sigma, settings.max_sigma + 0.00000000001)
+    }
+    return space
+
+
+def show_function_value_history(function_values, iterations):
+    """
+    Creates a graph that shows the performance history of the program in multiple iterations.
+    :param function_values: list of values which define the success of an iteration (precision or fitness)
+    :param iterations: list of iteration numbers beginning at 1
+    :return:
+    """
+    plt.xlabel('iteration')
+    plt.ylabel(settings.metric_to_be_maximised)
+    plt.title(settings.metric_to_be_maximised + ' value progress')
+    plt.plot(iterations, function_values, marker='o')
+    plt.ylim(bottom=0)
+    plt.xticks(iterations)
+    plt.show()
+    return

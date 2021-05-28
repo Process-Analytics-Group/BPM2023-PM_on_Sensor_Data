@@ -8,7 +8,7 @@ from hyperopt import tpe
 rel_dir_name_sensor_data = '19-Aruba/'
 
 # path of sources and outputs
-path_data_sources = 'Data-Sources/' + rel_dir_name_sensor_data
+path_data_sources = 'z_Data-Sources/' + rel_dir_name_sensor_data
 # folder containing files read and written during runtime
 dir_runtime_files = 'runtime-files/'
 # folder of one iteration containing files read and written during runtime
@@ -55,7 +55,7 @@ max_number_of_clusters = 20
 # Program execution type - Choose between the possible types:
 # 'fixed_params' (the parameters are set before the program is executed),
 # 'param_optimization' (uses a search space in which the parameters are optimized during execution)
-execution_type = 'param_optimization'
+execution_type = 'fixed_params'
 # number of times the process model discovery gets executed
 number_of_runs = 10
 
@@ -66,12 +66,12 @@ max_number_of_raw_input = 10000
 fixed_params = {'zero_distance_value': 1,
                 'traces_time_out_threshold': 300,
                 'trace_length_limit': 6,
-                'k_means_number_of_clusters': 10,
+                'custom_distance_number_of_clusters': 10,
                 'distance_threshold': 1.2,
                 'max_errors_per_day': 100,
                 'vectorization_type': 'time',
                 'event_case_correlation_method': 'Classic',
-                'clustering_method': 'SOM'}
+                'clustering_method': 'sklearn-SOM'}
 
 # hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
@@ -86,8 +86,20 @@ vectorization_type_list = ['quantity', 'time', 'quantity_time']
 event_case_correlation_method_list = ['Classic', 'FreFlaLa']
 
 # range for clustering method (parameter optimization)
-# possible methods: 'SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
+# possible methods: 'SOM', 'sklearn-SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
 clustering_method_list = ['SOM']
+
+# sklearn SOM settings hyperopt parameter tuning
+# optimization algorithm (representative Tree of Parzen Estimators (TPE))
+som_opt_algorithm = tpe.suggest
+som_opt_attempts = 20
+# The initial step size for updating the SOM weights. (default = 1)
+min_lr = 1
+max_lr = 1
+# Parameter for magnitude of change to each weight. Does not update over training (as does learning rate)more aggressive
+# updates to weights. (default = 1)
+min_sigma = 1
+max_sigma = 1
 
 # number of motion sensors
 number_of_motion_sensors = 31

@@ -1,3 +1,9 @@
+2021-05-28
+KD: Added sklearn SOM clustering with hyperparameter optimization
+KD: renamed "Data_Sources" folder name to "z_Data_Sources"
+KD: fixed bug when the number of data points should not be limited
+KD: moved logger and function value history creation configuration into helper
+
 2021-05-07
 KD: Added function value history graph
 KD: Removed SOMPy visualization

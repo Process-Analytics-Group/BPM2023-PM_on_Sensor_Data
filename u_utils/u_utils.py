@@ -59,16 +59,19 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
     # if there is no file the program ends
     except FileNotFoundError as err:
         err_msg = str("There is no file named '../" + filedir + filename + "'.")
+        logger = logging.getLogger(inspect.stack()[0][3])
+        logger.setLevel(settings.logging_level)
         logger.error(err, err_msg)
         raise err
 
-    if number_of_data_points > settings.max_number_of_raw_input:
-        data_frame = data_frame.head(settings.max_number_of_raw_input)
-        # log the limitation
-        logger = logging.getLogger(inspect.stack()[0][3])
-        logger.setLevel(settings.logging_level)
-        logger.info("Limited %s data points from csv-File to %s data points", number_of_data_points,
-                    settings.max_number_of_raw_input)
+    if settings.max_number_of_raw_input is not None:
+        if number_of_data_points > settings.max_number_of_raw_input:
+            data_frame = data_frame.head(settings.max_number_of_raw_input)
+            # log the limitation
+            logger = logging.getLogger(inspect.stack()[0][3])
+            logger.setLevel(settings.logging_level)
+            logger.info("Limited %s data points from csv-File to %s data points", number_of_data_points,
+                        settings.max_number_of_raw_input)
 
     return data_frame
 
@@ -90,3 +93,17 @@ def write_csv_file(data, filedir, filename, separator, logging_level):
     data.to_csv(file_path, sep=separator)
 
     return
+
+
+def find_divisor_pairs(number):
+    """
+    Finds all integer pairs of divisors for a given number.
+    :param number: the number the divisors are searched for
+    :return: a list of all divisor pairs
+    """
+    divisor_pairs = []
+    for i in range(1, number + 1):
+        if number % i == 0:
+            divisor_pairs.append([i, int(number / i)])
+
+    return divisor_pairs

@@ -5,7 +5,6 @@ from datetime import datetime
 import timeit
 import numpy as np
 from hyperopt import fmin, Trials, STATUS_OK
-from matplotlib import pyplot as plt
 import os
 import pathlib
 
@@ -25,17 +24,7 @@ path = pathlib.Path(settings.path_data_sources + settings.dir_runtime_files)
 path.mkdir(parents=True, exist_ok=True)
 
 # Logger configuration
-logging.basicConfig(
-    level=settings.logging_level,
-    format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
-    handlers=[
-        logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
-        logging.StreamHandler()])
-# "disable" specific logger
-logging.getLogger('matplotlib').setLevel(logging.WARNING)
-logging.getLogger('hyperopt').setLevel(logging.WARNING)
-logging.getLogger('numexpr').setLevel(logging.WARNING)
-logging.getLogger('graphviz').setLevel(logging.WARNING)
+helper.configure_logger()
 
 # checks settings for correctness
 helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
@@ -96,6 +85,14 @@ def perform_process_model_discovery(params):
     logger.info("################# Start iteration %s of %s #################",
                 perform_process_model_discovery.iteration_counter, settings.number_of_runs)
 
+    # shows used parameters in log
+    param_log_str = "Using the following parameters: "
+    for param_name, param in params.items():
+        param_log_str += str(param_name) + "=" + str(param) + ", "
+    # cuts the ", " at the end of the string away
+    param_log_str = param_log_str[0:len(param_log_str) - 2]
+    logger.info(param_log_str)
+
     dict_distance_adjacency_sensor['distance_matrix'] = \
         create_dm.set_zero_distance_value(distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
                                           zero_distance_value=params['zero_distance_value'])
@@ -154,6 +151,11 @@ def perform_process_model_discovery(params):
                                        miner_type=settings.miner_type,
                                        metric_to_be_maximised=settings.metric_to_be_maximised)
 
+    # show function value history in a graph
+    perform_process_model_discovery.function_values.append(metrics)
+    helper.show_function_value_history(function_values=perform_process_model_discovery.function_values,
+                                       iterations=range(1, perform_process_model_discovery.iteration_counter + 1))
+
     # stop timer
     t1_main = timeit.default_timer()
 
@@ -211,9 +213,11 @@ def perform_process_model_discovery(params):
 
 # capture the iterations of perform_process_model_discovery method
 perform_process_model_discovery.iteration_counter = 0
+perform_process_model_discovery.function_values = []
 
 # execute process model discovery with fixed parameters
 if settings.execution_type == 'fixed_params':
+    function_values = []
     while perform_process_model_discovery.iteration_counter < settings.number_of_runs:
         perform_process_model_discovery(settings.fixed_params)
 
@@ -243,20 +247,5 @@ elif settings.execution_type == 'param_optimization':
     logger = logging.getLogger('main')
     logger.setLevel(settings.logging_level)
     logger.info(information_string)
-
-    function_values = []
-    # show function value history in a graph
-    for i in range(0, settings.number_of_runs):
-        function_value_i = -trials.trials.__getitem__(i)['result']['loss']
-        function_values.append(function_value_i)
-
-    plt.xlabel('iteration')
-    plt.ylabel(settings.metric_to_be_maximised)
-    plt.title(settings.metric_to_be_maximised + ' value progress')
-    iterations = range(1, settings.number_of_runs + 1)
-    plt.plot(iterations, function_values, marker='o')
-    plt.ylim(bottom=0)
-    plt.xticks(iterations)
-    plt.show()
 
 pass
