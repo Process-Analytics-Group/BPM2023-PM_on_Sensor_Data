@@ -2,7 +2,6 @@ import inspect
 import logging
 
 from scipy.cluster.hierarchy import fclusterdata
-# ToDo @DJ: wieder einkommentieren
 from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import KMeans
 from yellowbrick.cluster import KElbowVisualizer

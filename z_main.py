@@ -139,17 +139,7 @@ def perform_process_model_discovery(params):
                                rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold)
 
     metrics = prd.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
-                                       path_data_sources=settings.path_data_sources,
-                                       dir_runtime_files=dir_runtime_files,
-                                       filename_log_export=settings.filename_log_export,
-                                       dir_petri_net_files=settings.dir_petri_net_files,
-                                       filename_petri_net=settings.filename_petri_net,
-                                       filename_petri_net_image=settings.filename_petri_net_image,
-                                       dir_dfg_files=settings.dir_dfg_files,
-                                       filename_dfg=settings.filename_dfg,
-                                       rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold,
-                                       miner_type=settings.miner_type,
-                                       metric_to_be_maximised=settings.metric_to_be_maximised)
+                                       dir_runtime_files=dir_runtime_files)
 
     # show function value history in a graph
     perform_process_model_discovery.function_values.append(metrics)

@@ -44,7 +44,7 @@ csv_delimiter_benchmark = ';'
 csv_header_benchmark = 0
 
 # ToDo comment 'metric_to_be_maximised'
-metric_to_be_maximised = 'entropia:Precision'
+metric_to_be_maximised = 'Precision'
 metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness']
 
 # range for number of clusters for the elbow-method (only used in "k-Means-Elbow" and "k-Medoids-Elbow")
