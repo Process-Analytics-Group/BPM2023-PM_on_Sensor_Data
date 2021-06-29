@@ -267,7 +267,7 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     return raw_sensor_data
 
 
-def param_combination_already_executed(path_data_sources, dir_export_files, current_params, step):
+def param_combination_already_executed(path_data_sources, current_params, step):
     '''
     Checks if the current parameter combination was already executed in previous iterations or other runs. Therefore the
     method checks if the directory at which the export files are saved is already created.
@@ -279,10 +279,12 @@ def param_combination_already_executed(path_data_sources, dir_export_files, curr
     :return: if there are already files and the directory in which the export files are saved
     '''
 
+    dir_classic_event_case_correlation = settings.dir_classic_event_case_correlation
+
     same_params_executed = False
 
     # checks if path already exists (creating whole folder path and replacing placeholders)
-    dir_same_param = path_data_sources + dir_export_files.format(**current_params)
+    dir_same_param = path_data_sources + dir_classic_event_case_correlation.format(**current_params)
 
     # if the directory does not exist the method returns None
     if os.path.exists(dir_same_param):
@@ -322,7 +324,13 @@ def create_param_opt_space():
         'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
         'event_case_correlation_method': hp.choice('event_case_correlation_method',
                                                    settings.event_case_correlation_method_list),
-        'clustering_method': hp.choice('clustering_method', settings.clustering_method_list)
+        'clustering_method': hp.choice('clustering_method', settings.clustering_method_list),
+        'trace_partition_method': hp.choice('trace_partition_method', settings.trace_partition_method),
+        'number_of_activations_per_trace': hp.randint('number_of_activations_per_trace',
+                                                      settings.number_of_activations_per_trace_min,
+                                                      settings.number_of_activations_per_trace_max + 1),
+        'trace_duration': hp.randint('trace_duration', settings.trace_duration_limit_min,
+                                     settings.trace_duration_limit_max + 1)
     }
     return space
 

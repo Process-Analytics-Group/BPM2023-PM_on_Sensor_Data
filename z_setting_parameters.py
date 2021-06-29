@@ -5,7 +5,11 @@ from hyperopt import tpe
 # ADJUSTABLE VARIABLES
 
 # folder name containing sensor data (relative from directory of sources)
-rel_dir_name_sensor_data = '19-Aruba/'
+rel_dir_name_sensor_data = '5-Kyoto/'
+# rel_dir_name_sensor_data = '19-Aruba/'
+# filename of the file that contains the sensor data
+filename_sensor_data = '5-Kyoto-Data.txt'
+# filename_sensor_data = '19-Aruba_Data'
 
 # path of sources and outputs
 path_data_sources = 'z_Data-Sources/' + rel_dir_name_sensor_data
@@ -25,8 +29,6 @@ filename_log_file = '1-LogFile.log'
 filename_adjacency_plot = 'adjacency_plot.pdf'
 
 # csv configuration for sensor data file
-# filename of the file that contains the sensor data
-filename_sensor_data = '19-Aruba_Data'
 # delimiter of the columns in csv file of sensor data (input)
 csv_delimiter_sensor_data = '\t'
 # indicator at which line the data starts
@@ -52,42 +54,16 @@ metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'en
 min_number_of_clusters = 3
 max_number_of_clusters = 20
 
-# Program execution type - Choose between the possible types:
-# 'fixed_params' (the parameters are set before the program is executed),
-# 'param_optimization' (uses a search space in which the parameters are optimized during execution)
-execution_type = 'fixed_params'
+
 # number of times the process model discovery gets executed
-number_of_runs = 10
+number_of_runs = 20
 
 # upper limit for input_data (set to None if there is no limit)
-max_number_of_raw_input = 10000
-
-# fixed params execution parameters
-fixed_params = {'zero_distance_value': 1,
-                'traces_time_out_threshold': 300,
-                'trace_length_limit': 6,
-                'custom_distance_number_of_clusters': 10,
-                'distance_threshold': 1.2,
-                'max_errors_per_day': 100,
-                'vectorization_type': 'time',
-                'event_case_correlation_method': 'Classic',
-                'clustering_method': 'sklearn-SOM'}
+max_number_of_raw_input = 30000
 
 # hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
 opt_algorithm = tpe.suggest
-
-# range for vectorization type (parameter optimization)
-# possible types: 'quantity', 'time', 'quantity_time'
-vectorization_type_list = ['quantity', 'time', 'quantity_time']
-
-# range for clustering method (parameter optimization)
-# possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
-event_case_correlation_method_list = ['Classic', 'FreFlaLa']
-
-# range for clustering method (parameter optimization)
-# possible methods: 'SOM', 'sklearn-SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
-clustering_method_list = ['SOM']
 
 # sklearn SOM settings hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
@@ -102,7 +78,7 @@ min_sigma = 1
 max_sigma = 1
 
 # number of motion sensors
-number_of_motion_sensors = 31
+number_of_motion_sensors = 51
 # prefix of motion sensor IDs
 prefix_motion_sensor_id = 'M'
 
@@ -206,3 +182,48 @@ dir_dfg_files = 'directly_follows_graphs/'
 filename_dfg_cluster = 'DFG_Cluster_{cluster}.png'
 # filename of dfg file
 filename_dfg = 'DFG.png'
+
+# # # # Hyperparameter Search # # # #
+# Program execution type - Choose between the possible types:
+# 'fixed_params' (the parameters are set before the program is executed),
+# 'param_optimization' (uses a search space in which the parameters are optimized during execution)
+execution_type = 'param_optimization'
+
+# how is the path of a person through the environment split
+#    'FixedSensorActivations': only count how many sensors are being activated
+#    'FixedActivationTime': Count the time between first and last activation in a trace
+#    'RoomsSimple': Split the traces when the person leaves a certain area (rooms)
+trace_partition_method = ['FixedSensorActivations', 'FixedActivationTime', 'RoomsSimple']
+
+number_of_activations_per_trace_min = 5
+number_of_activations_per_trace_max = 25
+
+trace_duration_limit_min = 120
+trace_duration_limit_max = 3600
+
+# range for vectorization type (parameter optimization)
+# possible types: 'quantity', 'time', 'quantity_time'
+vectorization_type_list = ['quantity', 'time', 'quantity_time']
+
+# range for clustering method (parameter optimization)
+# possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
+# ['current', 'legacy']
+event_case_correlation_method_list = ['current']
+
+# range for clustering method (parameter optimization)
+# possible methods: 'SOM', 'sklearn-SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
+clustering_method_list = ['SOM']
+
+# # Use fixed values for debug # #
+# fixed params execution parameters
+fixed_params = {'zero_distance_value': 1,
+                'traces_time_out_threshold': 300,
+                'trace_length_limit': 6,
+                'custom_distance_number_of_clusters': 10,
+                'distance_threshold': 1.2,
+                'max_errors_per_day': 100,
+                'vectorization_type': 'quantity_time',
+                'event_case_correlation_method': 'Classic',
+                'clustering_method': 'sklearn-SOM'}
+# #
+# # # # # # # # # # # # # # # # # # #

@@ -100,21 +100,15 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     traces_vectorised, output_case_traces_cluster = \
-        ecc.choose_and_perform_event_case_correlation_method(method=params['event_case_correlation_method'],
-                                                             dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                                             path_data_sources=settings.path_data_sources,
-                                                             dir_runtime_files=dir_runtime_files,
-                                                             dir_classic_event_case_correlation=settings.dir_classic_event_case_correlation,
-                                                             dir_freflala_event_case_correlation=settings.dir_freflala_event_case_correlation,
-                                                             filename_trace_data_time=settings.filename_trace_data_time,
-                                                             filename_output_case_traces_cluster=settings.filename_output_case_traces_cluster,
-                                                             distance_threshold=params['distance_threshold'],
-                                                             traces_time_out_threshold=params[
-                                                                 'traces_time_out_threshold'],
-                                                             trace_length_limit=params['trace_length_limit'],
-                                                             vectorization_method=params['vectorization_type'],
-                                                             raw_sensor_data=raw_sensor_data,
-                                                             max_errors_per_day=params['max_errors_per_day'])
+        ecc.choose_and_perform_event_case_correlation(raw_sensor_data=raw_sensor_data,
+                                                      dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                                                      dir_runtime_files=dir_runtime_files,
+                                                      hyp_vectorization_method=params['vectorization_type'],
+                                                      hyp_trace_partition_method=params['trace_partition_method'],
+                                                      hyp_number_of_activations_per_trace=params[
+                                                          'number_of_activations_per_trace'],
+                                                      hyp_trace_duration=params['trace_duration'],
+                                                      hyp_method=params['event_case_correlation_method'])
 
     # ################### ActivityDiscovery ####################
     cluster = ad.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
@@ -132,12 +126,14 @@ def perform_process_model_discovery(params):
                                                             output_case_traces_cluster=output_case_traces_cluster)
 
     # ################### ProcessDiscovery ####################
+    # discover the process models of the respective clusters
     prd.create_activity_models(output_case_traces_cluster=output_case_traces_cluster,
                                path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
                                dir_dfg_cluster_files=settings.dir_dfg_files,
                                filename_dfg_cluster=settings.filename_dfg_cluster,
                                rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold)
 
+    # discover the process model for the overall daily routine
     metrics = prd.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
                                        dir_runtime_files=dir_runtime_files)
 

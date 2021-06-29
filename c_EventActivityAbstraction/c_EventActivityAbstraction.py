@@ -7,7 +7,6 @@ import z_setting_parameters as settings
 def create_event_log_files(cluster,
                            traces_vectorised,
                            output_case_traces_cluster):
-
     traces_vectorised['Cluster'] = pd.DataFrame(cluster)
     output_case_traces_cluster['Cluster'] = \
         traces_vectorised['Cluster'][output_case_traces_cluster['Case']].values
@@ -18,21 +17,48 @@ def create_event_log_files(cluster,
     traces_vectorised = traces_vectorised.sort_values(by=['Cluster'])
     traces_vectorised = traces_vectorised.reset_index(drop=True)
 
+    # add column with routine description to the log
+    output_case_traces_cluster_routines = filter_cases(output_case_traces_cluster)
+
     # write traces to disk
     # time of sensor activations grouped by case
     traces_vectorised.to_csv(settings.path_data_sources + settings.dir_runtime_files + settings.filename_cluster,
                              sep=settings.csv_delimiter_cluster)
 
-    output_case_traces_cluster.to_csv(settings.path_data_sources + settings.dir_runtime_files +
-                                      settings.filename_cases_cluster,
-                                      sep=settings.csv_delimiter_cases_cluster)
+    output_case_traces_cluster_routines.to_csv(settings.path_data_sources + settings.dir_runtime_files +
+                                               settings.filename_cases_cluster,
+                                               sep=settings.csv_delimiter_cases_cluster)
 
+    return output_case_traces_cluster_routines
+
+
+def filter_cases(output_case_traces_cluster):
+    # add 'routine'-column to dataframe (morning/evening-routine or workday/weekend-routine)
+
+    output_case_traces_cluster['Routine'] = output_case_traces_cluster.apply(routine_classifier, axis=1)
+    output_case_traces_cluster['Routine'] = 'a'
     return output_case_traces_cluster
 
 
-def create_event_log_files_deprecated(trace_data_time, output_case_traces_cluster, k_means_cluster_ids, path_data_sources,
-                           dir_runtime_files, sm, km, filename_cluster, csv_delimiter_cluster, filename_cases_cluster,
-                           csv_delimiter_cases_cluster):
+def routine_classifier(row):
+    if 5 < row['Timestamp'].hour <= 10:
+        val = 'morning'
+    elif 10 < row['Timestamp'].hour <= 14:
+        val = 'noon'
+    elif 14 < row['Timestamp'].hour <= 18:
+        val = 'afternoon'
+    elif 18 < row['Timestamp'].hour <= 23:
+        val = 'evening'
+    else:
+        val = 'night'
+    return val
+
+
+def create_event_log_files_deprecated(trace_data_time, output_case_traces_cluster, k_means_cluster_ids,
+                                      path_data_sources,
+                                      dir_runtime_files, sm, km, filename_cluster, csv_delimiter_cluster,
+                                      filename_cases_cluster,
+                                      csv_delimiter_cases_cluster):
     # write best matching units (BMU) to output file
     trace_data_time['BMU'] = np.transpose(sm._bmu[0, :]).astype(int)
 
@@ -47,7 +73,7 @@ def create_event_log_files_deprecated(trace_data_time, output_case_traces_cluste
     # so the raw_data from the beginning now also has clusters
     output_case_traces_cluster['Cluster'] = trace_data_time['Cluster'][output_case_traces_cluster['Case']].values
     output_case_traces_cluster['BMU'] = trace_data_time['BMU'][output_case_traces_cluster['Case']].values
-    output_case_traces_cluster['kMeansVanilla'] = k_means_cluster_ids[output_case_traces_cluster['Case']-1]
+    output_case_traces_cluster['kMeansVanilla'] = k_means_cluster_ids[output_case_traces_cluster['Case'] - 1]
     # drop column where cluster = nan -> ToDo: investigate, why there is nan values
     output_case_traces_cluster = output_case_traces_cluster.dropna(subset=['Cluster'])
 

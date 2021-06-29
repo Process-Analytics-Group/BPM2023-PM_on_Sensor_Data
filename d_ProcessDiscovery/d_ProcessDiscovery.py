@@ -39,6 +39,8 @@ def create_activity_models(output_case_traces_cluster, path_data_sources, dir_ru
     # keep only needed columns
     output_case_traces_cluster = output_case_traces_cluster.reindex(
         columns={'Case', 'LC_Activity', 'Timestamp', 'Cluster'})
+
+    # rename columns so pm4py understands the columns
     output_case_traces_cluster = output_case_traces_cluster.rename(
         columns={'Case': 'case:concept:name',
                  'LC_Activity': 'concept:name',
@@ -57,8 +59,8 @@ def create_activity_models(output_case_traces_cluster, path_data_sources, dir_ru
 
         # keep only activities with more than certain number of occurrences
         activities = attributes_get.get_attribute_values(log, 'concept:name')
-        # determine that number relative to the max number of occurrences of a sensor in a cluster. (the result is
-        # the threshold at which an activity/activity strand is kept)
+        # determine that number relative to the max number of occurrences of a sensor in a cluster.
+        # (the result is the threshold at which an activity/activity strand is kept)
         min_number_of_occurrences = round((max(activities.values()) * rel_proportion_dfg_threshold), 0)
         activities = {x: y for x, y in activities.items() if y >= min_number_of_occurrences}
         log = attributes_filter.apply(log, activities)
@@ -78,7 +80,6 @@ def create_activity_models(output_case_traces_cluster, path_data_sources, dir_ru
 
 
 def create_process_model(output_case_traces_cluster, dir_runtime_files):
-
     path_data_sources = settings.path_data_sources
     filename_log_export = settings.filename_log_export
     dir_petri_net_files = settings.dir_petri_net_files
@@ -93,34 +94,50 @@ def create_process_model(output_case_traces_cluster, dir_runtime_files):
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
 
-    # create a log that can be understood by pm4py
-    pm4py_log = convert_log_to_pm4py(log=output_case_traces_cluster)
+    # go through all routines (morning/noon/evening/..)
+    routine_list = output_case_traces_cluster['Routine'].unique().tolist()
+    routine_metrics = pd.DataFrame(columns=['Quantity', metric_to_be_maximised], index=[routine_list])
+    for routine in routine_list:
+        routine_log = output_case_traces_cluster.loc[output_case_traces_cluster['Routine'] == routine]
 
-    # export log as XES-file
-    xes_exporter.apply(pm4py_log, path_data_sources + dir_runtime_files + filename_log_export)
-    logger.info("Exported log export into '../%s'.", path_data_sources + dir_runtime_files + filename_log_export)
+        # save length of log in order to calculate a weihted average for the metric
+        routine_metrics.at[routine, 'Quantity'] = len(routine_log)
 
-    # create png dfg file
-    export_dfg_imagefile(log=pm4py_log,
-                         path_data_sources=path_data_sources,
-                         dir_runtime_files=dir_runtime_files,
-                         dir_dfg_files=dir_dfg_files,
-                         filename_dfg=filename_dfg)
-    logger.info("Saved directly follows graph into '../%s'.",
-                path_data_sources + dir_runtime_files + dir_dfg_files + filename_dfg)
+        # create a log that can be understood by pm4py
+        pm4py_log = \
+            convert_log_to_pm4py(log=routine_log)
 
-    # apply miner, export petri-nets and return selected metric (precision, fitness, ...)
-    metrics = apply_miner(log=pm4py_log,
-                          path_data_sources=path_data_sources,
-                          dir_runtime_files=dir_runtime_files,
-                          dir_petri_net_files=dir_petri_net_files,
-                          filename_petri_net=filename_petri_net,
-                          filename_petri_net_image=filename_petri_net_image,
-                          filename_log_export=filename_log_export,
-                          miner_type=miner_type,
-                          metric_to_be_maximised=metric_to_be_maximised)
+        # export log as XES-file
+        xes_exporter.apply(pm4py_log, path_data_sources + dir_runtime_files + routine + '-' + filename_log_export)
+        logger.info("Exported log export into '../%s'.",
+                    path_data_sources + dir_runtime_files + routine + '-' + filename_log_export)
 
-    return metrics
+        # create png dfg file
+        export_dfg_imagefile(log=pm4py_log,
+                             path_data_sources=path_data_sources,
+                             dir_runtime_files=dir_runtime_files,
+                             dir_dfg_files=dir_dfg_files,
+                             filename_dfg=routine + '-' + filename_dfg)
+        logger.info("Saved directly follows graph into '../%s'.",
+                    path_data_sources + dir_runtime_files + dir_dfg_files + routine + '-' + filename_dfg)
+
+        # apply miner, export petri-nets and return selected metric (precision, fitness, ...)
+        metrics = apply_miner(log=pm4py_log,
+                              path_data_sources=path_data_sources,
+                              dir_runtime_files=dir_runtime_files,
+                              dir_petri_net_files=dir_petri_net_files + routine + '/',
+                              filename_petri_net=routine + '-' + filename_petri_net,
+                              filename_petri_net_image=routine + '-' + filename_petri_net_image,
+                              filename_log_export=routine + '-' + filename_log_export,
+                              miner_type=miner_type,
+                              metric_to_be_maximised=metric_to_be_maximised)
+        routine_metrics.at[routine, metric_to_be_maximised] = metrics
+
+    weighted_metric_average = \
+        (routine_metrics['Quantity'] * routine_metrics[metric_to_be_maximised]).sum() / routine_metrics[
+            'Quantity'].sum()
+
+    return weighted_metric_average
 
 
 def convert_log_to_pm4py(log):
@@ -134,8 +151,8 @@ def convert_log_to_pm4py(log):
 
     log = log.reindex(columns={'Case', 'Timestamp', 'Cluster', 'Date'})
     log_pm4py = log.rename(columns={'Date': 'case:concept:name',
-                              'Cluster': 'concept:name',
-                              'Timestamp': 'time:timestamp'})
+                                    'Cluster': 'concept:name',
+                                    'Timestamp': 'time:timestamp'})
     log_pm4py = log_pm4py.astype(str)
     log_pm4py['time:timestamp'] = pd.to_datetime(log_pm4py['time:timestamp'])
 
@@ -206,7 +223,7 @@ def apply_miner(log,
         return None
 
     # create directory for petri net files
-    os.mkdir(path_data_sources + dir_runtime_files + dir_petri_net_files)
+    os.makedirs(path_data_sources + dir_runtime_files + dir_petri_net_files)
 
     # export petri net png
     gviz = pn_visualizer.apply(net, initial_marking, final_marking)

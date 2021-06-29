@@ -1,0 +1,3098 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<log>
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext" />
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext" />
+	<string key="origin" value="csv" />
+	<trace>
+		<string key="concept:name" value="2007-10-26" />
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="222" />
+			<date key="time:timestamp" value="2007-10-26T06:00:00.083142" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="223" />
+			<date key="time:timestamp" value="2007-10-26T06:01:04.394042" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="224" />
+			<date key="time:timestamp" value="2007-10-26T06:02:15.806878" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="225" />
+			<date key="time:timestamp" value="2007-10-26T06:05:41.019867" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="226" />
+			<date key="time:timestamp" value="2007-10-26T06:06:15.403151" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="227" />
+			<date key="time:timestamp" value="2007-10-26T06:06:22.780046" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="228" />
+			<date key="time:timestamp" value="2007-10-26T06:06:53.569763" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="229" />
+			<date key="time:timestamp" value="2007-10-26T06:07:07.080757" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="230" />
+			<date key="time:timestamp" value="2007-10-26T06:07:46.254382" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="231" />
+			<date key="time:timestamp" value="2007-10-26T06:07:55.895664" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="232" />
+			<date key="time:timestamp" value="2007-10-26T06:21:49.439063" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="233" />
+			<date key="time:timestamp" value="2007-10-26T06:28:57.339806" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="234" />
+			<date key="time:timestamp" value="2007-10-26T06:41:43.298705" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="235" />
+			<date key="time:timestamp" value="2007-10-26T06:42:23.258844" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="236" />
+			<date key="time:timestamp" value="2007-10-26T06:42:59.331997" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="237" />
+			<date key="time:timestamp" value="2007-10-26T06:55:05.706675" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="238" />
+			<date key="time:timestamp" value="2007-10-26T06:55:55.600947" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="239" />
+			<date key="time:timestamp" value="2007-10-26T06:56:04.496068" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="240" />
+			<date key="time:timestamp" value="2007-10-26T06:56:07.320287" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="241" />
+			<date key="time:timestamp" value="2007-10-26T06:56:16.505646" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="242" />
+			<date key="time:timestamp" value="2007-10-26T07:02:21.079312" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="243" />
+			<date key="time:timestamp" value="2007-10-26T07:34:50.265055" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="244" />
+			<date key="time:timestamp" value="2007-10-26T07:35:00.181207" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="245" />
+			<date key="time:timestamp" value="2007-10-26T07:35:06.251519" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="246" />
+			<date key="time:timestamp" value="2007-10-26T07:35:14.877011" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="247" />
+			<date key="time:timestamp" value="2007-10-26T07:35:36.815778" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="248" />
+			<date key="time:timestamp" value="2007-10-26T07:42:10.179382" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="249" />
+			<date key="time:timestamp" value="2007-10-26T07:42:21.086031" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="250" />
+			<date key="time:timestamp" value="2007-10-26T07:42:29.028813" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="251" />
+			<date key="time:timestamp" value="2007-10-26T07:42:37.938886" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="252" />
+			<date key="time:timestamp" value="2007-10-26T07:42:44.710939" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="253" />
+			<date key="time:timestamp" value="2007-10-26T07:42:51.383017" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="254" />
+			<date key="time:timestamp" value="2007-10-26T07:43:04.887175" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="255" />
+			<date key="time:timestamp" value="2007-10-26T07:46:02.177054" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="256" />
+			<date key="time:timestamp" value="2007-10-26T07:46:18.620333" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="257" />
+			<date key="time:timestamp" value="2007-10-26T07:49:34.606773" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="258" />
+			<date key="time:timestamp" value="2007-10-26T07:49:43.001724" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="259" />
+			<date key="time:timestamp" value="2007-10-26T07:49:48.234954" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="260" />
+			<date key="time:timestamp" value="2007-10-26T07:50:05.413702" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="261" />
+			<date key="time:timestamp" value="2007-10-26T07:51:06.322533" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="262" />
+			<date key="time:timestamp" value="2007-10-26T07:56:39.388497" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="263" />
+			<date key="time:timestamp" value="2007-10-26T07:56:45.093181" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="264" />
+			<date key="time:timestamp" value="2007-10-26T07:56:48.697502" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="265" />
+			<date key="time:timestamp" value="2007-10-26T07:56:55.215574" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="266" />
+			<date key="time:timestamp" value="2007-10-26T08:00:38.556379" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="267" />
+			<date key="time:timestamp" value="2007-10-26T08:02:20.262702" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="268" />
+			<date key="time:timestamp" value="2007-10-26T08:03:47.634042" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="269" />
+			<date key="time:timestamp" value="2007-10-26T08:03:54.904254" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="270" />
+			<date key="time:timestamp" value="2007-10-26T08:04:05.112981" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="271" />
+			<date key="time:timestamp" value="2007-10-26T08:04:09.252847" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="272" />
+			<date key="time:timestamp" value="2007-10-26T08:04:13.483619" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="273" />
+			<date key="time:timestamp" value="2007-10-26T08:04:16.040076" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="274" />
+			<date key="time:timestamp" value="2007-10-26T08:04:24.327517" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="275" />
+			<date key="time:timestamp" value="2007-10-26T08:13:52.428746" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="276" />
+			<date key="time:timestamp" value="2007-10-26T08:13:57.089432" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="277" />
+			<date key="time:timestamp" value="2007-10-26T08:14:05.933628" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="278" />
+			<date key="time:timestamp" value="2007-10-26T08:14:12.593766" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="279" />
+			<date key="time:timestamp" value="2007-10-26T08:14:24.027142" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="280" />
+			<date key="time:timestamp" value="2007-10-26T08:14:44.115419" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="281" />
+			<date key="time:timestamp" value="2007-10-26T08:15:01.948134" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="282" />
+			<date key="time:timestamp" value="2007-10-26T08:15:10.886383" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="283" />
+			<date key="time:timestamp" value="2007-10-26T08:15:16.493404" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="284" />
+			<date key="time:timestamp" value="2007-10-26T08:15:28.262239" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="285" />
+			<date key="time:timestamp" value="2007-10-26T08:15:41.618368" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="286" />
+			<date key="time:timestamp" value="2007-10-26T08:15:46.444986" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="287" />
+			<date key="time:timestamp" value="2007-10-26T08:16:04.511537" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="288" />
+			<date key="time:timestamp" value="2007-10-26T08:16:15.042385" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="289" />
+			<date key="time:timestamp" value="2007-10-26T08:16:19.114105" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="290" />
+			<date key="time:timestamp" value="2007-10-26T08:16:22.895013" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="291" />
+			<date key="time:timestamp" value="2007-10-26T08:17:18.638489" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="292" />
+			<date key="time:timestamp" value="2007-10-26T08:17:25.005053" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="293" />
+			<date key="time:timestamp" value="2007-10-26T08:17:37.308356" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="294" />
+			<date key="time:timestamp" value="2007-10-26T08:17:44.059566" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="295" />
+			<date key="time:timestamp" value="2007-10-26T08:17:57.689938" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="296" />
+			<date key="time:timestamp" value="2007-10-26T08:18:31.751451" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="297" />
+			<date key="time:timestamp" value="2007-10-26T08:19:33.234502" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="298" />
+			<date key="time:timestamp" value="2007-10-26T08:19:38.002493" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="299" />
+			<date key="time:timestamp" value="2007-10-26T08:19:46.818377" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="300" />
+			<date key="time:timestamp" value="2007-10-26T08:19:51.219685" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="301" />
+			<date key="time:timestamp" value="2007-10-26T08:19:55.479557" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="302" />
+			<date key="time:timestamp" value="2007-10-26T08:20:04.054117" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="303" />
+			<date key="time:timestamp" value="2007-10-26T08:20:18.208073" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="304" />
+			<date key="time:timestamp" value="2007-10-26T08:20:29.380888" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="305" />
+			<date key="time:timestamp" value="2007-10-26T08:20:35.809572" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="306" />
+			<date key="time:timestamp" value="2007-10-26T08:20:43.014729" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="307" />
+			<date key="time:timestamp" value="2007-10-26T08:20:53.448527" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="308" />
+			<date key="time:timestamp" value="2007-10-26T08:20:57.270296" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="309" />
+			<date key="time:timestamp" value="2007-10-26T08:21:02.284491" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="310" />
+			<date key="time:timestamp" value="2007-10-26T08:21:09.319717" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="311" />
+			<date key="time:timestamp" value="2007-10-26T08:21:14.925088" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="312" />
+			<date key="time:timestamp" value="2007-10-26T08:21:17.076527" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="313" />
+			<date key="time:timestamp" value="2007-10-26T08:21:23.630594" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="314" />
+			<date key="time:timestamp" value="2007-10-26T08:21:49.083013" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="315" />
+			<date key="time:timestamp" value="2007-10-26T08:22:05.052031" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="316" />
+			<date key="time:timestamp" value="2007-10-26T08:22:18.225204" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="2007-10-27" />
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="510" />
+			<date key="time:timestamp" value="2007-10-27T06:07:08.321758" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="511" />
+			<date key="time:timestamp" value="2007-10-27T06:08:26.788301" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="512" />
+			<date key="time:timestamp" value="2007-10-27T06:08:44.889893" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="513" />
+			<date key="time:timestamp" value="2007-10-27T06:22:57.906525" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="514" />
+			<date key="time:timestamp" value="2007-10-27T06:23:07.997889" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="515" />
+			<date key="time:timestamp" value="2007-10-27T06:35:15.569066" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="516" />
+			<date key="time:timestamp" value="2007-10-27T06:35:24.479712" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="517" />
+			<date key="time:timestamp" value="2007-10-27T06:46:24.852186" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="518" />
+			<date key="time:timestamp" value="2007-10-27T07:02:51.296886" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="519" />
+			<date key="time:timestamp" value="2007-10-27T07:29:47.441406" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="520" />
+			<date key="time:timestamp" value="2007-10-27T07:29:55.309735" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="521" />
+			<date key="time:timestamp" value="2007-10-27T07:34:46.786883" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="522" />
+			<date key="time:timestamp" value="2007-10-27T07:52:11.572725" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="523" />
+			<date key="time:timestamp" value="2007-10-27T08:05:22.066497" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="524" />
+			<date key="time:timestamp" value="2007-10-27T08:13:40.465708" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="525" />
+			<date key="time:timestamp" value="2007-10-27T08:26:14.872313" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="526" />
+			<date key="time:timestamp" value="2007-10-27T08:29:05.045041" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="527" />
+			<date key="time:timestamp" value="2007-10-27T08:29:11.082225" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="528" />
+			<date key="time:timestamp" value="2007-10-27T08:29:17.659439" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="529" />
+			<date key="time:timestamp" value="2007-10-27T08:29:22.878013" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="530" />
+			<date key="time:timestamp" value="2007-10-27T08:29:44.077598" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="531" />
+			<date key="time:timestamp" value="2007-10-27T08:30:00.185365" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="532" />
+			<date key="time:timestamp" value="2007-10-27T08:40:02.115761" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="533" />
+			<date key="time:timestamp" value="2007-10-27T08:45:02.819909" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="534" />
+			<date key="time:timestamp" value="2007-10-27T08:45:45.343523" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="535" />
+			<date key="time:timestamp" value="2007-10-27T08:46:51.775902" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="536" />
+			<date key="time:timestamp" value="2007-10-27T08:48:21.075283" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="537" />
+			<date key="time:timestamp" value="2007-10-27T08:50:15.228256" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="538" />
+			<date key="time:timestamp" value="2007-10-27T08:52:07.786118" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="539" />
+			<date key="time:timestamp" value="2007-10-27T08:52:13.517557" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="540" />
+			<date key="time:timestamp" value="2007-10-27T08:52:34.097336" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="541" />
+			<date key="time:timestamp" value="2007-10-27T08:52:44.331445" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="542" />
+			<date key="time:timestamp" value="2007-10-27T08:52:59.561093" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="543" />
+			<date key="time:timestamp" value="2007-10-27T08:53:03.512017" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="544" />
+			<date key="time:timestamp" value="2007-10-27T08:53:09.444389" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="545" />
+			<date key="time:timestamp" value="2007-10-27T08:53:17.380218" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="546" />
+			<date key="time:timestamp" value="2007-10-27T08:53:23.130636" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="547" />
+			<date key="time:timestamp" value="2007-10-27T08:53:29.524926" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="548" />
+			<date key="time:timestamp" value="2007-10-27T08:53:40.281726" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="549" />
+			<date key="time:timestamp" value="2007-10-27T08:53:59.641502" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="550" />
+			<date key="time:timestamp" value="2007-10-27T08:54:41.446357" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="551" />
+			<date key="time:timestamp" value="2007-10-27T08:54:48.888309" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="552" />
+			<date key="time:timestamp" value="2007-10-27T08:55:00.171546" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="553" />
+			<date key="time:timestamp" value="2007-10-27T08:55:07.000798" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="554" />
+			<date key="time:timestamp" value="2007-10-27T08:55:12.532506" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="555" />
+			<date key="time:timestamp" value="2007-10-27T08:55:21.352484" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="556" />
+			<date key="time:timestamp" value="2007-10-27T08:55:25.995194" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="557" />
+			<date key="time:timestamp" value="2007-10-27T08:55:30.300009" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="558" />
+			<date key="time:timestamp" value="2007-10-27T08:55:38.001878" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="559" />
+			<date key="time:timestamp" value="2007-10-27T08:55:42.040067" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="560" />
+			<date key="time:timestamp" value="2007-10-27T08:55:47.693262" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="561" />
+			<date key="time:timestamp" value="2007-10-27T08:56:07.663006" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="562" />
+			<date key="time:timestamp" value="2007-10-27T08:56:14.176385" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="563" />
+			<date key="time:timestamp" value="2007-10-27T08:56:33.205823" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="564" />
+			<date key="time:timestamp" value="2007-10-27T08:57:12.494741" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="565" />
+			<date key="time:timestamp" value="2007-10-27T08:57:20.279356" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="566" />
+			<date key="time:timestamp" value="2007-10-27T08:57:34.412132" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="567" />
+			<date key="time:timestamp" value="2007-10-27T08:57:44.489434" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="568" />
+			<date key="time:timestamp" value="2007-10-27T08:57:52.205309" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="569" />
+			<date key="time:timestamp" value="2007-10-27T08:57:54.968507" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="570" />
+			<date key="time:timestamp" value="2007-10-27T08:57:59.143396" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="571" />
+			<date key="time:timestamp" value="2007-10-27T08:58:04.047046" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="572" />
+			<date key="time:timestamp" value="2007-10-27T08:58:08.281178" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="573" />
+			<date key="time:timestamp" value="2007-10-27T08:58:12.216533" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="574" />
+			<date key="time:timestamp" value="2007-10-27T08:58:16.728181" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="575" />
+			<date key="time:timestamp" value="2007-10-27T08:58:19.431473" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="576" />
+			<date key="time:timestamp" value="2007-10-27T08:58:22.079991" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="577" />
+			<date key="time:timestamp" value="2007-10-27T08:58:23.119916" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="578" />
+			<date key="time:timestamp" value="2007-10-27T08:58:27.151105" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="579" />
+			<date key="time:timestamp" value="2007-10-27T08:58:30.053324" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="580" />
+			<date key="time:timestamp" value="2007-10-27T08:58:39.002154" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="581" />
+			<date key="time:timestamp" value="2007-10-27T08:58:51.706083" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="582" />
+			<date key="time:timestamp" value="2007-10-27T09:00:07.166462" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="583" />
+			<date key="time:timestamp" value="2007-10-27T09:00:13.263814" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="584" />
+			<date key="time:timestamp" value="2007-10-27T09:00:27.423371" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="585" />
+			<date key="time:timestamp" value="2007-10-27T09:00:39.105825" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="586" />
+			<date key="time:timestamp" value="2007-10-27T09:00:54.043449" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="587" />
+			<date key="time:timestamp" value="2007-10-27T09:01:00.648875" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="588" />
+			<date key="time:timestamp" value="2007-10-27T09:01:05.123628" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="589" />
+			<date key="time:timestamp" value="2007-10-27T09:01:08.574653" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="590" />
+			<date key="time:timestamp" value="2007-10-27T09:01:11.701802" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="591" />
+			<date key="time:timestamp" value="2007-10-27T09:01:24.390307" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="592" />
+			<date key="time:timestamp" value="2007-10-27T09:01:47.986207" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="593" />
+			<date key="time:timestamp" value="2007-10-27T09:02:13.009738" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="594" />
+			<date key="time:timestamp" value="2007-10-27T09:02:30.863157" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="595" />
+			<date key="time:timestamp" value="2007-10-27T09:02:38.125206" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="596" />
+			<date key="time:timestamp" value="2007-10-27T09:02:51.649121" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="597" />
+			<date key="time:timestamp" value="2007-10-27T09:03:02.054092" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="598" />
+			<date key="time:timestamp" value="2007-10-27T09:03:13.634506" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="599" />
+			<date key="time:timestamp" value="2007-10-27T09:03:28.924318" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="600" />
+			<date key="time:timestamp" value="2007-10-27T09:03:38.361716" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="601" />
+			<date key="time:timestamp" value="2007-10-27T09:03:45.559784" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="602" />
+			<date key="time:timestamp" value="2007-10-27T09:04:25.121947" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="603" />
+			<date key="time:timestamp" value="2007-10-27T09:05:07.276073" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="604" />
+			<date key="time:timestamp" value="2007-10-27T09:05:21.108044" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="605" />
+			<date key="time:timestamp" value="2007-10-27T09:05:35.443847" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="606" />
+			<date key="time:timestamp" value="2007-10-27T09:05:52.685152" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="607" />
+			<date key="time:timestamp" value="2007-10-27T09:06:07.702637" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="608" />
+			<date key="time:timestamp" value="2007-10-27T09:06:20.707873" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="609" />
+			<date key="time:timestamp" value="2007-10-27T09:06:41.715841" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="610" />
+			<date key="time:timestamp" value="2007-10-27T09:07:07.029938" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="611" />
+			<date key="time:timestamp" value="2007-10-27T09:07:21.069746" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="612" />
+			<date key="time:timestamp" value="2007-10-27T09:07:34.564889" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="613" />
+			<date key="time:timestamp" value="2007-10-27T09:08:06.446707" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="614" />
+			<date key="time:timestamp" value="2007-10-27T09:08:17.007826" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="615" />
+			<date key="time:timestamp" value="2007-10-27T09:08:29.019811" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="616" />
+			<date key="time:timestamp" value="2007-10-27T09:08:47.125679" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="617" />
+			<date key="time:timestamp" value="2007-10-27T09:09:07.724967" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="618" />
+			<date key="time:timestamp" value="2007-10-27T09:09:17.961167" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="619" />
+			<date key="time:timestamp" value="2007-10-27T09:09:24.694359" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="620" />
+			<date key="time:timestamp" value="2007-10-27T09:09:36.405769" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="621" />
+			<date key="time:timestamp" value="2007-10-27T09:10:22.119641" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="622" />
+			<date key="time:timestamp" value="2007-10-27T09:10:35.464091" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="623" />
+			<date key="time:timestamp" value="2007-10-27T09:10:46.920494" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="624" />
+			<date key="time:timestamp" value="2007-10-27T09:10:54.027527" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="625" />
+			<date key="time:timestamp" value="2007-10-27T09:11:32.633371" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="626" />
+			<date key="time:timestamp" value="2007-10-27T09:11:58.155337" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="627" />
+			<date key="time:timestamp" value="2007-10-27T09:12:27.617347" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="628" />
+			<date key="time:timestamp" value="2007-10-27T09:12:32.683202" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="629" />
+			<date key="time:timestamp" value="2007-10-27T09:12:42.080525" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="630" />
+			<date key="time:timestamp" value="2007-10-27T09:12:47.008211" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="631" />
+			<date key="time:timestamp" value="2007-10-27T09:12:58.036554" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="632" />
+			<date key="time:timestamp" value="2007-10-27T09:13:06.493766" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="633" />
+			<date key="time:timestamp" value="2007-10-27T09:13:25.540553" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="634" />
+			<date key="time:timestamp" value="2007-10-27T09:13:30.231258" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="635" />
+			<date key="time:timestamp" value="2007-10-27T09:13:36.043748" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="636" />
+			<date key="time:timestamp" value="2007-10-27T09:13:53.540954" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="637" />
+			<date key="time:timestamp" value="2007-10-27T09:14:20.931836" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="638" />
+			<date key="time:timestamp" value="2007-10-27T09:14:32.609296" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="639" />
+			<date key="time:timestamp" value="2007-10-27T09:14:55.265053" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="640" />
+			<date key="time:timestamp" value="2007-10-27T09:15:01.977234" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="641" />
+			<date key="time:timestamp" value="2007-10-27T09:15:14.428431" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="642" />
+			<date key="time:timestamp" value="2007-10-27T09:15:26.926818" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="643" />
+			<date key="time:timestamp" value="2007-10-27T09:15:33.666175" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="644" />
+			<date key="time:timestamp" value="2007-10-27T09:15:35.187336" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="645" />
+			<date key="time:timestamp" value="2007-10-27T09:15:38.087323" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="646" />
+			<date key="time:timestamp" value="2007-10-27T09:15:40.321837" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="647" />
+			<date key="time:timestamp" value="2007-10-27T09:15:43.536951" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="648" />
+			<date key="time:timestamp" value="2007-10-27T09:15:46.314185" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="649" />
+			<date key="time:timestamp" value="2007-10-27T09:15:48.219669" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="650" />
+			<date key="time:timestamp" value="2007-10-27T09:15:49.876246" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="651" />
+			<date key="time:timestamp" value="2007-10-27T09:15:50.798956" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="652" />
+			<date key="time:timestamp" value="2007-10-27T09:15:57.241142" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="653" />
+			<date key="time:timestamp" value="2007-10-27T09:16:03.610626" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="654" />
+			<date key="time:timestamp" value="2007-10-27T09:16:09.739792" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="655" />
+			<date key="time:timestamp" value="2007-10-27T09:16:15.080378" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="656" />
+			<date key="time:timestamp" value="2007-10-27T09:16:20.059477" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="657" />
+			<date key="time:timestamp" value="2007-10-27T09:16:24.452395" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="658" />
+			<date key="time:timestamp" value="2007-10-27T09:16:27.006465" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="659" />
+			<date key="time:timestamp" value="2007-10-27T09:16:29.701171" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="660" />
+			<date key="time:timestamp" value="2007-10-27T09:16:31.728042" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="661" />
+			<date key="time:timestamp" value="2007-10-27T09:16:32.953773" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="662" />
+			<date key="time:timestamp" value="2007-10-27T09:16:35.893003" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="663" />
+			<date key="time:timestamp" value="2007-10-27T09:16:40.166505" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="664" />
+			<date key="time:timestamp" value="2007-10-27T09:16:48.236322" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="665" />
+			<date key="time:timestamp" value="2007-10-27T09:16:54.730539" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="666" />
+			<date key="time:timestamp" value="2007-10-27T09:17:01.234835" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="667" />
+			<date key="time:timestamp" value="2007-10-27T09:17:12.425751" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="668" />
+			<date key="time:timestamp" value="2007-10-27T09:17:32.718845" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="669" />
+			<date key="time:timestamp" value="2007-10-27T09:17:46.619958" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="670" />
+			<date key="time:timestamp" value="2007-10-27T09:17:55.604038" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="671" />
+			<date key="time:timestamp" value="2007-10-27T09:18:10.598908" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="672" />
+			<date key="time:timestamp" value="2007-10-27T09:18:16.654251" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="673" />
+			<date key="time:timestamp" value="2007-10-27T09:18:22.123739" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="674" />
+			<date key="time:timestamp" value="2007-10-27T09:33:33.246588" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="675" />
+			<date key="time:timestamp" value="2007-10-27T09:33:42.651609" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="676" />
+			<date key="time:timestamp" value="2007-10-27T09:33:59.042196" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="677" />
+			<date key="time:timestamp" value="2007-10-27T09:34:08.917551" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="678" />
+			<date key="time:timestamp" value="2007-10-27T09:34:14.619998" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="679" />
+			<date key="time:timestamp" value="2007-10-27T09:34:20.424426" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="680" />
+			<date key="time:timestamp" value="2007-10-27T09:34:33.563455" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="681" />
+			<date key="time:timestamp" value="2007-10-27T09:34:38.375566" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="682" />
+			<date key="time:timestamp" value="2007-10-27T09:35:01.842124" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="683" />
+			<date key="time:timestamp" value="2007-10-27T09:35:09.144125" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="684" />
+			<date key="time:timestamp" value="2007-10-27T09:35:12.563168" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="685" />
+			<date key="time:timestamp" value="2007-10-27T09:35:18.815437" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="686" />
+			<date key="time:timestamp" value="2007-10-27T09:35:26.501334" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="687" />
+			<date key="time:timestamp" value="2007-10-27T09:35:30.551246" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="688" />
+			<date key="time:timestamp" value="2007-10-27T09:35:33.788309" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="689" />
+			<date key="time:timestamp" value="2007-10-27T09:35:48.316672" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="690" />
+			<date key="time:timestamp" value="2007-10-27T09:35:54.114221" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="691" />
+			<date key="time:timestamp" value="2007-10-27T09:35:58.939644" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="692" />
+			<date key="time:timestamp" value="2007-10-27T09:36:03.747265" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="693" />
+			<date key="time:timestamp" value="2007-10-27T09:36:15.155083" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="694" />
+			<date key="time:timestamp" value="2007-10-27T09:36:18.516141" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="695" />
+			<date key="time:timestamp" value="2007-10-27T09:36:20.651553" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="696" />
+			<date key="time:timestamp" value="2007-10-27T09:36:44.156039" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="697" />
+			<date key="time:timestamp" value="2007-10-27T09:37:07.243136" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="698" />
+			<date key="time:timestamp" value="2007-10-27T09:37:24.591145" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="699" />
+			<date key="time:timestamp" value="2007-10-27T09:37:39.724981" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="700" />
+			<date key="time:timestamp" value="2007-10-27T09:38:23.680011" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="701" />
+			<date key="time:timestamp" value="2007-10-27T09:38:28.276759" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="702" />
+			<date key="time:timestamp" value="2007-10-27T09:38:33.869277" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="703" />
+			<date key="time:timestamp" value="2007-10-27T09:38:39.362766" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="704" />
+			<date key="time:timestamp" value="2007-10-27T09:38:50.780641" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="705" />
+			<date key="time:timestamp" value="2007-10-27T09:38:58.477777" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="706" />
+			<date key="time:timestamp" value="2007-10-27T09:39:27.951561" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="707" />
+			<date key="time:timestamp" value="2007-10-27T09:39:45.876779" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="708" />
+			<date key="time:timestamp" value="2007-10-27T09:40:07.129656" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="709" />
+			<date key="time:timestamp" value="2007-10-27T09:40:59.008346" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="710" />
+			<date key="time:timestamp" value="2007-10-27T09:41:50.027789" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="711" />
+			<date key="time:timestamp" value="2007-10-27T09:41:54.188867" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="712" />
+			<date key="time:timestamp" value="2007-10-27T09:42:14.633416" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="713" />
+			<date key="time:timestamp" value="2007-10-27T09:42:20.394389" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="714" />
+			<date key="time:timestamp" value="2007-10-27T09:42:47.059113" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="715" />
+			<date key="time:timestamp" value="2007-10-27T09:43:00.262436" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="716" />
+			<date key="time:timestamp" value="2007-10-27T09:43:18.019861" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="717" />
+			<date key="time:timestamp" value="2007-10-27T09:43:41.056617" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="718" />
+			<date key="time:timestamp" value="2007-10-27T09:44:24.044037" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="719" />
+			<date key="time:timestamp" value="2007-10-27T09:44:46.485194" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="720" />
+			<date key="time:timestamp" value="2007-10-27T09:45:14.165241" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="721" />
+			<date key="time:timestamp" value="2007-10-27T09:45:18.610063" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="722" />
+			<date key="time:timestamp" value="2007-10-27T09:45:19.929715" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="723" />
+			<date key="time:timestamp" value="2007-10-27T09:45:57.984719" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="724" />
+			<date key="time:timestamp" value="2007-10-27T09:46:02.930763" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="725" />
+			<date key="time:timestamp" value="2007-10-27T09:46:05.845984" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="726" />
+			<date key="time:timestamp" value="2007-10-27T09:46:11.449781" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="727" />
+			<date key="time:timestamp" value="2007-10-27T09:46:21.382543" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="728" />
+			<date key="time:timestamp" value="2007-10-27T09:46:25.413486" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="729" />
+			<date key="time:timestamp" value="2007-10-27T09:46:33.947219" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="730" />
+			<date key="time:timestamp" value="2007-10-27T09:46:37.726219" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="731" />
+			<date key="time:timestamp" value="2007-10-27T09:46:42.964821" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="732" />
+			<date key="time:timestamp" value="2007-10-27T09:46:45.825071" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="733" />
+			<date key="time:timestamp" value="2007-10-27T09:46:53.849965" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="734" />
+			<date key="time:timestamp" value="2007-10-27T09:47:04.979788" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="735" />
+			<date key="time:timestamp" value="2007-10-27T09:47:16.955319" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="736" />
+			<date key="time:timestamp" value="2007-10-27T09:47:22.040522" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="737" />
+			<date key="time:timestamp" value="2007-10-27T09:47:30.745313" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="738" />
+			<date key="time:timestamp" value="2007-10-27T09:47:35.265128" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="739" />
+			<date key="time:timestamp" value="2007-10-27T09:47:41.007105" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="740" />
+			<date key="time:timestamp" value="2007-10-27T09:47:50.868055" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="741" />
+			<date key="time:timestamp" value="2007-10-27T09:48:02.446282" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="742" />
+			<date key="time:timestamp" value="2007-10-27T09:48:10.056048" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="743" />
+			<date key="time:timestamp" value="2007-10-27T09:48:14.376932" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="744" />
+			<date key="time:timestamp" value="2007-10-27T09:48:20.458603" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="745" />
+			<date key="time:timestamp" value="2007-10-27T09:48:22.736288" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="746" />
+			<date key="time:timestamp" value="2007-10-27T09:48:26.346641" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="747" />
+			<date key="time:timestamp" value="2007-10-27T09:48:29.543751" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="748" />
+			<date key="time:timestamp" value="2007-10-27T09:48:35.819242" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="749" />
+			<date key="time:timestamp" value="2007-10-27T09:48:39.372293" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="750" />
+			<date key="time:timestamp" value="2007-10-27T09:48:47.930041" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="751" />
+			<date key="time:timestamp" value="2007-10-27T09:48:54.272377" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="752" />
+			<date key="time:timestamp" value="2007-10-27T09:48:59.942931" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="753" />
+			<date key="time:timestamp" value="2007-10-27T09:49:03.547993" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="754" />
+			<date key="time:timestamp" value="2007-10-27T09:49:12.502648" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="755" />
+			<date key="time:timestamp" value="2007-10-27T09:49:24.056882" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="756" />
+			<date key="time:timestamp" value="2007-10-27T09:50:02.490414" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="757" />
+			<date key="time:timestamp" value="2007-10-27T09:50:05.240687" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="758" />
+			<date key="time:timestamp" value="2007-10-27T09:50:12.828701" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="759" />
+			<date key="time:timestamp" value="2007-10-27T09:50:18.003428" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="760" />
+			<date key="time:timestamp" value="2007-10-27T09:50:22.527714" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="761" />
+			<date key="time:timestamp" value="2007-10-27T09:50:26.339693" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="762" />
+			<date key="time:timestamp" value="2007-10-27T09:50:29.368136" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="763" />
+			<date key="time:timestamp" value="2007-10-27T09:50:32.003658" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="764" />
+			<date key="time:timestamp" value="2007-10-27T09:50:34.735207" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="765" />
+			<date key="time:timestamp" value="2007-10-27T09:50:40.816766" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="766" />
+			<date key="time:timestamp" value="2007-10-27T09:50:43.925062" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="767" />
+			<date key="time:timestamp" value="2007-10-27T09:50:51.040764" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="768" />
+			<date key="time:timestamp" value="2007-10-27T09:50:54.930707" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="769" />
+			<date key="time:timestamp" value="2007-10-27T09:50:59.345581" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="770" />
+			<date key="time:timestamp" value="2007-10-27T09:51:06.051735" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="771" />
+			<date key="time:timestamp" value="2007-10-27T09:51:09.632768" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="772" />
+			<date key="time:timestamp" value="2007-10-27T09:51:13.631692" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="773" />
+			<date key="time:timestamp" value="2007-10-27T09:51:25.059493" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="774" />
+			<date key="time:timestamp" value="2007-10-27T09:51:34.871701" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="775" />
+			<date key="time:timestamp" value="2007-10-27T09:51:55.287703" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="776" />
+			<date key="time:timestamp" value="2007-10-27T09:52:01.086174" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="777" />
+			<date key="time:timestamp" value="2007-10-27T09:52:06.662755" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="778" />
+			<date key="time:timestamp" value="2007-10-27T09:52:18.345647" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="779" />
+			<date key="time:timestamp" value="2007-10-27T09:52:27.659217" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="780" />
+			<date key="time:timestamp" value="2007-10-27T09:52:31.059437" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="781" />
+			<date key="time:timestamp" value="2007-10-27T09:52:34.019768" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="782" />
+			<date key="time:timestamp" value="2007-10-27T09:52:43.500651" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="783" />
+			<date key="time:timestamp" value="2007-10-27T09:52:48.242105" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="784" />
+			<date key="time:timestamp" value="2007-10-27T09:52:52.423043" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="785" />
+			<date key="time:timestamp" value="2007-10-27T09:53:01.061223" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="786" />
+			<date key="time:timestamp" value="2007-10-27T09:53:11.402717" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="787" />
+			<date key="time:timestamp" value="2007-10-27T09:53:14.823803" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="788" />
+			<date key="time:timestamp" value="2007-10-27T09:53:19.136632" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="789" />
+			<date key="time:timestamp" value="2007-10-27T09:53:21.668014" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="790" />
+			<date key="time:timestamp" value="2007-10-27T09:53:35.132529" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="791" />
+			<date key="time:timestamp" value="2007-10-27T09:53:50.237141" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="792" />
+			<date key="time:timestamp" value="2007-10-27T09:54:09.694304" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="793" />
+			<date key="time:timestamp" value="2007-10-27T09:54:20.021665" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="794" />
+			<date key="time:timestamp" value="2007-10-27T09:54:25.340233" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="795" />
+			<date key="time:timestamp" value="2007-10-27T09:54:32.388362" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="796" />
+			<date key="time:timestamp" value="2007-10-27T09:54:38.127847" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="797" />
+			<date key="time:timestamp" value="2007-10-27T09:54:42.397725" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="798" />
+			<date key="time:timestamp" value="2007-10-27T09:54:51.604001" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="799" />
+			<date key="time:timestamp" value="2007-10-27T09:54:56.161644" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="800" />
+			<date key="time:timestamp" value="2007-10-27T09:55:01.967478" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="801" />
+			<date key="time:timestamp" value="2007-10-27T09:55:07.042641" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="802" />
+			<date key="time:timestamp" value="2007-10-27T09:55:11.836947" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="803" />
+			<date key="time:timestamp" value="2007-10-27T09:55:15.395335" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="804" />
+			<date key="time:timestamp" value="2007-10-27T09:55:18.145194" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="805" />
+			<date key="time:timestamp" value="2007-10-27T09:55:29.331292" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="806" />
+			<date key="time:timestamp" value="2007-10-27T09:55:32.479436" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="807" />
+			<date key="time:timestamp" value="2007-10-27T09:55:36.904282" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="808" />
+			<date key="time:timestamp" value="2007-10-27T09:55:43.202605" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="809" />
+			<date key="time:timestamp" value="2007-10-27T09:55:48.587207" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="810" />
+			<date key="time:timestamp" value="2007-10-27T09:55:54.371701" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="811" />
+			<date key="time:timestamp" value="2007-10-27T09:55:58.800921" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="812" />
+			<date key="time:timestamp" value="2007-10-27T09:56:01.284164" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="813" />
+			<date key="time:timestamp" value="2007-10-27T09:56:05.955188" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="814" />
+			<date key="time:timestamp" value="2007-10-27T09:56:08.951725" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="815" />
+			<date key="time:timestamp" value="2007-10-27T09:56:18.987936" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="816" />
+			<date key="time:timestamp" value="2007-10-27T09:56:24.102428" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="817" />
+			<date key="time:timestamp" value="2007-10-27T09:56:28.967568" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="818" />
+			<date key="time:timestamp" value="2007-10-27T09:56:35.117902" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="819" />
+			<date key="time:timestamp" value="2007-10-27T09:56:41.671139" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="820" />
+			<date key="time:timestamp" value="2007-10-27T09:56:50.705743" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="821" />
+			<date key="time:timestamp" value="2007-10-27T09:56:56.534202" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="822" />
+			<date key="time:timestamp" value="2007-10-27T09:57:10.143161" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="823" />
+			<date key="time:timestamp" value="2007-10-27T09:57:25.008758" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="824" />
+			<date key="time:timestamp" value="2007-10-27T09:57:33.091304" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="825" />
+			<date key="time:timestamp" value="2007-10-27T09:57:40.839487" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="826" />
+			<date key="time:timestamp" value="2007-10-27T09:57:48.131544" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="827" />
+			<date key="time:timestamp" value="2007-10-27T09:57:59.756549" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="828" />
+			<date key="time:timestamp" value="2007-10-27T09:58:03.444575" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="829" />
+			<date key="time:timestamp" value="2007-10-27T09:58:09.952864" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="830" />
+			<date key="time:timestamp" value="2007-10-27T09:58:16.006411" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="831" />
+			<date key="time:timestamp" value="2007-10-27T09:58:22.782041" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="832" />
+			<date key="time:timestamp" value="2007-10-27T09:58:32.427195" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="833" />
+			<date key="time:timestamp" value="2007-10-27T09:58:36.550081" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="834" />
+			<date key="time:timestamp" value="2007-10-27T09:59:09.156071" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="835" />
+			<date key="time:timestamp" value="2007-10-27T09:59:18.568625" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="836" />
+			<date key="time:timestamp" value="2007-10-27T09:59:23.791995" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="837" />
+			<date key="time:timestamp" value="2007-10-27T09:59:26.958968" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="838" />
+			<date key="time:timestamp" value="2007-10-27T09:59:31.567726" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="839" />
+			<date key="time:timestamp" value="2007-10-27T09:59:40.070105" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="840" />
+			<date key="time:timestamp" value="2007-10-27T09:59:42.092892" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="841" />
+			<date key="time:timestamp" value="2007-10-27T09:59:46.785312" />
+		</event>
+		<event>
+			<string key="concept:name" value="6.0" />
+			<string key="Case" value="842" />
+			<date key="time:timestamp" value="2007-10-27T09:59:54.094192" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="843" />
+			<date key="time:timestamp" value="2007-10-27T09:59:59.079872" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="2007-10-30" />
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="900" />
+			<date key="time:timestamp" value="2007-10-30T06:00:31.580933" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="901" />
+			<date key="time:timestamp" value="2007-10-30T06:00:52.637169" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="902" />
+			<date key="time:timestamp" value="2007-10-30T06:04:29.169183" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="903" />
+			<date key="time:timestamp" value="2007-10-30T06:04:58.865846" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="904" />
+			<date key="time:timestamp" value="2007-10-30T06:05:14.444506" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="905" />
+			<date key="time:timestamp" value="2007-10-30T06:07:30.968749" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="906" />
+			<date key="time:timestamp" value="2007-10-30T06:40:07.000807" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="907" />
+			<date key="time:timestamp" value="2007-10-30T06:42:22.944654" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="908" />
+			<date key="time:timestamp" value="2007-10-30T06:42:36.046692" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="909" />
+			<date key="time:timestamp" value="2007-10-30T06:43:02.450177" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="910" />
+			<date key="time:timestamp" value="2007-10-30T06:56:47.508742" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="911" />
+			<date key="time:timestamp" value="2007-10-30T06:58:53.639851" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="912" />
+			<date key="time:timestamp" value="2007-10-30T07:00:48.956937" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="913" />
+			<date key="time:timestamp" value="2007-10-30T07:09:39.967127" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="914" />
+			<date key="time:timestamp" value="2007-10-30T07:13:53.473658" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="915" />
+			<date key="time:timestamp" value="2007-10-30T07:14:11.524677" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="916" />
+			<date key="time:timestamp" value="2007-10-30T07:14:42.788924" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="917" />
+			<date key="time:timestamp" value="2007-10-30T08:00:02.711245" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="918" />
+			<date key="time:timestamp" value="2007-10-30T08:00:26.877751" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="919" />
+			<date key="time:timestamp" value="2007-10-30T08:00:35.879244" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="920" />
+			<date key="time:timestamp" value="2007-10-30T08:00:46.084402" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="921" />
+			<date key="time:timestamp" value="2007-10-30T08:00:49.984354" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="922" />
+			<date key="time:timestamp" value="2007-10-30T08:00:54.755045" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="923" />
+			<date key="time:timestamp" value="2007-10-30T08:01:07.888006" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="924" />
+			<date key="time:timestamp" value="2007-10-30T08:05:04.433187" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="925" />
+			<date key="time:timestamp" value="2007-10-30T08:05:20.457765" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="926" />
+			<date key="time:timestamp" value="2007-10-30T08:06:00.723665" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="927" />
+			<date key="time:timestamp" value="2007-10-30T08:10:06.296825" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="928" />
+			<date key="time:timestamp" value="2007-10-30T08:10:36.753363" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="929" />
+			<date key="time:timestamp" value="2007-10-30T08:10:44.453264" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="930" />
+			<date key="time:timestamp" value="2007-10-30T08:15:18.878281" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="931" />
+			<date key="time:timestamp" value="2007-10-30T08:20:13.330311" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="932" />
+			<date key="time:timestamp" value="2007-10-30T08:20:46.375907" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="933" />
+			<date key="time:timestamp" value="2007-10-30T08:25:12.069867" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="934" />
+			<date key="time:timestamp" value="2007-10-30T08:42:20.057906" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="935" />
+			<date key="time:timestamp" value="2007-10-30T08:42:44.525331" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="936" />
+			<date key="time:timestamp" value="2007-10-30T08:43:24.890411" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="937" />
+			<date key="time:timestamp" value="2007-10-30T08:43:29.417162" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="938" />
+			<date key="time:timestamp" value="2007-10-30T08:44:16.553667" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="939" />
+			<date key="time:timestamp" value="2007-10-30T08:44:19.955816" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="940" />
+			<date key="time:timestamp" value="2007-10-30T08:44:21.920288" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="941" />
+			<date key="time:timestamp" value="2007-10-30T08:44:29.749504" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="942" />
+			<date key="time:timestamp" value="2007-10-30T08:51:35.586095" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="943" />
+			<date key="time:timestamp" value="2007-10-30T08:51:39.972897" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="944" />
+			<date key="time:timestamp" value="2007-10-30T08:51:43.928794" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="945" />
+			<date key="time:timestamp" value="2007-10-30T08:51:48.690524" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="946" />
+			<date key="time:timestamp" value="2007-10-30T08:52:00.766027" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="947" />
+			<date key="time:timestamp" value="2007-10-30T08:52:34.814969" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="948" />
+			<date key="time:timestamp" value="2007-10-30T08:52:44.076508" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="949" />
+			<date key="time:timestamp" value="2007-10-30T08:52:53.942748" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="950" />
+			<date key="time:timestamp" value="2007-10-30T08:53:02.099544" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="951" />
+			<date key="time:timestamp" value="2007-10-30T08:53:09.269593" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="952" />
+			<date key="time:timestamp" value="2007-10-30T08:53:34.019579" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="953" />
+			<date key="time:timestamp" value="2007-10-30T08:53:47.155206" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="954" />
+			<date key="time:timestamp" value="2007-10-30T08:53:55.757813" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="955" />
+			<date key="time:timestamp" value="2007-10-30T08:54:07.840507" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="956" />
+			<date key="time:timestamp" value="2007-10-30T08:54:10.065079" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="957" />
+			<date key="time:timestamp" value="2007-10-30T08:54:12.159504" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="958" />
+			<date key="time:timestamp" value="2007-10-30T08:54:58.297775" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="959" />
+			<date key="time:timestamp" value="2007-10-30T08:55:03.246531" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="960" />
+			<date key="time:timestamp" value="2007-10-30T08:55:27.010057" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="961" />
+			<date key="time:timestamp" value="2007-10-30T08:55:48.062522" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="962" />
+			<date key="time:timestamp" value="2007-10-30T08:55:57.089261" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="963" />
+			<date key="time:timestamp" value="2007-10-30T08:56:16.186649" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="964" />
+			<date key="time:timestamp" value="2007-10-30T08:56:20.564448" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="965" />
+			<date key="time:timestamp" value="2007-10-30T08:56:29.748632" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="966" />
+			<date key="time:timestamp" value="2007-10-30T08:56:35.712932" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="967" />
+			<date key="time:timestamp" value="2007-10-30T08:56:42.711358" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="968" />
+			<date key="time:timestamp" value="2007-10-30T08:56:59.365888" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="969" />
+			<date key="time:timestamp" value="2007-10-30T08:57:05.139314" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="970" />
+			<date key="time:timestamp" value="2007-10-30T08:57:07.190749" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="971" />
+			<date key="time:timestamp" value="2007-10-30T08:57:12.247469" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="972" />
+			<date key="time:timestamp" value="2007-10-30T08:57:15.943354" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="973" />
+			<date key="time:timestamp" value="2007-10-30T08:57:22.036467" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="974" />
+			<date key="time:timestamp" value="2007-10-30T08:57:48.472247" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="975" />
+			<date key="time:timestamp" value="2007-10-30T08:58:01.634445" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="976" />
+			<date key="time:timestamp" value="2007-10-30T08:58:06.545651" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="977" />
+			<date key="time:timestamp" value="2007-10-30T08:58:14.547681" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="978" />
+			<date key="time:timestamp" value="2007-10-30T08:58:24.261035" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="979" />
+			<date key="time:timestamp" value="2007-10-30T08:58:30.453307" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="980" />
+			<date key="time:timestamp" value="2007-10-30T08:58:39.802776" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="981" />
+			<date key="time:timestamp" value="2007-10-30T08:58:47.593015" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="982" />
+			<date key="time:timestamp" value="2007-10-30T08:59:02.478956" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="983" />
+			<date key="time:timestamp" value="2007-10-30T08:59:20.724627" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="984" />
+			<date key="time:timestamp" value="2007-10-30T08:59:32.487389" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="985" />
+			<date key="time:timestamp" value="2007-10-30T08:59:40.217362" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="986" />
+			<date key="time:timestamp" value="2007-10-30T08:59:46.957576" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="987" />
+			<date key="time:timestamp" value="2007-10-30T08:59:52.108325" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="988" />
+			<date key="time:timestamp" value="2007-10-30T09:00:13.598698" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="989" />
+			<date key="time:timestamp" value="2007-10-30T09:00:17.810632" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="990" />
+			<date key="time:timestamp" value="2007-10-30T09:00:20.448868" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="991" />
+			<date key="time:timestamp" value="2007-10-30T09:00:26.199922" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="992" />
+			<date key="time:timestamp" value="2007-10-30T09:00:33.172003" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="993" />
+			<date key="time:timestamp" value="2007-10-30T09:00:36.299152" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="994" />
+			<date key="time:timestamp" value="2007-10-30T09:00:51.750915" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="995" />
+			<date key="time:timestamp" value="2007-10-30T09:01:05.260234" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="996" />
+			<date key="time:timestamp" value="2007-10-30T09:01:57.186061" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="997" />
+			<date key="time:timestamp" value="2007-10-30T09:02:06.567535" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="998" />
+			<date key="time:timestamp" value="2007-10-30T09:02:21.858194" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="999" />
+			<date key="time:timestamp" value="2007-10-30T09:02:35.621767" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1000" />
+			<date key="time:timestamp" value="2007-10-30T09:02:50.134695" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1001" />
+			<date key="time:timestamp" value="2007-10-30T09:03:13.811333" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1002" />
+			<date key="time:timestamp" value="2007-10-30T09:03:43.286346" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1003" />
+			<date key="time:timestamp" value="2007-10-30T09:03:52.360903" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1004" />
+			<date key="time:timestamp" value="2007-10-30T09:03:55.720978" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1005" />
+			<date key="time:timestamp" value="2007-10-30T09:04:07.001888" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1006" />
+			<date key="time:timestamp" value="2007-10-30T09:04:14.382893" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1007" />
+			<date key="time:timestamp" value="2007-10-30T09:04:23.460469" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1008" />
+			<date key="time:timestamp" value="2007-10-30T09:04:30.058943" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1009" />
+			<date key="time:timestamp" value="2007-10-30T09:04:50.272776" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1010" />
+			<date key="time:timestamp" value="2007-10-30T09:04:54.744886" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1011" />
+			<date key="time:timestamp" value="2007-10-30T09:04:59.275734" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="2007-10-31" />
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1223" />
+			<date key="time:timestamp" value="2007-10-31T06:05:56.930722" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1224" />
+			<date key="time:timestamp" value="2007-10-31T06:06:04.345176" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1225" />
+			<date key="time:timestamp" value="2007-10-31T06:06:08.456197" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1226" />
+			<date key="time:timestamp" value="2007-10-31T06:06:15.684269" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1227" />
+			<date key="time:timestamp" value="2007-10-31T06:06:23.216176" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1228" />
+			<date key="time:timestamp" value="2007-10-31T06:06:30.202284" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1229" />
+			<date key="time:timestamp" value="2007-10-31T06:06:50.096556" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1230" />
+			<date key="time:timestamp" value="2007-10-31T06:06:53.033727" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1231" />
+			<date key="time:timestamp" value="2007-10-31T06:07:02.791832" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1232" />
+			<date key="time:timestamp" value="2007-10-31T06:07:08.203591" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1233" />
+			<date key="time:timestamp" value="2007-10-31T06:07:15.635012" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1234" />
+			<date key="time:timestamp" value="2007-10-31T06:07:23.236975" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1235" />
+			<date key="time:timestamp" value="2007-10-31T06:07:35.481721" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1236" />
+			<date key="time:timestamp" value="2007-10-31T06:07:46.363831" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1237" />
+			<date key="time:timestamp" value="2007-10-31T06:09:07.201515" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1238" />
+			<date key="time:timestamp" value="2007-10-31T06:09:19.121018" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1239" />
+			<date key="time:timestamp" value="2007-10-31T06:09:27.681111" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1240" />
+			<date key="time:timestamp" value="2007-10-31T06:09:32.062201" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1241" />
+			<date key="time:timestamp" value="2007-10-31T06:09:44.004919" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1242" />
+			<date key="time:timestamp" value="2007-10-31T06:09:54.781988" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1243" />
+			<date key="time:timestamp" value="2007-10-31T06:10:02.373947" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1244" />
+			<date key="time:timestamp" value="2007-10-31T06:10:12.108664" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1245" />
+			<date key="time:timestamp" value="2007-10-31T06:10:15.458087" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1246" />
+			<date key="time:timestamp" value="2007-10-31T06:11:10.058758" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1247" />
+			<date key="time:timestamp" value="2007-10-31T06:11:20.070638" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1248" />
+			<date key="time:timestamp" value="2007-10-31T06:11:28.496665" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1249" />
+			<date key="time:timestamp" value="2007-10-31T06:11:36.771864" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1250" />
+			<date key="time:timestamp" value="2007-10-31T06:11:43.730378" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1251" />
+			<date key="time:timestamp" value="2007-10-31T06:12:12.254866" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1252" />
+			<date key="time:timestamp" value="2007-10-31T06:12:37.271269" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1253" />
+			<date key="time:timestamp" value="2007-10-31T06:13:21.733214" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1254" />
+			<date key="time:timestamp" value="2007-10-31T06:13:42.655249" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1255" />
+			<date key="time:timestamp" value="2007-10-31T06:13:47.251724" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1256" />
+			<date key="time:timestamp" value="2007-10-31T06:13:58.919829" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1257" />
+			<date key="time:timestamp" value="2007-10-31T06:14:08.802584" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1258" />
+			<date key="time:timestamp" value="2007-10-31T06:14:23.060955" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1259" />
+			<date key="time:timestamp" value="2007-10-31T06:14:29.777969" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1260" />
+			<date key="time:timestamp" value="2007-10-31T06:14:34.089859" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1261" />
+			<date key="time:timestamp" value="2007-10-31T06:14:50.217053" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1262" />
+			<date key="time:timestamp" value="2007-10-31T06:15:12.253495" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1263" />
+			<date key="time:timestamp" value="2007-10-31T06:15:15.771551" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1264" />
+			<date key="time:timestamp" value="2007-10-31T06:15:27.879247" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1265" />
+			<date key="time:timestamp" value="2007-10-31T06:15:32.911871" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1266" />
+			<date key="time:timestamp" value="2007-10-31T06:15:51.623029" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1267" />
+			<date key="time:timestamp" value="2007-10-31T06:16:18.078738" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1268" />
+			<date key="time:timestamp" value="2007-10-31T06:16:29.947486" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1269" />
+			<date key="time:timestamp" value="2007-10-31T06:16:34.882132" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1270" />
+			<date key="time:timestamp" value="2007-10-31T06:16:48.768374" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1271" />
+			<date key="time:timestamp" value="2007-10-31T06:16:58.157424" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1272" />
+			<date key="time:timestamp" value="2007-10-31T06:17:22.029173" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1273" />
+			<date key="time:timestamp" value="2007-10-31T06:17:46.867719" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1274" />
+			<date key="time:timestamp" value="2007-10-31T06:18:28.743209" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1275" />
+			<date key="time:timestamp" value="2007-10-31T06:19:33.995558" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1276" />
+			<date key="time:timestamp" value="2007-10-31T06:20:33.071806" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1277" />
+			<date key="time:timestamp" value="2007-10-31T06:20:50.850929" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1278" />
+			<date key="time:timestamp" value="2007-10-31T06:20:56.521387" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1279" />
+			<date key="time:timestamp" value="2007-10-31T06:22:13.900811" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1280" />
+			<date key="time:timestamp" value="2007-10-31T06:22:56.901235" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1281" />
+			<date key="time:timestamp" value="2007-10-31T06:23:28.017301" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1282" />
+			<date key="time:timestamp" value="2007-10-31T06:23:54.781279" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1283" />
+			<date key="time:timestamp" value="2007-10-31T06:25:29.077574" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1284" />
+			<date key="time:timestamp" value="2007-10-31T06:25:57.615725" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1285" />
+			<date key="time:timestamp" value="2007-10-31T06:26:07.370524" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1286" />
+			<date key="time:timestamp" value="2007-10-31T06:26:09.321969" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1287" />
+			<date key="time:timestamp" value="2007-10-31T06:26:12.205441" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1288" />
+			<date key="time:timestamp" value="2007-10-31T06:26:18.564139" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1289" />
+			<date key="time:timestamp" value="2007-10-31T06:26:28.825807" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1290" />
+			<date key="time:timestamp" value="2007-10-31T06:26:38.639126" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1291" />
+			<date key="time:timestamp" value="2007-10-31T06:26:41.024342" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1292" />
+			<date key="time:timestamp" value="2007-10-31T06:26:43.081849" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1293" />
+			<date key="time:timestamp" value="2007-10-31T06:26:52.301239" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1294" />
+			<date key="time:timestamp" value="2007-10-31T06:26:55.290388" />
+		</event>
+		<event>
+			<string key="concept:name" value="4.0" />
+			<string key="Case" value="1295" />
+			<date key="time:timestamp" value="2007-10-31T06:26:57.781683" />
+		</event>
+		<event>
+			<string key="concept:name" value="8.0" />
+			<string key="Case" value="1296" />
+			<date key="time:timestamp" value="2007-10-31T06:27:05.289715" />
+		</event>
+		<event>
+			<string key="concept:name" value="9.0" />
+			<string key="Case" value="1297" />
+			<date key="time:timestamp" value="2007-10-31T06:27:08.609827" />
+		</event>
+	</trace>
+</log>

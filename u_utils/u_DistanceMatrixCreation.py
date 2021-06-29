@@ -19,6 +19,12 @@ def get_distance_matrix():
 
     room_dict = import_rooms(room_dict_path)
 
+    # get a mapping where each sensor has their room label
+    sensor_to_room_dict = {}
+    for key, value in room_dict.items():
+        for string in value:
+            sensor_to_room_dict.setdefault(string, []).append(key)
+
     # add support for zeros
     # ToDo: find a better value for distances to zero
     # convert to numpy array
@@ -30,7 +36,9 @@ def get_distance_matrix():
     dict_distance_adjacency_sensor = {'adjacency_matrix': adjacency_matrix,
                                       'distance_matrix': distance_matrix,
                                       'room_dict': room_dict,
-                                      'sensor_labels': sensor_labels}
+                                      'sensor_labels': sensor_labels,
+                                      'sensor_to_room_dict': sensor_to_room_dict}
+
     pd.DataFrame(distance_matrix).to_csv(path_or_buf=settings.path_data_sources + 'distance_matrix.csv',
                                          sep=';')
     return dict_distance_adjacency_sensor

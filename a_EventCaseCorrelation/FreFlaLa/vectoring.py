@@ -67,6 +67,8 @@ def get_vectors_by_rooms(dataset,
             currently_active_sensors = []
             latest_active_sensor = None
 
+        # ToDO: Remove, same is done more efficiently in a_EventCaseCorrelation in
+        #  the method "convert_raw_data_to_event_log"
         if data_row.Active == 1:
             sensor_added.append(data_row.SensorID)
             currently_active_sensors.append(data_row.SensorID)

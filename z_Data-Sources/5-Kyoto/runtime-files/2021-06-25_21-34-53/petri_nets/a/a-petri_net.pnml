@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="net1" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <page id="n0">
+      <place id="sink0">
+        <name>
+          <text>sink0</text>
+        </name>
+      </place>
+      <place id="pre_1.0">
+        <name>
+          <text>pre_1.0</text>
+        </name>
+      </place>
+      <place id="intplace_1.0">
+        <name>
+          <text>intplace_1.0</text>
+        </name>
+      </place>
+      <place id="source0">
+        <name>
+          <text>source0</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <transition id="1.0">
+        <name>
+          <text>1.0</text>
+        </name>
+      </transition>
+      <transition id="5.0">
+        <name>
+          <text>5.0</text>
+        </name>
+      </transition>
+      <transition id="4.0">
+        <name>
+          <text>4.0</text>
+        </name>
+      </transition>
+      <transition id="3.0">
+        <name>
+          <text>3.0</text>
+        </name>
+      </transition>
+      <transition id="2.0">
+        <name>
+          <text>2.0</text>
+        </name>
+      </transition>
+      <transition id="hid_10">
+        <name>
+          <text>hid_10</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="2c7fa4ff-3940-41ed-9306-470a547fb930"/>
+      </transition>
+      <transition id="6.0">
+        <name>
+          <text>6.0</text>
+        </name>
+      </transition>
+      <transition id="hid_16">
+        <name>
+          <text>hid_16</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="d5758fb9-053e-4b69-9bbd-928d510f8aa3"/>
+      </transition>
+      <transition id="hid_8">
+        <name>
+          <text>hid_8</text>
+        </name>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="f5853260-60c4-49a1-84d2-44e7c2cbf1ca"/>
+      </transition>
+      <transition id="0.0">
+        <name>
+          <text>0.0</text>
+        </name>
+      </transition>
+      <arc id="8767406601479" source="intplace_1.0" target="3.0"/>
+      <arc id="8767406601635" source="2.0" target="pre_1.0"/>
+      <arc id="8767406601509" source="intplace_1.0" target="4.0"/>
+      <arc id="8767406601512" source="3.0" target="pre_1.0"/>
+      <arc id="8767410014633" source="intplace_1.0" target="hid_16"/>
+      <arc id="8767406601653" source="6.0" target="pre_1.0"/>
+      <arc id="8767379644215" source="1.0" target="intplace_1.0"/>
+      <arc id="8767379644347" source="source0" target="hid_8"/>
+      <arc id="8767406601533" source="4.0" target="pre_1.0"/>
+      <arc id="8767406601671" source="intplace_1.0" target="0.0"/>
+      <arc id="8767379644233" source="hid_8" target="pre_1.0"/>
+      <arc id="8767406601560" source="intplace_1.0" target="6.0"/>
+      <arc id="8767379967067" source="pre_1.0" target="1.0"/>
+      <arc id="8767406601563" source="5.0" target="pre_1.0"/>
+      <arc id="8767410014690" source="hid_16" target="sink0"/>
+      <arc id="8767406601572" source="0.0" target="pre_1.0"/>
+      <arc id="8767406601578" source="intplace_1.0" target="5.0"/>
+      <arc id="8767406601710" source="hid_10" target="pre_1.0"/>
+      <arc id="8767379644272" source="intplace_1.0" target="hid_10"/>
+      <arc id="8767406601716" source="intplace_1.0" target="2.0"/>
+    </page>
+    <finalmarkings>
+      <marking>
+        <place idref="sink0">
+          <text>1</text>
+        </place>
+      </marking>
+    </finalmarkings>
+  </net>
+</pnml>

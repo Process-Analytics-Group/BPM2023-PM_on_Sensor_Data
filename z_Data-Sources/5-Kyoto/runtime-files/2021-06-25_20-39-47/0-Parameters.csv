@@ -1,0 +1,34 @@
+Variable;Value;Description
+debug-mode;Deactivated;Debug Activated/Deactivated
+exogenous_csv_delimiter_sensor_data;	;Delimiter of the columns in csv file of sensor data (input)
+exogenous_csv_delimiter_traces;";";The char each column is divided by.
+exogenous_csv_dtype_sensor_data;{'Active': <class 'float'>};An assignment of data types to columns in sensor data file.
+exogenous_csv_header_sensor_data;0;Indicator at which line the data starts.
+exogenous_csv_parse_dates_sensor_data;['DateTime'];Columns that should get parsed as a date.
+exogenous_dir_dfg_files;directly_follows_graphs/;Directory in which dfg images are saved.
+exogenous_dir_petri_net_files;petri_nets/;Directory in which petri net export files are saved.
+exogenous_dir_runtime_files;runtime-files/;Folder containing files read and written during runtime
+exogenous_dir_runtime_files_iteration;%Y-%m-%d_%H-%M-%S/;Folder of one iteration containing files read and written during runtime
+exogenous_distance_threshold;1.2;Threshold when sensors are considered too far away.
+exogenous_filename_adjacency_matrix;Adjacency-Matrix.csv;Filename of adjacency matrix.
+exogenous_filename_adjacency_plot;adjacency_plot.pdf;Filename of adjacency plot.
+exogenous_filename_dfg;DFG.png;Filename of dfg image file.
+exogenous_filename_dfg_cluster;DFG_Cluster_{cluster}.png;Filename of dfg cluster image files.
+exogenous_filename_log_export;log_export.xes;Filename of log export file.
+exogenous_filename_parameters_file;0-Parameters.csv;Filename of parameters file.
+exogenous_filename_petri_net;petri_net.pnml;Filename of petri net pnml file.
+exogenous_filename_petri_net_image;ProcessModelHM.png;Filename of petri net image file.
+exogenous_filename_room_separation;Room-separation.csv;Filename of room separation file.
+exogenous_filename_sensor_data;5-Kyoto-Data.txt;Filename of sensor data file.
+exogenous_filename_traces_raw;traces_raw.csv;Filename of traces file.
+exogenous_logging_level;20;Lvl of logging for log file and console. (10=Debugging)
+exogenous_max_number_of_people_in_house;1;Maximum number of persons which were in the house while the recording of sensor data.
+exogenous_path_data_sources;z_Data-Sources/5-Kyoto/;Path of folder with source files
+exogenous_prefix_motion_sensor_id;M;A word, letter, or number placed before motion sensor number.
+exogenous_rel_dir_name_sensor_data;5-Kyoto/;The folder with sensor data (relative from data sources directory).
+exogenous_rel_proportion_dfg_threshold;0.5;Threshold for number of sensor activations at which a sensor is shown in dfg (relative to max occurrences of a sensor).
+exogenous_trace_length_limit;10;Maximum length of traces. (in case length mode is used to separate raw-traces)
+exogenous_traces_time_out_threshold;300;The time in seconds in which a sensor activation is assigned to a existing trace.
+exogenous_vectorization_type_list;['quantity', 'time', 'quantity_time'];range for vectorization type (parameter optimization)
+exogenous_zero_distance_value;1;Number representing zero distance to other sensors. (used in creation of distance_matrix_real_world matrix)
+filename_log_file;1-LogFile.log.log;Filename of logfile.
