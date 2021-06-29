@@ -62,6 +62,7 @@ def create_activity_models(output_case_traces_cluster, path_data_sources, dir_ru
         # determine that number relative to the max number of occurrences of a sensor in a cluster.
         # (the result is the threshold at which an activity/activity strand is kept)
         min_number_of_occurrences = round((max(activities.values()) * rel_proportion_dfg_threshold), 0)
+        # ToDo: Remove for loop, with vector-operation
         activities = {x: y for x, y in activities.items() if y >= min_number_of_occurrences}
         log = attributes_filter.apply(log, activities)
 

@@ -195,9 +195,11 @@ execution_type = 'param_optimization'
 #    'RoomsSimple': Split the traces when the person leaves a certain area (rooms)
 trace_partition_method = ['FixedSensorActivations', 'FixedActivationTime', 'RoomsSimple']
 
+# ToDo: @Kai 5er Schritte
 number_of_activations_per_trace_min = 5
-number_of_activations_per_trace_max = 25
+number_of_activations_per_trace_max = 100
 
+# ToDo: @Kai 120er Schritte
 trace_duration_limit_min = 120
 trace_duration_limit_max = 3600
 

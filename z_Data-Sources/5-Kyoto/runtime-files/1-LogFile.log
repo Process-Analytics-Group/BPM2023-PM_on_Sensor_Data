@@ -2439,3 +2439,12 @@ best iteration:
 		zero_distance_value = 1
 	files directory = runtime-files/2021-06-27_08-53-45/
 	iteration = 19
+2021-06-29 13:18:47,891 [INFO] [MainThread] [check_settings] The chosen settings are valid.
+2021-06-29 13:18:49,389 [INFO] [MainThread] [read_csv_file] Reading csv file '../z_Data-Sources/5-Kyoto/5-Kyoto-Data.txt'.
+2021-06-29 13:18:49,842 [INFO] [MainThread] [read_csv_file] Extracted 367574 data points from csv-File on disc in 0.5 seconds
+2021-06-29 13:18:49,843 [INFO] [MainThread] [read_csv_file] Limited 367574 data points from csv-File to 30000 data points
+2021-06-29 13:18:49,918 [INFO] [MainThread] [perform_process_model_discovery] ################# Start iteration 1 of 20 #################
+2021-06-29 13:18:49,918 [INFO] [MainThread] [perform_process_model_discovery] Using the following parameters: clustering_method=SOM, custom_distance_number_of_clusters=10, distance_threshold=1.2, event_case_correlation_method=current, max_errors_per_day=100, number_of_activations_per_trace=10, trace_duration=1372, trace_length_limit=10, trace_partition_method=FixedActivationTime, traces_time_out_threshold=300, vectorization_type=time, zero_distance_value=1
+2021-06-29 13:19:02,135 [INFO] [MainThread] [convert_raw_data_to_event_log] Transforming log took 0.4 seconds.
+2021-06-29 13:19:02,137 [INFO] [MainThread] [write_csv_file] Writing csv file to disk '../z_Data-Sources/5-Kyoto/runtime-files/2021-06-29_13-18-49/traces_raw.csv'.
+2021-06-29 13:19:02,310 [INFO] [MainThread] [convert_raw_data_to_event_log] Traces were saved as csv file '../z_Data-Sources/5-Kyoto/runtime-files/2021-06-29_13-18-49/traces_raw.csv

@@ -33,8 +33,10 @@ def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
 
     if hyp_method == 'current':
 
-        # add LC_activity and duration to event log
+        # add LC_activity and duration to event log and room information (and the "major_room" where the sensor activity
+        # takes place predominantly)
         # method only suitable for one person at the moment
+
         enhanced_event_log = convert_raw_data_to_event_log(dir_runtime_files=dir_runtime_files,
                                                            raw_sensor_data=raw_sensor_data,
                                                            dict_distance_adjacency_sensor=dict_distance_adjacency_sensor
