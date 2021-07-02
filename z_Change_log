@@ -1,3 +1,11 @@
+2021-07-02
+KD: Implemented combination already executed tests for trace partition methods
+KD: Generalized create_distance_threshold_list() -> convert_search_space_into_selection()
+KD: Enriched benchmark file with new hyper parameters
+KD: Edited z_settings_parameters
+KD: Added comments
+KD: Renamed clustering method "SOM" to "SOMPY"
+
 2021-05-28
 KD: Added sklearn SOM clustering with hyperparameter optimization
 KD: renamed "Data_Sources" folder name to "z_Data_Sources"

@@ -15,8 +15,8 @@ from a_EventCaseCorrelation.a_EventCaseCorrelation_legacy import choose_and_perf
 
 def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
                                               dir_runtime_files,
-                                              hyp_vectorization_method,
                                               raw_sensor_data,
+                                              hyp_vectorization_method,
                                               hyp_trace_partition_method,
                                               hyp_number_of_activations_per_trace,
                                               hyp_trace_duration,
@@ -28,15 +28,10 @@ def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
 
-    trace_data_time = None
-    output_case_traces_cluster = None
-
     if hyp_method == 'current':
-
         # add LC_activity and duration to event log and room information (and the "major_room" where the sensor activity
         # takes place predominantly)
         # method only suitable for one person at the moment
-
         enhanced_event_log = convert_raw_data_to_event_log(dir_runtime_files=dir_runtime_files,
                                                            raw_sensor_data=raw_sensor_data,
                                                            dict_distance_adjacency_sensor=dict_distance_adjacency_sensor
@@ -206,25 +201,83 @@ def partition_log_into_traces(traces_raw_pd,
                               hyp_trace_partition_method,
                               hyp_number_of_activations,
                               hyp_trace_duration):
+    # logger
+    logger = logging.getLogger(inspect.stack()[0][3])
+    logger.setLevel(settings.logging_level)
+
+    # boolean which shows if the trace partition was already executed with same parameters
+    same_params_executed = False
+    # path in which the traces file is located
+    dir_same_param = ""
+
+    # the sensor gets divided into traces by a fixed number of sensor activations
     if hyp_trace_partition_method == 'FixedSensorActivations':
-        # count the number of activations so every activated sensor is for now its own 'cluster'
-        traces_raw_pd['Case'] = (traces_raw_pd['Active'].groupby(traces_raw_pd['Active']).cumsum()).astype(int)
+        # checks if FixedSensorActivations trace partition method was already executed with same number of activations
+        same_params_executed, dir_same_param = \
+            helper.param_combination_already_executed(path_data_sources=settings.path_data_sources,
+                                                      dir_export_files=
+                                                      settings.dir_ecc_trace_partition_method_sensor_activations,
+                                                      current_params={
+                                                          'trace_partition_method': hyp_trace_partition_method,
+                                                          'number_of_activations': hyp_number_of_activations},
+                                                      step='fixed sensor activations trace partition')
+        if not same_params_executed:
+            # this is the first time the trace partition gets executed with the given number of activations
+            # count the number of activations so every activated sensor is for now its own 'cluster'
+            traces_raw_pd['Case'] = (traces_raw_pd['Active'].groupby(traces_raw_pd['Active']).cumsum()).astype(int)
 
-        traces_raw_pd['Case'] = np.where(traces_raw_pd['Case'] == 0,
-                                         0,
-                                         ((traces_raw_pd['Case'] - 1) / hyp_number_of_activations).astype(int) + 1)
+            traces_raw_pd['Case'] = np.where(traces_raw_pd['Case'] == 0,
+                                             0,
+                                             ((traces_raw_pd['Case'] - 1) / hyp_number_of_activations).astype(int) + 1)
 
+    # the sensor gets divided into traces by the sensor activation time
     elif hyp_trace_partition_method == 'FixedActivationTime':
+        same_params_executed, dir_same_param = \
+            helper.param_combination_already_executed(path_data_sources=settings.path_data_sources,
+                                                      dir_export_files=
+                                                      settings.dir_ecc_trace_partition_method_activation_time,
+                                                      current_params={
+                                                          'trace_partition_method': hyp_trace_partition_method,
+                                                          'trace_duration': hyp_trace_duration},
+                                                      step='fixed activation time trace partition')
+        if not same_params_executed:
+            # this is the first time the trace partition gets executed with the given activation time
 
-        # cumulate the duration (not individual activation time of sensors) and divide it by the desired duration
-        # only fill in active values. the deactivating has to be done in the cluster where the sensor was activated
-        # in the first place
-        traces_raw_pd['Case'] = ((traces_raw_pd['Duration'].fillna(0).cumsum() / hyp_trace_duration + 1) *
+            # cumulate the duration (not individual activation time of sensors) and divide it by the desired duration
+            # only fill in active values. the deactivating has to be done in the cluster where the sensor was activated
+            # in the first place
+            traces_raw_pd['Case'] = ((traces_raw_pd['Duration'].fillna(0).cumsum() / hyp_trace_duration + 1) *
                                  traces_raw_pd['Active']).astype(int)
 
+    # Divide sensor activations into traces. Activations in the same room and at the same time have the same case id.
     elif hyp_trace_partition_method == 'RoomsSimple':
-        traces_raw_pd['Case'] = ((traces_raw_pd.room_major != traces_raw_pd.room_major.shift()).cumsum() *
+        # checks if FixedSensorActivations trace partition method was already executed with same number of activations
+        same_params_executed, dir_same_param = \
+            helper.param_combination_already_executed(path_data_sources=settings.path_data_sources,
+                                                      dir_export_files=
+                                                      settings.dir_ecc_trace_partition_method_rooms_simple,
+                                                      current_params={
+                                                          'trace_partition_method': hyp_trace_partition_method},
+                                                      step='rooms simple trace partition')
+        if not same_params_executed:
+            traces_raw_pd['Case'] = ((traces_raw_pd.room_major != traces_raw_pd.room_major.shift()).cumsum() *
                                  traces_raw_pd['Active']).astype(int)
+
+    if not same_params_executed:
+        # create directory if it not exists and export traces_raw_pd dataframe to drive
+        path = pathlib.Path(dir_same_param)
+        path.mkdir(parents=True, exist_ok=True)
+        traces_raw_pd.to_pickle(dir_same_param + settings.filename_ecc_traces_raw)
+        # write action into log
+        logger.info(
+            "Performed %s trace partition. Exported raw traces into '../%s'",
+            hyp_trace_partition_method, dir_same_param)
+    else:
+        # The trace partition with the parameters was already executed in a previous iteration.
+        # read in the result of it
+        traces_raw_pd = pd.read_pickle(dir_same_param + settings.filename_ecc_traces_raw)
+        # write action into log
+        logger.info("Imported raw traces from '../%s'", dir_same_param)
 
     # need to sort the array because the later column comparison/merging does not keep index numbers
     traces_raw_pd_sorted = traces_raw_pd.sort_values(by=['SensorID', 'Timestamp'])

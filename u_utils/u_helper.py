@@ -171,20 +171,29 @@ def append_to_performance_documentation_file(path_data_sources,
                      runtime)
 
 
-def create_distance_threshold_list(distance_threshold_min,
-                                   distance_threshold_max,
-                                   distance_threshold_step_length):
-    # creates a list of possible thresholds
-    curr_distance_threshold = distance_threshold_min
-    distance_threshold_list = []
+def convert_search_space_into_selection(search_space_min,
+                                        search_space_max,
+                                        step_length):
+    """
+    Creates a selection of values which represents the given search place. The number of the values is defined by the
+    step length and the size of the given search space.
 
-    while curr_distance_threshold < distance_threshold_max:
-        distance_threshold_list.append(curr_distance_threshold)
-        curr_distance_threshold += distance_threshold_step_length
+    :param search_space_min:    Minimal limit of the search space.
+    :param search_space_max:    Maximal limit of the search space.
+    :param step_length:         The step length between each value the search space will divided in.
 
-    distance_threshold_list.append(distance_threshold_max)
+    :return: a list containing numeric values from the search space
+    """
+    curr_value = search_space_min
+    selection = []
 
-    return distance_threshold_list
+    while curr_value < search_space_max:
+        selection.append(curr_value)
+        curr_value += step_length
+
+    selection.append(search_space_max)
+
+    return selection
 
 
 def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
@@ -267,8 +276,8 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     return raw_sensor_data
 
 
-def param_combination_already_executed(path_data_sources, current_params, step):
-    '''
+def param_combination_already_executed(path_data_sources, current_params, dir_export_files, step):
+    """
     Checks if the current parameter combination was already executed in previous iterations or other runs. Therefore the
     method checks if the directory at which the export files are saved is already created.
 
@@ -277,14 +286,11 @@ def param_combination_already_executed(path_data_sources, current_params, step):
     :param dir_export_files: directory at which the export files are saved
     :param step: the program step in which the parameter combination is executed
     :return: if there are already files and the directory in which the export files are saved
-    '''
-
-    dir_classic_event_case_correlation = settings.dir_classic_event_case_correlation
-
+    """
     same_params_executed = False
 
     # checks if path already exists (creating whole folder path and replacing placeholders)
-    dir_same_param = path_data_sources + dir_classic_event_case_correlation.format(**current_params)
+    dir_same_param = path_data_sources + dir_export_files.format(**current_params)
 
     # if the directory does not exist the method returns None
     if os.path.exists(dir_same_param):
@@ -302,12 +308,25 @@ def create_param_opt_space():
     Creates the search space for parameter optimization.
     :return: The space which defines the bounds of the parameters in parameter optimization
     """
-    # creates a selection of thresholds out of min, max and threshold length
-    distance_threshold_list = create_distance_threshold_list(
-        distance_threshold_min=settings.distance_threshold_min,
-        distance_threshold_max=settings.distance_threshold_max,
-        distance_threshold_step_length=settings.distance_threshold_step_length)
+    # creates a selection of thresholds out of min, max and threshold step length
+    distance_threshold_list = convert_search_space_into_selection(
+        search_space_min=settings.distance_threshold_min,
+        search_space_max=settings.distance_threshold_max,
+        step_length=settings.distance_threshold_step_length)
 
+    # creates a selection of possible activations per trace out of min, max and step length
+    number_of_activations_per_trace_list = convert_search_space_into_selection(
+        search_space_min=settings.number_of_activations_per_trace_min,
+        search_space_max=settings.number_of_activations_per_trace_max,
+        step_length=settings.number_of_activations_per_trace_step_length)
+
+    # creates a selection of trace duration limits out of min, max and step length
+    trace_duration_list = convert_search_space_into_selection(
+        search_space_min=settings.trace_duration_min,
+        search_space_max=settings.trace_duration_max,
+        step_length=settings.trace_duration_step_length)
+
+    # creates the search space for "hyperopt" parameter search
     space = {
         'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
                                           settings.zero_distance_value_max + 1),
@@ -326,11 +345,9 @@ def create_param_opt_space():
                                                    settings.event_case_correlation_method_list),
         'clustering_method': hp.choice('clustering_method', settings.clustering_method_list),
         'trace_partition_method': hp.choice('trace_partition_method', settings.trace_partition_method),
-        'number_of_activations_per_trace': hp.randint('number_of_activations_per_trace',
-                                                      settings.number_of_activations_per_trace_min,
-                                                      settings.number_of_activations_per_trace_max + 1),
-        'trace_duration': hp.randint('trace_duration', settings.trace_duration_limit_min,
-                                     settings.trace_duration_limit_max + 1)
+        'number_of_activations_per_trace': hp.choice('number_of_activations_per_trace',
+                                                     number_of_activations_per_trace_list),
+        'trace_duration': hp.choice('trace_duration', trace_duration_list)
     }
     return space
 

@@ -46,7 +46,7 @@ def choose_and_perform_clustering_method(clustering_method,
     """
 
     # clustering with self organizing map
-    if clustering_method == 'SOM':
+    if clustering_method == 'SOMPY':
         k_means_cluster_ids, sm, km = cluster_and_classify_activities(
             trace_data_without_case_number=trace_data_without_case_number,
             max_number_of_clusters=max_number_of_clusters, min_number_of_clusters=min_number_of_clusters,

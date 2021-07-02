@@ -45,7 +45,7 @@ csv_delimiter_benchmark = ';'
 # indicator at which line the data starts
 csv_header_benchmark = 0
 
-# ToDo comment 'metric_to_be_maximised'
+# the way in which the result of an iteration is evaluated
 metric_to_be_maximised = 'Precision'
 metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness']
 
@@ -54,16 +54,11 @@ metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'en
 min_number_of_clusters = 3
 max_number_of_clusters = 20
 
-
 # number of times the process model discovery gets executed
 number_of_runs = 20
 
 # upper limit for input_data (set to None if there is no limit)
 max_number_of_raw_input = 30000
-
-# hyperopt parameter tuning
-# optimization algorithm (representative Tree of Parzen Estimators (TPE))
-opt_algorithm = tpe.suggest
 
 # sklearn SOM settings hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
@@ -85,29 +80,8 @@ prefix_motion_sensor_id = 'M'
 # set a level of logging
 logging_level = logging.INFO
 
-# set distance for zero to other sensors (range for parameter optimization)
-# used in creation of the distance_matrix_real_world matrix
-zero_distance_value_min = 1
-zero_distance_value_max = 1
-
-# threshold when sensors are considered too far away (range for parameter optimization)
-distance_threshold_min = 1.2
-distance_threshold_max = 1.2
-distance_threshold_step_length = 0.1
-
 # maximum number of persons which were in the house while the recording of sensor data
 max_number_of_people_in_house = 1
-
-# the time in seconds in which a sensor activation is assigned to a existing trace (range for parameter optimization)
-traces_time_out_threshold_min = 300
-traces_time_out_threshold_max = 300
-# maximum length of traces (in case length mode is used to separate raw-traces)
-trace_length_limit_min = 4
-trace_length_limit_max = 10
-
-# range for number of CustomDistance cluster (parameter optimization)
-custom_distance_clusters_min = 6
-custom_distance_clusters_max = 16
 
 # Specifies the linkage method for clustering with custom distance calculation
 linkage_method_for_clustering = 'ward'
@@ -116,16 +90,29 @@ linkage_method_for_clustering_list = ['single', 'complete', 'average', 'weighted
 # threshold for filtering out sensors in dfg relative to max occurrences of a sensor (value in range 0-1)
 rel_proportion_dfg_threshold = 0.5
 
-# # FreFlaLa Method
-# parameter how high the threshold for errors per day are until they get dropped
-max_errors_per_day_min = 100
-max_errors_per_day_max = 100
-
 # miner used for process model creation - choose between: heuristic, inductive
 miner_type = 'heuristic'
 miner_type_list = ['heuristic', 'inductive']
 
 # event case correlation export files
+# folder containing files read and written during ecc trace partition method (number_of_activations)
+dir_ecc_trace_partition_method_sensor_activations = 'ecc/' \
+                                                    'trace_partition/' \
+                                                    'method-{trace_partition_method}/' \
+                                                    'number_of_activations-{number_of_activations}/'
+# folder containing files read and written during ecc trace partition method (trace_duration)
+dir_ecc_trace_partition_method_activation_time = 'ecc/' \
+                                                 'trace_partition/' \
+                                                 'method-{trace_partition_method}/' \
+                                                 'trace_duration-{trace_duration}/'
+# folder containing files read and written during ecc trace partition method (room separation)
+dir_ecc_trace_partition_method_rooms_simple = 'ecc/' \
+                                              'trace_partition/' \
+                                              'method-{trace_partition_method}/'
+# filename of ecc raw trace file
+filename_ecc_traces_raw = 'traces_raw.pickle'
+
+# TODO remove the following two path when remove ECC_legacy file
 # folder containing files read and written during ecc classical method
 dir_classic_event_case_correlation = 'ecc/' \
                                      'method-{event_case_correlation_method}/' \
@@ -189,32 +176,64 @@ filename_dfg = 'DFG.png'
 # 'param_optimization' (uses a search space in which the parameters are optimized during execution)
 execution_type = 'param_optimization'
 
+# hyperopt parameter tuning - optimization algorithm (representative Tree of Parzen Estimators (TPE))
+opt_algorithm = tpe.suggest
+
 # how is the path of a person through the environment split
 #    'FixedSensorActivations': only count how many sensors are being activated
 #    'FixedActivationTime': Count the time between first and last activation in a trace
 #    'RoomsSimple': Split the traces when the person leaves a certain area (rooms)
 trace_partition_method = ['FixedSensorActivations', 'FixedActivationTime', 'RoomsSimple']
 
-# ToDo: @Kai 5er Schritte
+# range for number of sensor activations per trace
 number_of_activations_per_trace_min = 5
 number_of_activations_per_trace_max = 100
+number_of_activations_per_trace_step_length = 5
 
-# ToDo: @Kai 120er Schritte
-trace_duration_limit_min = 120
-trace_duration_limit_max = 3600
+# range for number of cumulated sensor duration time per trace
+trace_duration_min = 120
+trace_duration_max = 3600
+trace_duration_step_length = 120
 
-# range for vectorization type (parameter optimization)
+# set distance for zero to other sensors
+# used in creation of the distance_matrix_real_world matrix
+zero_distance_value_min = 1
+zero_distance_value_max = 1
+
+# threshold when sensors are considered too far away
+distance_threshold_min = 1.2
+distance_threshold_max = 1.2
+distance_threshold_step_length = 0.1
+
+# range for number of CustomDistance cluster
+custom_distance_clusters_min = 6
+custom_distance_clusters_max = 16
+
+# the time in seconds in which a sensor activation is assigned to a existing trace (range for parameter optimization)
+traces_time_out_threshold_min = 300
+traces_time_out_threshold_max = 300
+
+# maximum length of traces (in case length mode is used to separate raw-traces)
+trace_length_limit_min = 4
+trace_length_limit_max = 10
+
+# range for vectorization type
 # possible types: 'quantity', 'time', 'quantity_time'
 vectorization_type_list = ['quantity', 'time', 'quantity_time']
 
-# range for clustering method (parameter optimization)
+# range for clustering method
 # possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
 # ['current', 'legacy']
 event_case_correlation_method_list = ['current']
 
 # range for clustering method (parameter optimization)
-# possible methods: 'SOM', 'sklearn-SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
-clustering_method_list = ['SOM']
+# possible methods: 'SOMPY', 'sklearn-SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
+clustering_method_list = ['SOMPY']
+
+# # FreFlaLa Method
+# parameter how high the threshold for errors per day are until they get dropped
+max_errors_per_day_min = 100
+max_errors_per_day_max = 100
 
 # # Use fixed values for debug # #
 # fixed params execution parameters

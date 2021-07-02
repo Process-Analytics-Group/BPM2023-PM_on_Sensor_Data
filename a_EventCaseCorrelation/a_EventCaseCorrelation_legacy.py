@@ -16,7 +16,6 @@ from u_utils import u_utils as utils, u_helper as helper
 def choose_and_perform_event_case_correlation_method(dict_distance_adjacency_sensor,
                                                      dir_runtime_files,
                                                      raw_sensor_data):
-    dir_freflala_event_case_correlation = settings.dir_freflala_event_case_correlation
     filename_trace_data_time = settings.filename_trace_data_time
     filename_output_case_traces_cluster = settings.filename_output_case_traces_cluster
     path_data_sources = settings.path_data_sources
@@ -43,7 +42,8 @@ def choose_and_perform_event_case_correlation_method(dict_distance_adjacency_sen
                                                           'traces_time_out_threshold': str(traces_time_out_threshold),
                                                           'trace_length_limit': str(trace_length_limit),
                                                           'vectorization_type': str(vectorization_method)},
-                                                      step='event case correlation')
+                                                      dir_export_files=settings.dir_classic_event_case_correlation,
+                                                      step='event case correlation legacy')
         if not same_params_executed:
             # Classical Method
             trace_data_time, output_case_traces_cluster = \
@@ -58,14 +58,14 @@ def choose_and_perform_event_case_correlation_method(dict_distance_adjacency_sen
     elif method == 'FreFlaLa':
         same_params_executed, dir_same_param = \
             helper.param_combination_already_executed(path_data_sources=path_data_sources,
-                                                      dir_export_files=dir_freflala_event_case_correlation,
                                                       current_params={
                                                           'event_case_correlation_method': str(method),
                                                           'max_errors_per_day': str(max_errors_per_day),
                                                           'traces_time_out_threshold': str(traces_time_out_threshold),
                                                           'trace_length_limit': str(trace_length_limit),
                                                           'vectorization_type': str(vectorization_method)},
-                                                      step='event case correlation')
+                                                      dir_export_files=settings.dir_freflala_event_case_correlation,
+                                                      step='event case correlation legacy')
         if not same_params_executed:
             trace_data_time, output_case_traces_cluster = \
                 FreFlaLa.apply_threshold_filtering(dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
