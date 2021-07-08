@@ -121,15 +121,30 @@ def convert_raw_data_to_event_log(raw_sensor_data,
     raw_sensor_data_motion['Sensor_Added'] = \
         (raw_sensor_data_motion['Active'] * raw_sensor_data_motion['SensorID']).astype(int)
 
+    raw_sensor_data_motion = raw_sensor_data_motion.sort_values(by=['SensorID', 'Timestamp'])
+    # last occurrence of a sensor ID always has to be Active=0 and first Active=1
+    raw_sensor_data_motion = raw_sensor_data_motion[~((raw_sensor_data_motion['SensorID'] !=
+                                                       raw_sensor_data_motion['SensorID'].shift(-1)) &
+                                                      (raw_sensor_data_motion['Active'] == 1))]
+    # delete rows where sensor has activated again, but not deactivated
+    raw_sensor_data_motion = \
+        raw_sensor_data_motion[raw_sensor_data_motion['Active'] != raw_sensor_data_motion['Active'].shift(1)]
     # calculate the activation duration of every active sensor
     raw_sensor_data_motion['SensorActivationTime'] = (
         (raw_sensor_data_motion.sort_values(by=['SensorID', 'Timestamp'])['Timestamp'].diff(periods=1)).shift(
             -1)).dt.total_seconds()
 
+    # restore old order and reset index
+    raw_sensor_data_motion = raw_sensor_data_motion.sort_values(by=['Timestamp'])
+    raw_sensor_data_motion = raw_sensor_data_motion.reset_index(drop=True)
+    raw_sensor_data_motion.index = raw_sensor_data_motion.index + 1
+
     # remove all activation times for Active == 0, because SensorActivationTime only makes sense for activated sensors
     raw_sensor_data_motion['SensorActivationTime'] = np.where(raw_sensor_data_motion['Active'] == 0, np.nan,
                                                               raw_sensor_data_motion['SensorActivationTime'])
 
+    # ToDo: Remove this limit value
+    raw_sensor_data_motion = raw_sensor_data_motion[raw_sensor_data_motion['SensorActivationTime'] < 1000]
     # at the end of a log, where sensors are not deactivated anymore, a large negative number would be displayed.
     # replace negative numbers with np.nan
     raw_sensor_data_motion['SensorActivationTime'] = np.where(raw_sensor_data_motion['SensorActivationTime'] < 0,
@@ -247,7 +262,7 @@ def partition_log_into_traces(traces_raw_pd,
             # only fill in active values. the deactivating has to be done in the cluster where the sensor was activated
             # in the first place
             traces_raw_pd['Case'] = ((traces_raw_pd['Duration'].fillna(0).cumsum() / hyp_trace_duration + 1) *
-                                 traces_raw_pd['Active']).astype(int)
+                                     traces_raw_pd['Active']).astype(int)
 
     # Divide sensor activations into traces. Activations in the same room and at the same time have the same case id.
     elif hyp_trace_partition_method == 'RoomsSimple':
@@ -261,7 +276,7 @@ def partition_log_into_traces(traces_raw_pd,
                                                       step='rooms simple trace partition')
         if not same_params_executed:
             traces_raw_pd['Case'] = ((traces_raw_pd.room_major != traces_raw_pd.room_major.shift()).cumsum() *
-                                 traces_raw_pd['Active']).astype(int)
+                                     traces_raw_pd['Active']).astype(int)
 
     if not same_params_executed:
         # create directory if it not exists and export traces_raw_pd dataframe to drive
@@ -332,4 +347,4 @@ def transform_log_to_vectors(log_with_case_id,
         quantity_time_vector = pd.concat([quantity_vector, time_vector], axis=1)
         return quantity_time_vector
 
-    return 1
+    return None

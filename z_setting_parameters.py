@@ -46,19 +46,14 @@ csv_delimiter_benchmark = ';'
 csv_header_benchmark = 0
 
 # the way in which the result of an iteration is evaluated
-metric_to_be_maximised = 'Precision'
-metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness']
-
-# range for number of clusters for the elbow-method (only used in "k-Means-Elbow" and "k-Medoids-Elbow")
-# is not effected by parameter optimization
-min_number_of_clusters = 3
-max_number_of_clusters = 20
+metric_to_be_maximised = 'entropia:Precision'
+metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness', 'F1']
 
 # number of times the process model discovery gets executed
-number_of_runs = 20
+number_of_runs = 200
 
 # upper limit for input_data (set to None if there is no limit)
-max_number_of_raw_input = 30000
+max_number_of_raw_input = None
 
 # sklearn SOM settings hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
@@ -187,12 +182,12 @@ trace_partition_method = ['FixedSensorActivations', 'FixedActivationTime', 'Room
 
 # range for number of sensor activations per trace
 number_of_activations_per_trace_min = 5
-number_of_activations_per_trace_max = 100
+number_of_activations_per_trace_max = 50
 number_of_activations_per_trace_step_length = 5
 
 # range for number of cumulated sensor duration time per trace
 trace_duration_min = 120
-trace_duration_max = 3600
+trace_duration_max = 1800
 trace_duration_step_length = 120
 
 # set distance for zero to other sensors
@@ -200,26 +195,30 @@ trace_duration_step_length = 120
 zero_distance_value_min = 1
 zero_distance_value_max = 1
 
-# threshold when sensors are considered too far away
-distance_threshold_min = 1.2
-distance_threshold_max = 1.2
-distance_threshold_step_length = 0.1
-
-# range for number of CustomDistance cluster
-custom_distance_clusters_min = 6
-custom_distance_clusters_max = 16
-
-# the time in seconds in which a sensor activation is assigned to a existing trace (range for parameter optimization)
-traces_time_out_threshold_min = 300
-traces_time_out_threshold_max = 300
-
-# maximum length of traces (in case length mode is used to separate raw-traces)
-trace_length_limit_min = 4
-trace_length_limit_max = 10
+# number of clusters
+hyp_min_number_clusters = 6
+hyp_max_number_clusters = 20
 
 # range for vectorization type
 # possible types: 'quantity', 'time', 'quantity_time'
 vectorization_type_list = ['quantity', 'time', 'quantity_time']
+
+# # Routines
+# separate the day into various segments
+# 1: No segmentation
+# 2: 0-12: Am, 12-23: PM
+# 3: 0-8: Night, 8-16: Day, 16-23: Evening
+# 4: 0-6: Night, 6-12: Morning, 12-18: Afternoon, 18-24: Night
+# 5: 5-10: Morning, 10-14: Noon, 14-17: Afternoon, 17-23:Evening, 23-5:Night
+hyp_number_of_day_partitions_list = [1, 2, 3, 4, 5]
+
+# differentiate between different days of the week
+# weekday: Mo, Tue, Wed, Thu, Fri, Sat, Sun
+# workday: weekend/workday
+# None: no day differentiation
+# possible values: ['weekday', 'workday', None]
+hyp_week_separator_list = ['weekday', 'workday', None]
+# #
 
 # range for clustering method
 # possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
@@ -228,12 +227,7 @@ event_case_correlation_method_list = ['current']
 
 # range for clustering method (parameter optimization)
 # possible methods: 'SOMPY', 'sklearn-SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
-clustering_method_list = ['SOMPY']
-
-# # FreFlaLa Method
-# parameter how high the threshold for errors per day are until they get dropped
-max_errors_per_day_min = 100
-max_errors_per_day_max = 100
+clustering_method_list = ['sklearn-SOM', 'k-Means', 'k-Medoids']
 
 # # Use fixed values for debug # #
 # fixed params execution parameters
@@ -245,6 +239,8 @@ fixed_params = {'zero_distance_value': 1,
                 'max_errors_per_day': 100,
                 'vectorization_type': 'quantity_time',
                 'event_case_correlation_method': 'Classic',
-                'clustering_method': 'sklearn-SOM'}
+                'clustering_method': 'sklearn-SOM',
+                'hyp_number_of_day_partitions': 3,
+                'hyp_week_separator': 'workday'}
 # #
 # # # # # # # # # # # # # # # # # # #

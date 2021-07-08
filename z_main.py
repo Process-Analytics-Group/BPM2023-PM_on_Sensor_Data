@@ -29,14 +29,8 @@ helper.configure_logger()
 # checks settings for correctness
 helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
                       zero_distance_value_max=settings.zero_distance_value_max,
-                      distance_threshold_min=settings.distance_threshold_min,
-                      distance_threshold_max=settings.distance_threshold_max,
-                      traces_time_out_threshold_min=settings.traces_time_out_threshold_min,
-                      traces_time_out_threshold_max=settings.traces_time_out_threshold_max,
-                      trace_length_limit_min=settings.trace_length_limit_min,
-                      trace_length_limit_max=settings.trace_length_limit_max,
-                      custom_distance_clusters_min=settings.custom_distance_clusters_min,
-                      custom_distance_clusters_max=settings.custom_distance_clusters_max,
+                      # trace_length_limit_min=settings.trace_length_limit_min,
+                      # trace_length_limit_max=settings.trace_length_limit_max,
                       miner_type=settings.miner_type,
                       miner_type_list=settings.miner_type_list,
                       metric_to_be_maximised=settings.metric_to_be_maximised,
@@ -112,18 +106,24 @@ def perform_process_model_discovery(params):
 
     # ################### ActivityDiscovery ####################
     cluster = ad.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
-                                                      number_of_clusters=params['custom_distance_number_of_clusters'],
+                                                      hyp_number_of_clusters=params['hyp_number_of_clusters'],
                                                       trace_data_without_case_number=traces_vectorised,
                                                       dir_runtime_files=dir_runtime_files,
                                                       dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                       vectorization_type=params['vectorization_type'],
-                                                      min_number_of_clusters=settings.min_number_of_clusters,
-                                                      max_number_of_clusters=settings.max_number_of_clusters)
+                                                      # min_number_of_clusters=settings.min_number_of_clusters,
+                                                      # number_of_clusters=params['custom_distance_number_of_clusters'],
+                                                      # max_number_of_clusters=settings.max_number_of_clusters
+                                                      )
 
     # ################### EventActivityAbstraction ####################
-    output_case_traces_cluster = eaa.create_event_log_files(cluster=cluster,
+    output_case_traces_cluster = eaa.create_event_log_files(dir_runtime_files=dir_runtime_files,
+                                                            cluster=cluster,
                                                             traces_vectorised=traces_vectorised,
-                                                            output_case_traces_cluster=output_case_traces_cluster)
+                                                            output_case_traces_cluster=output_case_traces_cluster,
+                                                            hyp_week_separator=params['hyp_week_separator'],
+                                                            hyp_number_of_day_partitions=params[
+                                                                'hyp_number_of_day_partitions'])
 
     # ################### ProcessDiscovery ####################
     # discover the process models of the respective clusters
@@ -138,7 +138,7 @@ def perform_process_model_discovery(params):
                                        dir_runtime_files=dir_runtime_files)
 
     # show function value history in a graph
-    perform_process_model_discovery.function_values.append(metrics)
+    perform_process_model_discovery.function_values.append(metrics[settings.metric_to_be_maximised])
     helper.show_function_value_history(function_values=perform_process_model_discovery.function_values,
                                        iterations=range(1, perform_process_model_discovery.iteration_counter + 1))
 
@@ -153,23 +153,25 @@ def perform_process_model_discovery(params):
         dir_runtime_files=dir_runtime_files,
         filename_benchmark=settings.filename_benchmark,
         csv_delimiter_benchmark=settings.csv_delimiter_benchmark,
-        list_of_properties={'FunctionValue': metrics,
+        list_of_properties={'Maximising': settings.metric_to_be_maximised,
+                            'Precision': metrics['Precision'],
+                            'Fitness': metrics['Fitness'],
+                            'F1': metrics['F1'],
                             'FunctionValueType': settings.metric_to_be_maximised,
                             'runtime_main': runtime_main,
                             'iteration': perform_process_model_discovery.iteration_counter,
                             'zero_distance_value': params['zero_distance_value'],
-                            'distance_threshold': params['distance_threshold'],
-                            'traces_time_out_threshold': params['traces_time_out_threshold'],
-                            'trace_length_limit': params['trace_length_limit'],
+                            # 'trace_length_limit': params['trace_length_limit'],
                             'trace_partition_method': params['trace_partition_method'],
                             'number_of_activations_per_trace': params['number_of_activations_per_trace'],
                             'trace_duration': params['trace_duration'],
                             'vectorization_type': params['vectorization_type'],
-                            'custom_distance_number_of_clusters': params['custom_distance_number_of_clusters'],
-                            'max_errors_per_day': params['max_errors_per_day'],
                             'MinerType': settings.miner_type,
                             'event_case_correlation_method': params['event_case_correlation_method'],
-                            'clustering_method': params['clustering_method']})
+                            'clustering_method': params['clustering_method'],
+                            'hyp_number_of_day_partitions': params['hyp_number_of_day_partitions'],
+                            'hyp_week_separator': params['hyp_week_separator'],
+                            'hyp_number_of_clusters': params['hyp_number_of_clusters']})
 
     helper.append_to_log_file(
         new_entry_to_log_variable='runtime_main',
@@ -192,7 +194,7 @@ def perform_process_model_discovery(params):
                 perform_process_model_discovery.iteration_counter, settings.number_of_runs)
 
     return {
-        'loss': -metrics,
+        'loss': -metrics[settings.metric_to_be_maximised],
         'status': STATUS_OK,
         'iteration': perform_process_model_discovery.iteration_counter,
         'dir_runtime_files': dir_runtime_files,

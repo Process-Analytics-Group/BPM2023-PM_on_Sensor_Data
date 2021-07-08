@@ -17,13 +17,15 @@ from u_utils import u_helper as helper, u_utils as utils
 
 
 def choose_and_perform_clustering_method(clustering_method,
-                                         number_of_clusters,
                                          trace_data_without_case_number,
                                          dir_runtime_files,
                                          dict_distance_adjacency_sensor,
                                          vectorization_type,
-                                         min_number_of_clusters,
-                                         max_number_of_clusters):
+                                         hyp_number_of_clusters,
+                                         # min_number_of_clusters,
+                                         # max_number_of_clusters
+                                         # number_of_clusters,
+                                         ):
     """
     This method manages the different clustering methods and starts the selected method. The results of the different
     clustering methods is in the same Format.
@@ -47,10 +49,11 @@ def choose_and_perform_clustering_method(clustering_method,
 
     # clustering with self organizing map
     if clustering_method == 'SOMPY':
-        k_means_cluster_ids, sm, km = cluster_and_classify_activities(
+        sm, km = cluster_and_classify_activities(
             trace_data_without_case_number=trace_data_without_case_number,
-            max_number_of_clusters=max_number_of_clusters, min_number_of_clusters=min_number_of_clusters,
-            dir_runtime_files=dir_runtime_files)
+            # max_number_of_clusters=max_number_of_clusters, min_number_of_clusters=min_number_of_clusters,
+            dir_runtime_files=dir_runtime_files,
+            hyp_number_of_clusters=hyp_number_of_clusters)
         # use the k-means inertia as clustering score. Average distance to centroids
         cluster_score = km.inertia_
         clustering_result = km.labels_[np.transpose(sm._bmu[0, :]).astype(int)]
@@ -58,7 +61,8 @@ def choose_and_perform_clustering_method(clustering_method,
     # clustering with the self organizing map by sklearn
     elif clustering_method == 'sklearn-SOM':
         # find all possible som dimensions
-        divisor_pairs = utils.find_divisor_pairs(number=number_of_clusters)
+        # divisor_pairs = utils.find_divisor_pairs(number=number_of_clusters)
+        divisor_pairs = utils.find_divisor_pairs(number=hyp_number_of_clusters)
         # only keep the most "squared" shape
         som_dimensions = divisor_pairs[int((divisor_pairs.__len__() - 1) / 2)]
 
@@ -83,49 +87,50 @@ def choose_and_perform_clustering_method(clustering_method,
         logger.info("Clustered data into %s clusters using a %sx%s sklearn SOM.", number_of_clusters, som_dimensions[0],
                     som_dimensions[1])
 
-
     # clustering with a custom distance calculation
     elif clustering_method == 'CustomDistance':
         clustering_result = b_FreFlaLa.clustering_with_custom_distance_calculation(
             trace_data_without_case_number,
             dict_distance_adjacency_sensor,
             vectorization_type,
-            number_of_clusters)
+            hyp_number_of_clusters)
 
     # clustering with k-means form sk-learn
     elif clustering_method == 'k-Means':
 
         clustering_result, cluster_score = b_FreFlaLa.clustering_kmeans(trace_data_without_case_number,
-                                                                        number_of_clusters)
+                                                                        hyp_number_of_clusters)
 
     # elbow method to choose optimal number of clusters and clustering with k-means
     elif clustering_method == 'k-Means-Elbow':
+        clustering_result, cluster_score = b_FreFlaLa.clustering_kmeans(trace_data_without_case_number,
+                                                                        hyp_number_of_clusters)
         # if the maximum und minimum number of clusters are equal the elobw-method is skipped
-        if max_number_of_clusters == min_number_of_clusters:
-            clustering_result, cluster_score = b_FreFlaLa.clustering_kmeans(trace_data_without_case_number,
-                                                                            max_number_of_clusters)
-        else:
-            clustering_result, cluster_score = b_FreFlaLa.elbow_method_kmeans(trace_data_without_case_number,
-                                                                              min_number_of_clusters,
-                                                                              max_number_of_clusters)
+        # if max_number_of_clusters == min_number_of_clusters:
+        #     clustering_result, cluster_score = b_FreFlaLa.clustering_kmeans(trace_data_without_case_number,
+        #                                                                     max_number_of_clusters)
+        # else:
+        #     clustering_result, cluster_score = b_FreFlaLa.elbow_method_kmeans(trace_data_without_case_number,
+        #                                                                       min_number_of_clusters,
+        #                                                                       max_number_of_clusters)
 
     # clustering with k-medoids form sk-learn-extra
     elif clustering_method == 'k-Medoids':
 
         clustering_result, cluster_score = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number,
-                                                                           number_of_clusters)
+                                                                           hyp_number_of_clusters)
 
     # elbow method to choose optimal number of clusters and clustering with k-medoids
     elif clustering_method == 'k-Medoids-Elbow':
-
+        pass
         # if the maximum und minimum number of clusters are equal the elobw-method is skipped
-        if max_number_of_clusters == min_number_of_clusters:
-            clustering_result, cluster_score = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number,
-                                                                               number_of_clusters)
-        else:
-            clustering_result, cluster_score = b_FreFlaLa.elbow_method_kmedoids(trace_data_without_case_number,
-                                                                                min_number_of_clusters,
-                                                                                max_number_of_clusters)
+        # if max_number_of_clusters == min_number_of_clusters:
+        #     clustering_result, cluster_score = b_FreFlaLa.clustering_k_medoids(trace_data_without_case_number,
+        #                                                                        number_of_clusters)
+        # else:
+        #     clustering_result, cluster_score = b_FreFlaLa.elbow_method_kmedoids(trace_data_without_case_number,
+        #                                                                         min_number_of_clusters,
+        #                                                                         max_number_of_clusters)
 
     else:
         logger = logging.getLogger(inspect.stack()[0][3])
@@ -158,28 +163,30 @@ def create_som_with_sklearn(params, m, n, trace_data_without_case_number):
     return sklearn_som.inertia_
 
 
-def cluster_and_classify_activities(trace_data_without_case_number, min_number_of_clusters, max_number_of_clusters,
+def cluster_and_classify_activities(trace_data_without_case_number,
+                                    # min_number_of_clusters, max_number_of_clusters,
+                                    hyp_number_of_clusters,
                                     dir_runtime_files):
     # Instantiate the clustering model and visualizer
-    model = KMeans()
-    elbow_kmeans = KElbowVisualizer(model, k=(min_number_of_clusters, max_number_of_clusters))
-
-    # Fit the data to the elbow method
-    elbow_kmeans.fit(trace_data_without_case_number)
-    # Visualize the elbow method
-    elbow_kmeans.show()
-    # optimal number of clusters determined by the elbow method
-    number_of_clusters = elbow_kmeans.elbow_value_
-    # k-means clustering with number of clusters form elbow method
-    k_means_cluster_ids = custom_kmeans(data=trace_data_without_case_number,
-                                        number_of_clusters=number_of_clusters)
+    # model = KMeans()
+    # elbow_kmeans = KElbowVisualizer(model, k=(min_number_of_clusters, max_number_of_clusters))
+    #
+    # # Fit the data to the elbow method
+    # elbow_kmeans.fit(trace_data_without_case_number)
+    # # Visualize the elbow method
+    # elbow_kmeans.show()
+    # # optimal number of clusters determined by the elbow method
+    # number_of_clusters = elbow_kmeans.elbow_value_
+    # # k-means clustering with number of clusters form elbow method
+    # k_means_cluster_ids = custom_kmeans(data=trace_data_without_case_number,
+    #                                     number_of_clusters=number_of_clusters)
 
     # self organizing map with number of clusters form elbow method
     sm, km, quantization_error, topographic_error = self_organising_map(
-        trace_data_without_case_number=trace_data_without_case_number, K_opt=number_of_clusters,
+        trace_data_without_case_number=trace_data_without_case_number, K_opt=hyp_number_of_clusters,
         dir_runtime_files=dir_runtime_files)
 
-    return k_means_cluster_ids, sm, km
+    return sm, km
 
 
 # k-means Vanilla

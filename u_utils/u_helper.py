@@ -87,12 +87,9 @@ def create_parameters_log_file(dir_runtime_files, params):
          ['exogenous_logging_level', settings.logging_level, 'Lvl of logging for log file and console. (10=Debugging)'],
          ['exogenous_zero_distance_value', params['zero_distance_value'],
           'Number representing zero distance to other sensors. (used in creation of distance_matrix_real_world matrix)'],
-         ['exogenous_distance_threshold', params['distance_threshold'],
-          'Threshold when sensors are considered too far away.'],
-         ['exogenous_traces_time_out_threshold', params['traces_time_out_threshold'],
-          'The time in seconds in which a sensor activation is assigned to a existing trace.'],
-         ['exogenous_trace_length_limit', params['trace_length_limit'],
-          'Maximum length of traces. (in case length mode is used to separate raw-traces)']]
+         # ['exogenous_trace_length_limit', params['trace_length_limit'],
+         #  'Maximum length of traces. (in case length mode is used to separate raw-traces)']
+         ]
 
     get_trace = getattr(sys, 'gettrace', None)
     if get_trace() is None:
@@ -196,9 +193,10 @@ def convert_search_space_into_selection(search_space_min,
     return selection
 
 
-def check_settings(zero_distance_value_min, zero_distance_value_max, distance_threshold_min, distance_threshold_max,
-                   traces_time_out_threshold_min, traces_time_out_threshold_max, trace_length_limit_min,
-                   trace_length_limit_max, custom_distance_clusters_min, custom_distance_clusters_max, miner_type,
+def check_settings(zero_distance_value_min, zero_distance_value_max,
+                   # trace_length_limit_min,
+                   # trace_length_limit_max,
+                   miner_type,
                    miner_type_list, metric_to_be_maximised, metric_to_be_maximised_list):
     # checks settings for correctness (if they are invalid the execution get stopped)
     settings_valid = True
@@ -212,21 +210,9 @@ def check_settings(zero_distance_value_min, zero_distance_value_max, distance_th
         logger.error("'zero_distance_value_min' has to be <= 'zero_distance_value_max'")
         settings_valid = False
 
-    if distance_threshold_min > distance_threshold_max:
-        logger.error("'distance_threshold_min' has to be <= 'distance_threshold_max'")
-        settings_valid = False
-
-    if traces_time_out_threshold_min > traces_time_out_threshold_max:
-        logger.error("'traces_time_out_threshold_min' has to be <= 'traces_time_out_threshold_max'")
-        settings_valid = False
-
-    if trace_length_limit_min > trace_length_limit_max:
-        logger.error("'trace_length_limit_min' has to be <= 'trace_length_limit_max'")
-        settings_valid = False
-
-    if custom_distance_clusters_min > custom_distance_clusters_max:
-        logger.error("'custom_distance_clusters_min' has to be <= 'custom_distance_clusters_max'")
-        settings_valid = False
+    # if trace_length_limit_min > trace_length_limit_max:
+    #     logger.error("'trace_length_limit_min' has to be <= 'trace_length_limit_max'")
+    #     settings_valid = False
 
     if miner_type not in miner_type_list:
         error_msg = str("'" + miner_type +
@@ -309,10 +295,10 @@ def create_param_opt_space():
     :return: The space which defines the bounds of the parameters in parameter optimization
     """
     # creates a selection of thresholds out of min, max and threshold step length
-    distance_threshold_list = convert_search_space_into_selection(
-        search_space_min=settings.distance_threshold_min,
-        search_space_max=settings.distance_threshold_max,
-        step_length=settings.distance_threshold_step_length)
+    # distance_threshold_list = convert_search_space_into_selection(
+    #     search_space_min=settings.distance_threshold_min,
+    #     search_space_max=settings.distance_threshold_max,
+    #     step_length=settings.distance_threshold_step_length)
 
     # creates a selection of possible activations per trace out of min, max and step length
     number_of_activations_per_trace_list = convert_search_space_into_selection(
@@ -330,16 +316,6 @@ def create_param_opt_space():
     space = {
         'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
                                           settings.zero_distance_value_max + 1),
-        'traces_time_out_threshold': hp.randint('traces_time_out_threshold', settings.traces_time_out_threshold_min,
-                                                settings.traces_time_out_threshold_max + 1),
-        'trace_length_limit': hp.randint('trace_length_limit', settings.trace_length_limit_min,
-                                         settings.trace_length_limit_max + 1),
-        'custom_distance_number_of_clusters': hp.randint('custom_distance_number_of_clusters',
-                                                         settings.custom_distance_clusters_min,
-                                                         settings.custom_distance_clusters_max + 1),
-        'distance_threshold': hp.choice('distance_threshold', distance_threshold_list),
-        'max_errors_per_day': hp.randint('max_errors_per_day', settings.max_errors_per_day_min,
-                                         settings.max_errors_per_day_max + 1),
         'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
         'event_case_correlation_method': hp.choice('event_case_correlation_method',
                                                    settings.event_case_correlation_method_list),
@@ -347,7 +323,12 @@ def create_param_opt_space():
         'trace_partition_method': hp.choice('trace_partition_method', settings.trace_partition_method),
         'number_of_activations_per_trace': hp.choice('number_of_activations_per_trace',
                                                      number_of_activations_per_trace_list),
-        'trace_duration': hp.choice('trace_duration', trace_duration_list)
+        'trace_duration': hp.choice('trace_duration', trace_duration_list),
+        'hyp_number_of_day_partitions': hp.choice('hyp_number_of_day_partitions',
+                                                  settings.hyp_number_of_day_partitions_list),
+        'hyp_week_separator': hp.choice('hyp_week_separator', settings.hyp_week_separator_list),
+        'hyp_number_of_clusters': hp.randint('hyp_number_of_clusters', settings.hyp_min_number_clusters,
+                                             settings.hyp_max_number_clusters + 1)
     }
     return space
 
@@ -371,11 +352,13 @@ def show_function_value_history(function_values, iterations):
     :param iterations: list of iteration numbers beginning at 1
     :return:
     """
-    plt.xlabel('iteration')
+    plt.xlabel('Iteration')
     plt.ylabel(settings.metric_to_be_maximised)
-    plt.title(settings.metric_to_be_maximised + ' value progress')
+    plt.title(settings.metric_to_be_maximised + ' Value Progress')
     plt.plot(iterations, function_values, marker='o')
     plt.ylim(bottom=0)
     plt.xticks(iterations)
+    plt.savefig(settings.path_data_sources + settings.dir_runtime_files + settings.metric_to_be_maximised +
+                '_progress.png', dpi=300)
     plt.show()
     return

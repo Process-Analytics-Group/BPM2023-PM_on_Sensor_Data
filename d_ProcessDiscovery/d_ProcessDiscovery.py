@@ -2,7 +2,7 @@ import inspect
 import logging
 import os
 import re
-
+from scipy import stats
 import pandas as pd
 from pm4py.algo.discovery.dfg import algorithm as dfg_discovery
 from pm4py.algo.discovery.heuristics import algorithm as heuristics_miner
@@ -95,13 +95,30 @@ def create_process_model(output_case_traces_cluster, dir_runtime_files):
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
 
+    # export routine/cluster list for Disco import etc.
+    # only keep one row with the same cluster for the same day
+    # sort dataframe
+    output_case_traces_cluster_sorted = output_case_traces_cluster.sort_values(by=['Case', 'Timestamp'])
+    # define columns to compare
+    cols = ["Routine", "Cluster"]
+    output_routine_cluster_export = output_case_traces_cluster.loc[
+        (output_case_traces_cluster_sorted[cols].shift() != output_case_traces_cluster_sorted[cols]).any(axis=1)]
+    # add date column to be used as 'CaseID' later
+    output_routine_cluster_export['Date'] = output_routine_cluster_export['Timestamp'].dt.date
+    # save as csv
+    output_routine_cluster_export.to_csv(
+        path_or_buf=settings.path_data_sources + dir_runtime_files + 'Clusters_in_Routines.csv',
+        index=False,
+        sep=';')
+
     # go through all routines (morning/noon/evening/..)
     routine_list = output_case_traces_cluster['Routine'].unique().tolist()
-    routine_metrics = pd.DataFrame(columns=['Quantity', metric_to_be_maximised], index=[routine_list])
+    # routine_metrics = pd.DataFrame(columns=['Quantity', metric_to_be_maximised], index=[routine_list])
+    routine_metrics = pd.DataFrame(columns=['Quantity', 'Precision', 'Fitness', 'F1'], index=[routine_list])
     for routine in routine_list:
         routine_log = output_case_traces_cluster.loc[output_case_traces_cluster['Routine'] == routine]
 
-        # save length of log in order to calculate a weihted average for the metric
+        # save length of log in order to calculate a weighted average for the metric
         routine_metrics.at[routine, 'Quantity'] = len(routine_log)
 
         # create a log that can be understood by pm4py
@@ -132,11 +149,19 @@ def create_process_model(output_case_traces_cluster, dir_runtime_files):
                               filename_log_export=routine + '-' + filename_log_export,
                               miner_type=miner_type,
                               metric_to_be_maximised=metric_to_be_maximised)
-        routine_metrics.at[routine, metric_to_be_maximised] = metrics
+        routine_metrics.at[routine, metrics] = metrics.values()
 
-    weighted_metric_average = \
-        (routine_metrics['Quantity'] * routine_metrics[metric_to_be_maximised]).sum() / routine_metrics[
-            'Quantity'].sum()
+    weighted_metric_average = {}
+    weighted_metric_average['Precision'] = (routine_metrics['Quantity'] *
+                                            routine_metrics['Precision']).sum() / routine_metrics['Quantity'].sum()
+    weighted_metric_average['Fitness'] = (routine_metrics['Quantity'] *
+                                          routine_metrics['Fitness']).sum() / routine_metrics['Quantity'].sum()
+    weighted_metric_average['F1'] = (routine_metrics['Quantity'] *
+                                     routine_metrics['F1']).sum() / routine_metrics['Quantity'].sum()
+
+    # weighted_metric_average = \
+    #     (routine_metrics['Quantity'] * routine_metrics[metric_to_be_maximised]).sum() / \
+    #     routine_metrics['Quantity'].sum()
 
     return weighted_metric_average
 
@@ -242,13 +267,25 @@ def apply_miner(log,
     # logger
     logger.info("Calculating %s.", metric_to_be_maximised)
     # Choose target value to be maximised
+    metrics = {}
     if metric_to_be_maximised == 'Fitness':
         precision = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
                                                    variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
-        metrics = precision['log_fitness']
+        metrics['Fitness'] = precision['log_fitness']
     elif metric_to_be_maximised == 'Precision':
-        metrics = precision_evaluator.apply(log, net, initial_marking, final_marking,
-                                            variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
+        # metrics = precision_evaluator.apply(log, net, initial_marking, final_marking,
+        #                                    variant=precision_evaluator.Variants.ALIGN_ETCONFORMANCE)
+        metrics['Precision'] = precision_evaluator.apply(log, net, initial_marking, final_marking,
+                                                         variant=precision_evaluator.Variants.ETCONFORMANCE_TOKEN)
+    elif metric_to_be_maximised == 'F1':
+        fitness = replay_fitness_evaluator.apply(log_converted, net, initial_marking, final_marking,
+                                                 variant=replay_fitness_evaluator.Variants.TOKEN_BASED)
+
+        metrics['Precision'] = precision_evaluator.apply(log, net, initial_marking, final_marking,
+                                                         variant=precision_evaluator.Variants.ETCONFORMANCE_TOKEN)
+        metrics['Fitness'] = fitness['log_fitness']
+
+        metrics['F1'] = stats.hmean([metrics['Precision'], metrics['Fitness']])
     else:
         # evaluate precision/fitness with entropia
         # assemble paths for entropia evaluation
@@ -269,7 +306,8 @@ def apply_miner(log,
         else:
             # the result is a number
             # only keep the computed number of the entropia result and cut every other char
-            metrics = float(re.sub('[^\d.]', '', entropia_res))
+
+            metrics[metric_to_be_maximised] = float(re.sub('[^\d.]', '', entropia_res))
 
     logger.info("%s calculated: %s", metric_to_be_maximised, metrics)
 

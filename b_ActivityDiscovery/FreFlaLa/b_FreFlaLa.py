@@ -18,7 +18,7 @@ def clustering_kmeans(data, number_of_clusters):
     @param number_of_clusters:  Specifies the number of cluster.
     @return:                    result list returns cluster for each vector, average distance to centroid
     """
-    kmeans = KMeans(n_clusters=number_of_clusters, random_state=0).fit(data.values)
+    kmeans = KMeans(n_clusters=number_of_clusters).fit(data.values)
 
     return kmeans.labels_, kmeans.inertia_
 
@@ -58,7 +58,7 @@ def clustering_k_medoids(allvectors, clustersize):
     @return:            result list returns cluster for each vector, average distance to centroid
     """
 
-    kmedoids = KMedoids(n_clusters=clustersize, random_state=0).fit(allvectors)
+    kmedoids = KMedoids(n_clusters=clustersize, init='k-medoids++').fit(allvectors)
     return kmedoids.labels_, kmedoids.inertia_
 
 
