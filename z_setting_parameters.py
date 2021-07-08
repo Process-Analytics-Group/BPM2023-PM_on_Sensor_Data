@@ -46,7 +46,7 @@ csv_delimiter_benchmark = ';'
 csv_header_benchmark = 0
 
 # the way in which the result of an iteration is evaluated
-metric_to_be_maximised = 'entropia:Precision'
+metric_to_be_maximised = 'F1'
 metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'entropia:Fitness', 'F1']
 
 # number of times the process model discovery gets executed
@@ -220,13 +220,8 @@ hyp_number_of_day_partitions_list = [1, 2, 3, 4, 5]
 hyp_week_separator_list = ['weekday', 'workday', None]
 # #
 
-# range for clustering method
-# possible methods: 'Classic' (classical approach), 'FreFlaLa' (filter out days with visitors)
-# ['current', 'legacy']
-event_case_correlation_method_list = ['current']
-
 # range for clustering method (parameter optimization)
-# possible methods: 'SOMPY', 'sklearn-SOM', 'CustomDistance', 'k-Means', 'k-Medoids'
+# possible methods: 'sklearn-SOM', 'k-Means', 'k-Medoids'
 clustering_method_list = ['sklearn-SOM', 'k-Means', 'k-Medoids']
 
 # # Use fixed values for debug # #

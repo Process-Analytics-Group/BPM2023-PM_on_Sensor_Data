@@ -1,3 +1,8 @@
+2021-07-08
+KD + DJ: Removed EventCaseCorrelation legacy file
+KD + DJ: Removed FreFlaLa files
+KD + DJ: Restructuring
+
 2021-07-02
 KD: Implemented combination already executed tests for trace partition methods
 KD: Generalized create_distance_threshold_list() -> convert_search_space_into_selection()

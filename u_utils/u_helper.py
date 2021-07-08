@@ -317,8 +317,6 @@ def create_param_opt_space():
         'zero_distance_value': hp.randint('zero_distance_value', settings.zero_distance_value_min,
                                           settings.zero_distance_value_max + 1),
         'vectorization_type': hp.choice('vectorization_type', settings.vectorization_type_list),
-        'event_case_correlation_method': hp.choice('event_case_correlation_method',
-                                                   settings.event_case_correlation_method_list),
         'clustering_method': hp.choice('clustering_method', settings.clustering_method_list),
         'trace_partition_method': hp.choice('trace_partition_method', settings.trace_partition_method),
         'number_of_activations_per_trace': hp.choice('number_of_activations_per_trace',

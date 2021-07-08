@@ -101,20 +101,12 @@ def perform_process_model_discovery(params):
                                                       hyp_trace_partition_method=params['trace_partition_method'],
                                                       hyp_number_of_activations_per_trace=params[
                                                           'number_of_activations_per_trace'],
-                                                      hyp_trace_duration=params['trace_duration'],
-                                                      hyp_method=params['event_case_correlation_method'])
+                                                      hyp_trace_duration=params['trace_duration'])
 
     # ################### ActivityDiscovery ####################
     cluster = ad.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
                                                       hyp_number_of_clusters=params['hyp_number_of_clusters'],
-                                                      trace_data_without_case_number=traces_vectorised,
-                                                      dir_runtime_files=dir_runtime_files,
-                                                      dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                                      vectorization_type=params['vectorization_type'],
-                                                      # min_number_of_clusters=settings.min_number_of_clusters,
-                                                      # number_of_clusters=params['custom_distance_number_of_clusters'],
-                                                      # max_number_of_clusters=settings.max_number_of_clusters
-                                                      )
+                                                      trace_data_without_case_number=traces_vectorised)
 
     # ################### EventActivityAbstraction ####################
     output_case_traces_cluster = eaa.create_event_log_files(dir_runtime_files=dir_runtime_files,
@@ -161,13 +153,11 @@ def perform_process_model_discovery(params):
                             'runtime_main': runtime_main,
                             'iteration': perform_process_model_discovery.iteration_counter,
                             'zero_distance_value': params['zero_distance_value'],
-                            # 'trace_length_limit': params['trace_length_limit'],
                             'trace_partition_method': params['trace_partition_method'],
                             'number_of_activations_per_trace': params['number_of_activations_per_trace'],
                             'trace_duration': params['trace_duration'],
                             'vectorization_type': params['vectorization_type'],
                             'MinerType': settings.miner_type,
-                            'event_case_correlation_method': params['event_case_correlation_method'],
                             'clustering_method': params['clustering_method'],
                             'hyp_number_of_day_partitions': params['hyp_number_of_day_partitions'],
                             'hyp_week_separator': params['hyp_week_separator'],

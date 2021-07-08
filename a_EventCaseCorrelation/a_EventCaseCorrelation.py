@@ -1,7 +1,6 @@
 # Personentrennung und Tracelängenbestimmung
 import inspect
 import logging
-import math
 import pathlib
 import timeit
 
@@ -10,7 +9,6 @@ import pandas as pd
 
 import z_setting_parameters as settings
 from u_utils import u_utils as utils, u_helper as helper
-from a_EventCaseCorrelation.a_EventCaseCorrelation_legacy import choose_and_perform_event_case_correlation_method
 
 
 def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
@@ -19,8 +17,7 @@ def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
                                               hyp_vectorization_method,
                                               hyp_trace_partition_method,
                                               hyp_number_of_activations_per_trace,
-                                              hyp_trace_duration,
-                                              hyp_method):
+                                              hyp_trace_duration):
     filename_trace_data_time = settings.filename_trace_data_time
     filename_output_case_traces_cluster = settings.filename_output_case_traces_cluster
     path_data_sources = settings.path_data_sources
@@ -28,35 +25,27 @@ def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
     logger = logging.getLogger(inspect.stack()[0][3])
     logger.setLevel(settings.logging_level)
 
-    if hyp_method == 'current':
-        # add LC_activity and duration to event log and room information (and the "major_room" where the sensor activity
-        # takes place predominantly)
-        # method only suitable for one person at the moment
-        enhanced_event_log = convert_raw_data_to_event_log(dir_runtime_files=dir_runtime_files,
-                                                           raw_sensor_data=raw_sensor_data,
-                                                           dict_distance_adjacency_sensor=dict_distance_adjacency_sensor
-                                                           )
+    # add LC_activity and duration to event log and room information (and the "major_room" where the sensor activity
+    # takes place predominantly)
+    # method only suitable for one person at the moment
+    enhanced_event_log = convert_raw_data_to_event_log(dir_runtime_files=dir_runtime_files,
+                                                       raw_sensor_data=raw_sensor_data,
+                                                       dict_distance_adjacency_sensor=dict_distance_adjacency_sensor
+                                                       )
 
-        # returns the event log with case/cluster numbers
-        log_with_case_id = partition_log_into_traces(traces_raw_pd=enhanced_event_log,
-                                                     dir_runtime_files=dir_runtime_files,
-                                                     hyp_trace_partition_method=hyp_trace_partition_method,
-                                                     hyp_number_of_activations=hyp_number_of_activations_per_trace,
-                                                     hyp_trace_duration=hyp_trace_duration)
+    # returns the event log with case/cluster numbers
+    log_with_case_id = partition_log_into_traces(traces_raw_pd=enhanced_event_log,
+                                                 dir_runtime_files=dir_runtime_files,
+                                                 hyp_trace_partition_method=hyp_trace_partition_method,
+                                                 hyp_number_of_activations=hyp_number_of_activations_per_trace,
+                                                 hyp_trace_duration=hyp_trace_duration)
 
-        # transform log into vectors that can be clustered later
-        vectorised_log = transform_log_to_vectors(log_with_case_id=log_with_case_id,
-                                                  dir_runtime_files=dir_runtime_files,
-                                                  vectorization_method=hyp_vectorization_method)
+    # transform log into vectors that can be clustered later
+    vectorised_log = transform_log_to_vectors(log_with_case_id=log_with_case_id,
+                                              dir_runtime_files=dir_runtime_files,
+                                              vectorization_method=hyp_vectorization_method)
 
-        log_with_case_id.rename(columns={'SensorID': 'LC_Activity'}, inplace=True)
-
-    elif hyp_method == 'legacy':
-        vectorised_log, log_with_case_id = \
-            choose_and_perform_event_case_correlation_method(dict_distance_adjacency_sensor=
-                                                             dict_distance_adjacency_sensor,
-                                                             dir_runtime_files=dir_runtime_files,
-                                                             raw_sensor_data=raw_sensor_data)
+    log_with_case_id.rename(columns={'SensorID': 'LC_Activity'}, inplace=True)
 
     return vectorised_log, log_with_case_id
 
