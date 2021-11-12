@@ -11,6 +11,18 @@ rel_dir_name_sensor_data = '5-Kyoto/'
 filename_sensor_data = '5-Kyoto-Data.txt'
 # filename_sensor_data = '19-Aruba_Data'
 
+# internal column names
+column_name_sensor_id = 'SensorID'
+column_name_timestamp = 'DateTime'
+column_name_status = 'Active'
+# column to value type assignment with the following pattern: "'<column name in file>': '<data type>'"
+column_assignment_sensor_data = {'SensorID': column_name_sensor_id,
+                            'DateTime': column_name_timestamp,
+                            'Active': column_name_status}
+#column_assignment_sensor_data = {'SensorID': 'sensor_id',
+#                            'DateTime': 'timestamp',
+#                            'Active': 'activated'}
+
 # path of sources and outputs
 path_data_sources = 'z_Data-Sources/' + rel_dir_name_sensor_data
 # folder containing files read and written during runtime
@@ -69,7 +81,9 @@ max_sigma = 1
 
 # number of motion sensors
 number_of_motion_sensors = 51
-# prefix of motion sensor IDs
+# regular expression to define on which sensors the process model discovery is performed on
+allowed_sensor_re = '^[M]\d{3,3}$'
+# define how the non numeric part of motion sensors look like
 prefix_motion_sensor_id = 'M'
 
 # set a level of logging

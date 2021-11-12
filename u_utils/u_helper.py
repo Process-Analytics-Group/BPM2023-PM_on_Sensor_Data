@@ -69,6 +69,8 @@ def create_parameters_log_file(dir_runtime_files, params):
          ['exogenous_csv_delimiter_traces', settings.csv_delimiter_traces, 'The char each column is divided by.'],
          ['exogenous_vectorization_type_list', settings.vectorization_type_list,
           'range for vectorization type (parameter optimization)'],
+         ['exogenous_allowed_sensor_re', settings.allowed_sensor_re,
+          'Regular expression to define on which sensors the process model discovery is performed on.'],
          ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id,
           'A word, letter, or number placed before motion sensor number.'],
          ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house,
@@ -250,12 +252,16 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     :return: the sensor data in a pandas data frame
     """
 
+    # read in the file containing sensor data
     raw_sensor_data = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
                                           parse_dates=parse_dates, dtype=dtype)
 
+    # assign columns to data types
+    raw_sensor_data = raw_sensor_data.rename(columns=settings.column_assignment_sensor_data)
+
     # drop all lines without motion sensor (identify by sensor ID-prefix)
     # ToDo: in future versions allow for more sensor types if implemented
-    index_names = raw_sensor_data[raw_sensor_data['SensorID'].str.startswith(settings.prefix_motion_sensor_id)].index
+    index_names = raw_sensor_data[raw_sensor_data[settings.column_name_sensor_id].str.match(settings.allowed_sensor_re)].index
     raw_sensor_data = raw_sensor_data.loc[index_names]
     raw_sensor_data.reset_index(inplace=True, drop=True)
 

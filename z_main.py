@@ -83,7 +83,7 @@ def perform_process_model_discovery(params):
     param_log_str = "Using the following parameters: "
     for param_name, param in params.items():
         param_log_str += str(param_name) + "=" + str(param) + ", "
-    # cuts the ", " at the end of the string away
+    # cuts ", " at the end of the string
     param_log_str = param_log_str[0:len(param_log_str) - 2]
     logger.info(param_log_str)
 
