@@ -11,17 +11,14 @@ rel_dir_name_sensor_data = '5-Kyoto/'
 filename_sensor_data = '5-Kyoto-Data.txt'
 # filename_sensor_data = '19-Aruba_Data'
 
-# internal column names
-column_name_sensor_id = 'SensorID'
-column_name_timestamp = 'DateTime'
-column_name_status = 'Active'
-# column to value type assignment with the following pattern: "'<column name in file>': '<data type>'"
-column_assignment_sensor_data = {'SensorID': column_name_sensor_id,
-                            'DateTime': column_name_timestamp,
-                            'Active': column_name_status}
-#column_assignment_sensor_data = {'SensorID': 'sensor_id',
-#                            'DateTime': 'timestamp',
-#                            'Active': 'activated'}
+# column names in file for sensor label, timestamp and status
+file_column_name_sensor_label = 'SensorID'
+file_column_name_timestamp = 'DateTime'
+file_column_name_status = 'Active'
+# column to value type assignment with the following pattern: "'<column name in file>': '<internal column type>'"
+column_assignment_sensor_data = {file_column_name_sensor_label: 'SensorLabel',
+                            file_column_name_timestamp: 'DateTime',
+                            file_column_name_status: 'Active'}
 
 # path of sources and outputs
 path_data_sources = 'z_Data-Sources/' + rel_dir_name_sensor_data
@@ -29,6 +26,10 @@ path_data_sources = 'z_Data-Sources/' + rel_dir_name_sensor_data
 dir_runtime_files = 'runtime-files/'
 # folder of one iteration containing files read and written during runtime
 dir_runtime_files_iteration = '%Y-%m-%d_%H-%M-%S/'
+# folder containing user configuration file
+dir_user_config = ''
+# filename of configuration file
+filename_user_config = 'config.ini'
 # filename of room separation
 filename_room_separation = 'Room-separation.csv'
 # filename of Adjacency-Matrix
@@ -64,8 +65,8 @@ metric_to_be_maximised_list = ['Precision', 'Fitness', 'entropia:Precision', 'en
 # number of times the process model discovery gets executed
 number_of_runs = 200
 
-# upper limit for input_data (set to None if there is no limit)
-max_number_of_raw_input = None
+# upper limit for input_data (set to -1 if there is no limit)
+max_number_of_raw_input = -1
 
 # sklearn SOM settings hyperopt parameter tuning
 # optimization algorithm (representative Tree of Parzen Estimators (TPE))
@@ -79,18 +80,13 @@ max_lr = 1
 min_sigma = 1
 max_sigma = 1
 
-# number of motion sensors
-number_of_motion_sensors = 51
-# regular expression to define on which sensors the process model discovery is performed on
-allowed_sensor_re = '^[M]\d{3,3}$'
-# define how the non numeric part of motion sensors look like
-prefix_motion_sensor_id = 'M'
+# define how the non numeric part of the different sensor types look like. An entry in the dictionary has the following
+# pattern: "'<sensor_type>': '<prefix>'"
+# Only the motion sensors are currently taken into account.
+sensor_type_prefixes = {'motion': 'M', 'door': 'D', 'temperature': 'T'}
 
 # set a level of logging
 logging_level = logging.INFO
-
-# maximum number of persons which were in the house while the recording of sensor data
-max_number_of_people_in_house = 1
 
 # Specifies the linkage method for clustering with custom distance calculation
 linkage_method_for_clustering = 'ward'
@@ -227,11 +223,11 @@ vectorization_type_list = ['quantity', 'time', 'quantity_time']
 hyp_number_of_day_partitions_list = [1, 2, 3, 4, 5]
 
 # differentiate between different days of the week
-# weekday: Mo, Tue, Wed, Thu, Fri, Sat, Sun
-# workday: weekend/workday
-# None: no day differentiation
-# possible values: ['weekday', 'workday', None]
-hyp_week_separator_list = ['weekday', 'workday', None]
+# weekday: differentiates between all days of the week (Mo, Tue, Wed, Thu, Fri, Sat, Sun)
+# workday: differentiates between workdays and weekend
+# none: no day differentiation
+# possible values: ["weekday", "workday", "none"]
+hyp_week_separator_list = ['weekday', 'workday', 'none']
 # #
 
 # range for clustering method (parameter optimization)

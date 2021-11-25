@@ -1,5 +1,7 @@
 import inspect
 import logging
+import configparser
+import json
 import os
 import sys
 import timeit
@@ -69,12 +71,6 @@ def create_parameters_log_file(dir_runtime_files, params):
          ['exogenous_csv_delimiter_traces', settings.csv_delimiter_traces, 'The char each column is divided by.'],
          ['exogenous_vectorization_type_list', settings.vectorization_type_list,
           'range for vectorization type (parameter optimization)'],
-         ['exogenous_allowed_sensor_re', settings.allowed_sensor_re,
-          'Regular expression to define on which sensors the process model discovery is performed on.'],
-         ['exogenous_prefix_motion_sensor_id', settings.prefix_motion_sensor_id,
-          'A word, letter, or number placed before motion sensor number.'],
-         ['exogenous_max_number_of_people_in_house', settings.max_number_of_people_in_house,
-          'Maximum number of persons which were in the house while the recording of sensor data.'],
          ['exogenous_filename_log_export', settings.filename_log_export, 'Filename of log export file.'],
          ['exogenous_dir_petri_net_files', settings.dir_petri_net_files,
           'Directory in which petri net export files are saved.'],
@@ -239,7 +235,7 @@ def check_settings(zero_distance_value_min, zero_distance_value_max,
     return
 
 
-def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=None, dtype=None):
+def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=None, dtype=None, sensor_labels=None):
     """Imports sensor data from csv file.
 
     :param filedir: The folder the file lies in.
@@ -256,16 +252,34 @@ def import_raw_sensor_data(filedir, filename, separator, header, parse_dates=Non
     raw_sensor_data = utils.read_csv_file(filedir=filedir, filename=filename, separator=separator, header=header,
                                           parse_dates=parse_dates, dtype=dtype)
 
-    # assign columns to data types
-    raw_sensor_data = raw_sensor_data.rename(columns=settings.column_assignment_sensor_data)
+    # column to value type assignment with the following pattern: "'<column name in file>': '<internal column type>'"
+    column_assignment_sensor_data = {settings.file_column_name_sensor_label: 'SensorLabel',
+                                     settings.file_column_name_timestamp: 'DateTime',
+                                     settings.file_column_name_status: 'Active'}
+    # assign columns to column types
+    raw_sensor_data = raw_sensor_data.rename(columns=column_assignment_sensor_data)
+
+    # mapping: sensor label to internal sensor id
+    sensor_labels_to_id_mapping = pd.DataFrame({
+        'SensorID': range(0, len(sensor_labels)),
+        'SensorLabel': sensor_labels
+    })
+    # add integer sensor id to data
+    raw_sensor_data = raw_sensor_data.join(sensor_labels_to_id_mapping.set_index('SensorLabel'),
+                                                         on='SensorLabel', how='left')
+
+    # categorize into sensor types by prefix
+    raw_sensor_data.loc[raw_sensor_data['SensorLabel'].str.startswith(settings.sensor_type_prefixes['motion']), 'SensorType'] = 'motion'
+    raw_sensor_data.loc[raw_sensor_data['SensorLabel'].str.startswith(settings.sensor_type_prefixes['door']), 'SensorType'] = 'door'
+    raw_sensor_data.loc[raw_sensor_data['SensorLabel'].str.startswith(settings.sensor_type_prefixes['temperature']), 'SensorType'] = 'temperature'
 
     # drop all lines without motion sensor (identify by sensor ID-prefix)
     # ToDo: in future versions allow for more sensor types if implemented
-    index_names = raw_sensor_data[raw_sensor_data[settings.column_name_sensor_id].str.match(settings.allowed_sensor_re)].index
-    raw_sensor_data = raw_sensor_data.loc[index_names]
-    raw_sensor_data.reset_index(inplace=True, drop=True)
+    #index_names = raw_sensor_data[raw_sensor_data['SensorLabel'].str.equals('motion')].index
+    raw_sensor_data_motion = raw_sensor_data.loc[raw_sensor_data['SensorType'] == 'motion']
+    raw_sensor_data_motion.reset_index(inplace=True, drop=True)
 
-    return raw_sensor_data
+    return raw_sensor_data_motion
 
 
 def param_combination_already_executed(path_data_sources, current_params, dir_export_files, step):
@@ -365,4 +379,54 @@ def show_function_value_history(function_values, iterations):
     plt.savefig(settings.path_data_sources + settings.dir_runtime_files + settings.metric_to_be_maximised +
                 '_progress.png', dpi=300)
     plt.show()
+    return
+
+
+def import_user_config():
+    """
+    Reads in the configuration defined by the user.
+    :return:
+    """
+    config = configparser.ConfigParser()
+    config.read(settings.dir_user_config + settings.filename_user_config)
+
+    settings.file_column_name_sensor_label = config['DEFAULT']['file_column_name_sensor_label']
+    settings.file_column_name_timestamp = config['DEFAULT']['file_column_name_timestamp']
+    settings.file_column_name_status = config['DEFAULT']['file_column_name_status']
+    settings.number_of_runs = config.getint('DEFAULT', 'number_of_runs')
+    settings.metric_to_be_maximised = config['DEFAULT']['metric_to_be_maximised']
+    settings.max_number_of_raw_input = config.getint('DEFAULT', 'max_number_of_raw_input')
+    settings.sensor_type_prefixes['motion'] = config['DEFAULT']['motion_sensor_prefix']
+    settings.linkage_method_for_clustering = config['DEFAULT']['linkage_method_for_clustering']
+    settings.rel_proportion_dfg_threshold = config.getfloat('DEFAULT', 'rel_proportion_dfg_threshold')
+    settings.miner_type = config['DEFAULT']['miner_type']
+    settings.execution_type = config['DEFAULT']['execution_type']
+
+    settings.trace_partition_method = json.loads(config['hyperopt_params']['trace_partition_method'])
+    settings.number_of_activations_per_trace_min = config.getint('hyperopt_params', 'number_of_activations_per_trace_min')
+    settings.number_of_activations_per_trace_max = config.getint('hyperopt_params', 'number_of_activations_per_trace_max')
+    settings.number_of_activations_per_trace_step_length = config.getint('hyperopt_params', 'number_of_activations_per_trace_step_length')
+    settings.trace_duration_min = config.getint('hyperopt_params', 'trace_duration_min')
+    settings.trace_duration_max = config.getint('hyperopt_params', 'trace_duration_max')
+    settings.trace_duration_step_length = config.getint('hyperopt_params', 'trace_duration_step_length')
+    settings.zero_distance_value_min = config.getint('hyperopt_params', 'zero_distance_value_min')
+    settings.zero_distance_value_max = config.getint('hyperopt_params', 'zero_distance_value_max')
+    settings.hyp_min_number_clusters = config.getint('hyperopt_params', 'hyp_min_number_clusters')
+    settings.hyp_max_number_clusters = config.getint('hyperopt_params', 'hyp_max_number_clusters')
+    settings.vectorization_type_list = json.loads(config['hyperopt_params']['vectorization_type_list'])
+    settings.hyp_number_of_day_partitions_list = json.loads(config['hyperopt_params']['hyp_number_of_day_partitions_list'])
+    settings.hyp_week_separator_list = json.loads(config['hyperopt_params']['hyp_week_separator_list'])
+    settings.clustering_method_list = json.loads(config['hyperopt_params']['clustering_method_list'])
+
+    settings.fixed_params['zero_distance_value'] = config.getint('fixed_params', 'zero_distance_value')
+    settings.fixed_params['traces_time_out_threshold'] = config.getint('fixed_params', 'traces_time_out_threshold')
+    settings.fixed_params['trace_length_limit'] = config.getint('fixed_params', 'trace_length_limit')
+    settings.fixed_params['custom_distance_number_of_clusters'] = config.getint('fixed_params', 'custom_distance_number_of_clusters')
+    settings.fixed_params['distance_threshold'] = config.getfloat('fixed_params', 'distance_threshold')
+    settings.fixed_params['max_errors_per_day'] = config.getint('fixed_params', 'max_errors_per_day')
+    settings.fixed_params['vectorization_type'] = config['fixed_params']['vectorization_type']
+    settings.fixed_params['event_case_correlation_method'] = config['fixed_params']['event_case_correlation_method']
+    settings.fixed_params['clustering_method'] = config['fixed_params']['clustering_method']
+    settings.fixed_params['hyp_number_of_day_partitions'] = config.getint('fixed_params', 'hyp_number_of_day_partitions')
+    settings.fixed_params['hyp_week_separator'] = config['fixed_params']['hyp_week_separator']
     return

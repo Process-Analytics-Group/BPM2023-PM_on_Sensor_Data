@@ -64,7 +64,7 @@ def read_csv_file(filedir, filename, separator, header, parse_dates=None, dtype=
         logger.error(err, err_msg)
         raise err
 
-    if settings.max_number_of_raw_input is not None:
+    if settings.max_number_of_raw_input != -1:
         if number_of_data_points > settings.max_number_of_raw_input:
             data_frame = data_frame.head(settings.max_number_of_raw_input)
             # log the limitation
