@@ -13,7 +13,7 @@ from u_utils import u_utils as utils, u_helper as helper
 
 def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
                                               dir_runtime_files,
-                                              raw_sensor_data,
+                                              raw_sensor_data_motion,
                                               hyp_vectorization_method,
                                               hyp_trace_partition_method,
                                               hyp_number_of_activations_per_trace,
@@ -29,7 +29,7 @@ def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
     # takes place predominantly)
     # method only suitable for one person at the moment
     enhanced_event_log = convert_raw_data_to_event_log(dir_runtime_files=dir_runtime_files,
-                                                       raw_sensor_data=raw_sensor_data,
+                                                       raw_sensor_data_motion=raw_sensor_data_motion,
                                                        dict_distance_adjacency_sensor=dict_distance_adjacency_sensor
                                                        )
 
@@ -50,7 +50,7 @@ def choose_and_perform_event_case_correlation(dict_distance_adjacency_sensor,
     return vectorised_log, log_with_case_id
 
 
-def convert_raw_data_to_event_log(raw_sensor_data,
+def convert_raw_data_to_event_log(raw_sensor_data_motion,
                                   dict_distance_adjacency_sensor,
                                   dir_runtime_files):
     """
@@ -74,112 +74,96 @@ def convert_raw_data_to_event_log(raw_sensor_data,
     # csv_delimiter_traces: csv delimiter of trace file which will get created
     csv_delimiter_traces = settings.csv_delimiter_traces
 
-    # get distance matrix from dictionary
-    distance_matrix = dict_distance_adjacency_sensor['distance_matrix']
-
-    # # #
-
     # start timer
     t0_convert_raw2trace = timeit.default_timer()
 
     # ToDo Let code check if raw_sensor_data has been calculated for the same parameters already then remove deepcopy
-    raw_sensor_data_local = raw_sensor_data.copy()
+    raw_sensor_data_motion_local = raw_sensor_data_motion.copy()
 
-    raw_sensor_data_local.rename(columns={'DateTime': 'Timestamp'}, inplace=True)
-
-    # move index so it starts with 1 instead of zero
-    # extract letter part from sensor ID. Usually contains information about the type (M=Motion, T=Temperature)
-    raw_sensor_data_local.insert(loc=1, column='SensorType',
-                                 value=raw_sensor_data_local['SensorID'].str.extractall('([a-zA-Z]+)').unstack().loc[:,
-                                       0])
-
-    # remove non-numeric part form sensorID to perform easier lookups with column
-    raw_sensor_data_local['SensorID'] = (
-        raw_sensor_data_local['SensorID'].str.extractall('(\d+)').unstack().loc[:, 0]).astype(int)
-
-    # only keep motion sensors (for now. Take other sensor types into consideration in future versions)
-    raw_sensor_data_motion = raw_sensor_data_local[
-        (raw_sensor_data_local['SensorType'] == settings.prefix_motion_sensor_id)]
+    raw_sensor_data_motion_local.rename(columns={'DateTime': 'Timestamp'}, inplace=True)
 
     # sort array by timestamp
-    raw_sensor_data_motion = raw_sensor_data_motion.sort_values(by=['Timestamp']).reset_index(drop=True)
-    # in case there is a motion sensorID that is not in the adjacency matrix, remove it
-    raw_sensor_data_motion = raw_sensor_data_motion[(raw_sensor_data_motion['SensorID'] < len(distance_matrix))]
+    raw_sensor_data_motion_local = raw_sensor_data_motion_local.sort_values(by=['Timestamp']).reset_index(drop=True)
 
     # Which sensor has been added at the timestamp. If sensor was deactivated no sensor has been added
-    raw_sensor_data_motion['Sensor_Added'] = \
-        (raw_sensor_data_motion['Active'] * raw_sensor_data_motion['SensorID']).astype(int)
+    raw_sensor_data_motion_local['Sensor_Added'] = \
+        (raw_sensor_data_motion_local['Active'] * raw_sensor_data_motion_local['SensorID']).astype(int)
 
-    raw_sensor_data_motion = raw_sensor_data_motion.sort_values(by=['SensorID', 'Timestamp'])
+    raw_sensor_data_motion_local = raw_sensor_data_motion_local.sort_values(by=['SensorID', 'Timestamp'])
     # last occurrence of a sensor ID always has to be Active=0 and first Active=1
-    raw_sensor_data_motion = raw_sensor_data_motion[~((raw_sensor_data_motion['SensorID'] !=
-                                                       raw_sensor_data_motion['SensorID'].shift(-1)) &
-                                                      (raw_sensor_data_motion['Active'] == 1))]
+    raw_sensor_data_motion_local = raw_sensor_data_motion_local[~((raw_sensor_data_motion_local['SensorID'] !=
+                                                                   raw_sensor_data_motion_local['SensorID'].shift(-1)) &
+                                                                  (raw_sensor_data_motion_local['Active'] == 1))]
     # delete rows where sensor has activated again, but not deactivated
-    raw_sensor_data_motion = \
-        raw_sensor_data_motion[raw_sensor_data_motion['Active'] != raw_sensor_data_motion['Active'].shift(1)]
+    raw_sensor_data_motion_local = \
+        raw_sensor_data_motion_local[
+            raw_sensor_data_motion_local['Active'] != raw_sensor_data_motion_local['Active'].shift(1)]
     # calculate the activation duration of every active sensor
-    raw_sensor_data_motion['SensorActivationTime'] = (
-        (raw_sensor_data_motion.sort_values(by=['SensorID', 'Timestamp'])['Timestamp'].diff(periods=1)).shift(
+    raw_sensor_data_motion_local['SensorActivationTime'] = (
+        (raw_sensor_data_motion_local.sort_values(by=['SensorID', 'Timestamp'])['Timestamp'].diff(periods=1)).shift(
             -1)).dt.total_seconds()
 
     # restore old order and reset index
-    raw_sensor_data_motion = raw_sensor_data_motion.sort_values(by=['Timestamp'])
-    raw_sensor_data_motion = raw_sensor_data_motion.reset_index(drop=True)
-    raw_sensor_data_motion.index = raw_sensor_data_motion.index + 1
+    raw_sensor_data_motion_local = raw_sensor_data_motion_local.sort_values(by=['Timestamp'])
+    raw_sensor_data_motion_local = raw_sensor_data_motion_local.reset_index(drop=True)
+    raw_sensor_data_motion_local.index = raw_sensor_data_motion_local.index + 1
 
     # remove all activation times for Active == 0, because SensorActivationTime only makes sense for activated sensors
-    raw_sensor_data_motion['SensorActivationTime'] = np.where(raw_sensor_data_motion['Active'] == 0, np.nan,
-                                                              raw_sensor_data_motion['SensorActivationTime'])
+    raw_sensor_data_motion_local['SensorActivationTime'] = np.where(raw_sensor_data_motion_local['Active'] == 0, np.nan,
+                                                                    raw_sensor_data_motion_local[
+                                                                        'SensorActivationTime'])
 
     # ToDo: Remove this limit value
-    raw_sensor_data_motion = raw_sensor_data_motion[raw_sensor_data_motion['SensorActivationTime'] < 1000]
+    raw_sensor_data_motion_local = raw_sensor_data_motion_local[
+        raw_sensor_data_motion_local['SensorActivationTime'] < 1000]
     # at the end of a log, where sensors are not deactivated anymore, a large negative number would be displayed.
     # replace negative numbers with np.nan
-    raw_sensor_data_motion['SensorActivationTime'] = np.where(raw_sensor_data_motion['SensorActivationTime'] < 0,
-                                                              np.nan, raw_sensor_data_motion['SensorActivationTime'])
+    raw_sensor_data_motion_local['SensorActivationTime'] = np.where(
+        raw_sensor_data_motion_local['SensorActivationTime'] < 0,
+        np.nan, raw_sensor_data_motion_local['SensorActivationTime'])
 
     # calculate the duration of each log entry
     # (pandas: shift column by one and then subtract the cell values column wise)
-    raw_sensor_data_motion['Duration'] = ((raw_sensor_data_motion['Timestamp'].diff(periods=1)).
-                                          shift(-1)).dt.total_seconds()
+    raw_sensor_data_motion_local['Duration'] = ((raw_sensor_data_motion_local['Timestamp'].diff(periods=1)).
+                                                shift(-1)).dt.total_seconds()
 
     # add LC_activity for process discovery later. Just use active column and replace 1 with s and 0 with c
-    raw_sensor_data_motion['LC'] = np.where(raw_sensor_data_motion['Active'] == 1, 's', 'c')
+    raw_sensor_data_motion_local['LC'] = np.where(raw_sensor_data_motion_local['Active'] == 1, 's', 'c')
 
     # add room/area name to log
-    raw_sensor_data_motion['room'] = \
-        raw_sensor_data_motion.replace({'SensorID': dict_distance_adjacency_sensor['sensor_to_room_dict']})['SensorID']
+    raw_sensor_data_motion_local['room'] = \
+        raw_sensor_data_motion_local.replace({'SensorID': dict_distance_adjacency_sensor['sensor_to_room_dict']})[
+            'SensorID']
 
     # find out fringe areas where the sensor just gets activated by accident
     # compare rows below and above and if they are both different from the row itself then assume that the
     # new-room activation is not deliberate
-    raw_sensor_data_motion['noise'] = ((raw_sensor_data_motion['room'].shift(periods=1)) !=
-                                       raw_sensor_data_motion['room']) & \
-                                      ((raw_sensor_data_motion['room'].shift(periods=-1)) !=
-                                       raw_sensor_data_motion['room']) & \
-                                      ((raw_sensor_data_motion['room'].shift(periods=-1)) == (
-                                          raw_sensor_data_motion['room'].shift(periods=1)))
+    raw_sensor_data_motion_local['noise'] = ((raw_sensor_data_motion_local['room'].shift(periods=1)) !=
+                                             raw_sensor_data_motion_local['room']) & \
+                                            ((raw_sensor_data_motion_local['room'].shift(periods=-1)) !=
+                                             raw_sensor_data_motion_local['room']) & \
+                                            ((raw_sensor_data_motion_local['room'].shift(periods=-1)) == (
+                                                raw_sensor_data_motion_local['room'].shift(periods=1)))
 
     # all noisy parts, take the room that was active around the outlying row and use it as the "major_room"
-    raw_sensor_data_motion['room_major'] = np.where(raw_sensor_data_motion['noise'],
-                                                    raw_sensor_data_motion['room'].shift(periods=-1),
-                                                    raw_sensor_data_motion['room'])
+    raw_sensor_data_motion_local['room_major'] = np.where(raw_sensor_data_motion_local['noise'],
+                                                          raw_sensor_data_motion_local['room'].shift(periods=-1),
+                                                          raw_sensor_data_motion_local['room'])
 
     # do it one more time to get rid of the alternating room-activations. This has to be done better in future versions.
-    raw_sensor_data_motion['noise'] = ((raw_sensor_data_motion['room_major'].shift(periods=1)) !=
-                                       raw_sensor_data_motion['room_major']) & \
-                                      ((raw_sensor_data_motion['room_major'].shift(periods=-1)) !=
-                                       raw_sensor_data_motion['room_major']) & \
-                                      ((raw_sensor_data_motion['room_major'].shift(periods=-1)) == (
-                                          raw_sensor_data_motion['room_major'].shift(periods=1)))
+    raw_sensor_data_motion_local['noise'] = ((raw_sensor_data_motion_local['room_major'].shift(periods=1)) !=
+                                             raw_sensor_data_motion_local['room_major']) & \
+                                            ((raw_sensor_data_motion_local['room_major'].shift(periods=-1)) !=
+                                             raw_sensor_data_motion_local['room_major']) & \
+                                            ((raw_sensor_data_motion_local['room_major'].shift(periods=-1)) == (
+                                                raw_sensor_data_motion_local['room_major'].shift(periods=1)))
 
-    raw_sensor_data_motion['room_major'] = np.where(raw_sensor_data_motion['noise'],
-                                                    raw_sensor_data_motion['room_major'].shift(periods=-1),
-                                                    raw_sensor_data_motion['room_major'])
+    raw_sensor_data_motion_local['room_major'] = np.where(raw_sensor_data_motion_local['noise'],
+                                                          raw_sensor_data_motion_local['room_major'].shift(periods=-1),
+                                                          raw_sensor_data_motion_local['room_major'])
 
     # noise column no longer required. Drop it to save memory.
-    raw_sensor_data_motion = raw_sensor_data_motion.drop(['noise'], axis=1)
+    raw_sensor_data_motion_local = raw_sensor_data_motion_local.drop(['noise'], axis=1)
 
     # stop timer
     t1_convert_raw2trace = timeit.default_timer()
@@ -191,13 +175,13 @@ def convert_raw_data_to_event_log(raw_sensor_data,
     logger.info("Transforming log took %s seconds.", runtime_convert_raw2trace)
 
     # write traces to storage
-    utils.write_csv_file(data=raw_sensor_data_motion, filedir=data_sources_path + dir_runtime_files,
+    utils.write_csv_file(data=raw_sensor_data_motion_local, filedir=data_sources_path + dir_runtime_files,
                          filename=filename_traces_raw, separator=csv_delimiter_traces,
                          logging_level=settings.logging_level)
     # logging
     logger.info("Traces were saved as csv file '../%s", data_sources_path + dir_runtime_files + filename_traces_raw)
 
-    return raw_sensor_data_motion
+    return raw_sensor_data_motion_local
 
 
 def partition_log_into_traces(traces_raw_pd,

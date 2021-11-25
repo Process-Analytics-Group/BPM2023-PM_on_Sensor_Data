@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 import timeit
 import numpy as np
+import pandas as pd
 from hyperopt import fmin, Trials, STATUS_OK
 import os
 import pathlib
@@ -23,6 +24,8 @@ t0_main = timeit.default_timer()
 path = pathlib.Path(settings.path_data_sources + settings.dir_runtime_files)
 path.mkdir(parents=True, exist_ok=True)
 
+helper.import_user_config()
+
 # Logger configuration
 helper.configure_logger()
 
@@ -39,6 +42,7 @@ helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
 # get distance Matrix from imported adjacency-matrix
 dict_distance_adjacency_sensor = create_dm.get_distance_matrix()
 
+
 # draw a node-representation of the Smart Home
 create_dm.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sensor,
                                data_sources_path=settings.path_data_sources,
@@ -46,13 +50,13 @@ create_dm.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sen
 
 # load data
 # read in the sensor data as a pandas data frame
-raw_sensor_data = helper.import_raw_sensor_data(filedir=settings.path_data_sources,
+raw_sensor_data_motion = helper.import_raw_sensor_data(filedir=settings.path_data_sources,
                                                 filename=settings.filename_sensor_data,
                                                 separator=settings.csv_delimiter_sensor_data,
                                                 header=settings.csv_header_sensor_data,
                                                 parse_dates=settings.csv_parse_dates_sensor_data,
-                                                dtype=settings.csv_dtype_sensor_data)
-
+                                                dtype=settings.csv_dtype_sensor_data,
+                                                sensor_labels=dict_distance_adjacency_sensor['sensor_labels'])
 
 def perform_process_model_discovery(params):
     """
@@ -94,7 +98,7 @@ def perform_process_model_discovery(params):
     # ################### EventCaseCorrelation ####################
     # transform raw-data to traces
     traces_vectorised, output_case_traces_cluster = \
-        ecc.choose_and_perform_event_case_correlation(raw_sensor_data=raw_sensor_data,
+        ecc.choose_and_perform_event_case_correlation(raw_sensor_data_motion=raw_sensor_data_motion,
                                                       dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
                                                       dir_runtime_files=dir_runtime_files,
                                                       hyp_vectorization_method=params['vectorization_type'],
