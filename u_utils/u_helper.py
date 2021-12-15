@@ -33,6 +33,8 @@ def configure_logger():
     logging.getLogger('hyperopt').setLevel(logging.WARNING)
     logging.getLogger('numexpr').setLevel(logging.WARNING)
     logging.getLogger('graphviz').setLevel(logging.WARNING)
+    # disable the warning on copying columns
+    pd.options.mode.chained_assignment = None
 
     return
 

@@ -29,7 +29,7 @@ dir_runtime_files_iteration = '%Y-%m-%d_%H-%M-%S/'
 # folder containing user configuration file
 dir_user_config = ''
 # filename of configuration file
-filename_user_config = 'config.ini'
+filename_user_config = 'z_user_config.ini'
 # filename of room separation
 filename_room_separation = 'Room-separation.csv'
 # filename of Adjacency-Matrix
