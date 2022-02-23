@@ -1,3 +1,3 @@
 #!/bin/bash
-python z_main.py
+python z_start.py
 sleep 5000

@@ -40,6 +40,12 @@ filename_parameters_file = '0-Parameters.csv'
 filename_log_file = '1-LogFile.log'
 # filename of Adjacency-plot
 filename_adjacency_plot = 'adjacency_plot.pdf'
+# filename of export explanation
+filename_export_explanation = 'README.md'
+# filename of archive which contains all outputs of a process model discovery run
+filename_export_data = 'export_data_%Y-%m-%d_%H-%M-%S.zip'
+# regular expression that matches the filename above
+filename_pattern_ed = '^export_data_.+\.zip$'
 
 # csv configuration for sensor data file
 # delimiter of the columns in csv file of sensor data (input)
