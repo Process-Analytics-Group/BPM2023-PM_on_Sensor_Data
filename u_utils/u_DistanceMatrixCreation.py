@@ -130,6 +130,7 @@ def floyd_warshall(adj_matrix):
 
 def draw_adjacency_graph(dict_room_information,
                          data_sources_path,
+                         dir_runtime_files,
                          filename_adjacency_plot):
     adjacency_matrix = dict_room_information['adjacency_matrix']
     sensor_labels = dict_room_information['sensor_labels']
@@ -154,6 +155,7 @@ def draw_adjacency_graph(dict_room_information,
         else:
             iterator += 1
 
+    plt.clf()
     # set figure size
     plot = plt.figure(figsize=(15, 15))
     my_labels_mapping = dict(enumerate(sensor_labels, start=0))
@@ -172,6 +174,6 @@ def draw_adjacency_graph(dict_room_information,
     for element in legend:
         patches.append(mpatches.Patch(color=element[1], label=element[0]))
     plt.legend(handles=patches)
-    plt.show()
-    export_file_name_path = data_sources_path + filename_adjacency_plot
+    #plt.show()
+    export_file_name_path = data_sources_path + dir_runtime_files + filename_adjacency_plot
     plot.savefig(export_file_name_path)

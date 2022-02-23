@@ -16,7 +16,7 @@ import u_utils.u_utils as utils
 import z_setting_parameters as settings
 
 
-def configure_logger():
+def configure_logger(handlers):
     """
     Creates the logger configuration and disable logging in external libraries which is not needed.
     :return:
@@ -24,9 +24,7 @@ def configure_logger():
     logging.basicConfig(
         level=settings.logging_level,
         format="%(asctime)s [%(levelname)s] [%(threadName)s] [%(name)s] %(message)s",
-        handlers=[
-            logging.FileHandler(settings.path_data_sources + settings.dir_runtime_files + settings.filename_log_file),
-            logging.StreamHandler()])
+        handlers=handlers)
 
     # "disable" specific logger
     logging.getLogger('matplotlib').setLevel(logging.WARNING)
@@ -372,6 +370,7 @@ def show_function_value_history(function_values, iterations):
     :param iterations: list of iteration numbers beginning at 1
     :return:
     """
+    plt.clf()
     plt.xlabel('Iteration')
     plt.ylabel(settings.metric_to_be_maximised)
     plt.title(settings.metric_to_be_maximised + ' Value Progress')
@@ -380,7 +379,7 @@ def show_function_value_history(function_values, iterations):
     plt.xticks(iterations)
     plt.savefig(settings.path_data_sources + settings.dir_runtime_files + settings.metric_to_be_maximised +
                 '_progress.png', dpi=300)
-    plt.show()
+    #plot.show()
     return
 
 
