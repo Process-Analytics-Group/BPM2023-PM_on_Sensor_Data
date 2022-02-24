@@ -1,6 +1,7 @@
 /z_Data-Sources/5-Kyoto/runtime-files
 /z_Data-Sources/5-Kyoto/ecc
 /z_Data-Sources/5-Kyoto/export_data_*
-/z_Data-Sources/19-Aruba
+/z_Data-Sources/19-Aruba/runtime-files
+/z_Data-Sources/19-Aruba/ecc
 /venv
 .idea
