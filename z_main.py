@@ -10,12 +10,12 @@ import pathlib
 from zipfile import ZipFile
 import re
 
-from u_utils import u_helper as helper, u_DistanceMatrixCreation as create_dm
+from u_utils import u_helper as helper, u_DistanceMatrixCreation as DistanceMatrixCreation
 import z_setting_parameters as settings
-from a_EventCaseCorrelation import a_EventCaseCorrelation as ecc
-from b_ActivityDiscovery import b_ActivityDiscovery as ad
-from c_EventActivityAbstraction import c_EventActivityAbstraction as eaa
-from d_ProcessDiscovery import d_ProcessDiscovery as prd
+from a_EventCaseCorrelation import a_EventCaseCorrelation as EventCaseCorrelation
+from b_ActivityDiscovery import b_ActivityDiscovery as ActivityDiscovery
+from c_EventActivityAbstraction import c_EventActivityAbstraction as EventActivityAbstraction
+from d_ProcessDiscovery import d_ProcessDiscovery as ProcessDiscovery
 
 
 def execute_process_model_discovery():
@@ -23,10 +23,6 @@ def execute_process_model_discovery():
     t0_main = timeit.default_timer()
     # start datetime
     t0_datetime = datetime.now()
-
-    # check if runtime folder exists, if not create it
-    path = pathlib.Path(settings.path_data_sources + settings.dir_runtime_files)
-    path.mkdir(parents=True, exist_ok=True)
 
     # checks settings for correctness
     helper.check_settings(zero_distance_value_min=settings.zero_distance_value_min,
@@ -39,13 +35,13 @@ def execute_process_model_discovery():
                           metric_to_be_maximised_list=settings.metric_to_be_maximised_list)
 
     # get distance Matrix from imported adjacency-matrix
-    dict_distance_adjacency_sensor = create_dm.get_distance_matrix()
+    dict_distance_adjacency_sensor = DistanceMatrixCreation.get_distance_matrix()
 
     # draw a node-representation of the Smart Home
-    create_dm.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sensor,
-                                   data_sources_path=settings.path_data_sources,
-                                   dir_runtime_files=settings.dir_runtime_files,
-                                   filename_adjacency_plot=settings.filename_adjacency_plot)
+    DistanceMatrixCreation.draw_adjacency_graph(dict_room_information=dict_distance_adjacency_sensor,
+                                                data_sources_path=settings.path_data_sources,
+                                                dir_runtime_files=settings.dir_runtime_files,
+                                                filename_adjacency_plot=settings.filename_adjacency_plot)
 
     # load data
     # read in the sensor data as a pandas data frame
@@ -92,46 +88,51 @@ def execute_process_model_discovery():
         logger.info(param_log_str)
 
         dict_distance_adjacency_sensor['distance_matrix'] = \
-            create_dm.set_zero_distance_value(distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
-                                              zero_distance_value=params['zero_distance_value'])
+            DistanceMatrixCreation.set_zero_distance_value(
+                distance_matrix=dict_distance_adjacency_sensor['distance_matrix'],
+                zero_distance_value=params['zero_distance_value'])
 
         # ################### EventCaseCorrelation ####################
         # transform raw-data to traces
         traces_vectorised, output_case_traces_cluster = \
-            ecc.choose_and_perform_event_case_correlation(raw_sensor_data_motion=raw_sensor_data_motion,
-                                                          dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
-                                                          dir_runtime_files=dir_runtime_files,
-                                                          hyp_vectorization_method=params['vectorization_type'],
-                                                          hyp_trace_partition_method=params['trace_partition_method'],
-                                                          hyp_number_of_activations_per_trace=params[
-                                                              'number_of_activations_per_trace'],
-                                                          hyp_trace_duration=params['trace_duration'])
+            EventCaseCorrelation.choose_and_perform_event_case_correlation(
+                raw_sensor_data_motion=raw_sensor_data_motion,
+                dict_distance_adjacency_sensor=dict_distance_adjacency_sensor,
+                dir_runtime_files=dir_runtime_files,
+                hyp_vectorization_method=params['vectorization_type'],
+                hyp_trace_partition_method=params['trace_partition_method'],
+                hyp_number_of_activations_per_trace=params[
+                    'number_of_activations_per_trace'],
+                hyp_trace_duration=params['trace_duration'])
 
         # ################### ActivityDiscovery ####################
-        cluster = ad.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
-                                                          hyp_number_of_clusters=params['hyp_number_of_clusters'],
-                                                          trace_data_without_case_number=traces_vectorised)
+        cluster = ActivityDiscovery.choose_and_perform_clustering_method(clustering_method=params['clustering_method'],
+                                                                         hyp_number_of_clusters=params[
+                                                                             'hyp_number_of_clusters'],
+                                                                         trace_data_without_case_number=traces_vectorised)
 
         # ################### EventActivityAbstraction ####################
-        output_case_traces_cluster = eaa.create_event_log_files(dir_runtime_files=dir_runtime_files,
-                                                                cluster=cluster,
-                                                                traces_vectorised=traces_vectorised,
-                                                                output_case_traces_cluster=output_case_traces_cluster,
-                                                                hyp_week_separator=params['hyp_week_separator'],
-                                                                hyp_number_of_day_partitions=params[
-                                                                    'hyp_number_of_day_partitions'])
+        output_case_traces_cluster = EventActivityAbstraction.create_event_log_files(
+            dir_runtime_files=dir_runtime_files,
+            cluster=cluster,
+            traces_vectorised=traces_vectorised,
+            output_case_traces_cluster=output_case_traces_cluster,
+            hyp_week_separator=params['hyp_week_separator'],
+            hyp_number_of_day_partitions=params[
+                'hyp_number_of_day_partitions'])
 
         # ################### ProcessDiscovery ####################
         # discover the process models of the respective clusters
-        prd.create_activity_models(output_case_traces_cluster=output_case_traces_cluster,
-                                   path_data_sources=settings.path_data_sources, dir_runtime_files=dir_runtime_files,
-                                   dir_dfg_cluster_files=settings.dir_dfg_files,
-                                   filename_dfg_cluster=settings.filename_dfg_cluster,
-                                   rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold)
+        ProcessDiscovery.create_activity_models(output_case_traces_cluster=output_case_traces_cluster,
+                                                path_data_sources=settings.path_data_sources,
+                                                dir_runtime_files=dir_runtime_files,
+                                                dir_dfg_cluster_files=settings.dir_dfg_files,
+                                                filename_dfg_cluster=settings.filename_dfg_cluster,
+                                                rel_proportion_dfg_threshold=settings.rel_proportion_dfg_threshold)
 
         # discover the process model for the overall daily routine
-        metrics = prd.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
-                                           dir_runtime_files=dir_runtime_files)
+        metrics = ProcessDiscovery.create_process_model(output_case_traces_cluster=output_case_traces_cluster,
+                                                        dir_runtime_files=dir_runtime_files)
 
         # show function value history in a graph
         perform_process_model_discovery.function_values.append(metrics[settings.metric_to_be_maximised])
@@ -233,7 +234,8 @@ def execute_process_model_discovery():
         logger.info(information_string)
 
         # creates readme file for the export data
-        readme_file = open(settings.path_data_sources + settings.dir_runtime_files + settings.filename_export_explanation, 'w+')
+        readme_file = open(
+            settings.path_data_sources + settings.dir_runtime_files + settings.filename_export_explanation, 'w+')
         readme_file.write(information_string)
         readme_file.close()
 
@@ -255,7 +257,8 @@ def execute_process_model_discovery():
                         except PermissionError:
                             logger = logging.getLogger('main')
                             logger.setLevel(settings.logging_level)
-                            logger.info('Could not delete file ' + '\"' + filePath + '\". The file is currently in use.')
+                            logger.info(
+                                'Could not delete file ' + '\"' + filePath + '\". The file is currently in use.')
                     # path is empty dir
                     else:
                         os.rmdir(filePath)

@@ -17,8 +17,8 @@ file_column_name_timestamp = 'DateTime'
 file_column_name_status = 'Active'
 # column to value type assignment with the following pattern: "'<column name in file>': '<internal column type>'"
 column_assignment_sensor_data = {file_column_name_sensor_label: 'SensorLabel',
-                            file_column_name_timestamp: 'DateTime',
-                            file_column_name_status: 'Active'}
+                                 file_column_name_timestamp: 'DateTime',
+                                 file_column_name_status: 'Active'}
 
 # path of sources and outputs
 path_data_sources = 'z_Data-Sources/' + rel_dir_name_sensor_data
